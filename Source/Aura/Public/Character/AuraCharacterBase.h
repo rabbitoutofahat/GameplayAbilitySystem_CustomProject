@@ -9,6 +9,7 @@
 
 class UAbilitySystemComponent;
 class UAttributeSet;
+class UGameplayEffect;
 
 /**
  *
@@ -43,4 +44,9 @@ protected:
 	* 2. ASC lives on the player state -> PossessedBy() on the pawn on the server, OnRep_PlayerState() (i.e., via rep notify) on the player controller on the client
 	*/
 	virtual void InitAbilityActorInfo(); // Must be done after possession (the controller has been set for the Pawn)
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
+
+	void InitialisePrimaryAttributes() const;
 };

@@ -53,4 +53,6 @@ void AAuraCharacter::InitAbilityActorInfo()
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
+
+	InitialisePrimaryAttributes(); // We want to initialise primary attributes by applying it as a gameplay effect to the character at the beginning of the game
 }

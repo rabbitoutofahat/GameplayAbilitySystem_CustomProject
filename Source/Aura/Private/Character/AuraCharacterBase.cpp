@@ -1,6 +1,8 @@
 // Copyright Druid Mechanics
 
 #include "Character/AuraCharacterBase.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
@@ -23,6 +25,17 @@ void AAuraCharacterBase::BeginPlay()
 
 void AAuraCharacterBase::InitAbilityActorInfo()
 {
+}
+
+void AAuraCharacterBase::InitialisePrimaryAttributes() const
+{
+	check(IsValid(GetAbilitySystemComponent()));
+	check(IsValid(DefaultPrimaryAttributes));
+
+	// Get the gameplay effect spec from self, then apply to a target ASC (which is our own)
+	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DefaultPrimaryAttributes, 1.f, ContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
 }
 
 

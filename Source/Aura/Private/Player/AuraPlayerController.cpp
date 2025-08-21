@@ -8,32 +8,78 @@
 
 AAuraPlayerController::AAuraPlayerController()
 {
-
 	bReplicates = true; // In multiplayer, when an entity changes on the server, that change will be replicated/sent down to all clients connected to the server 
-
 }
 
 void AAuraPlayerController::PlayerTick(float DeltaTime)
 {
-
 	Super::PlayerTick(DeltaTime);
 
 	CursorTrace();
+}
 
+void AAuraPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+    check(AuraContext); // Check is going to halt execution if the condition pointed to by AuraContext fails - AuraContext will be evaluated as 'false' if it hasn't been set yet
+	SetMappingContext();
+	
+	bShowMouseCursor = true; // Show mouse cursor in viewport
+	DefaultMouseCursor = EMouseCursor::Default;
+	FInputModeGameAndUI InputModeData; // Enables use of input from both the keyboard and mouse and can use mouse input to affect UI such as widgets
+	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	InputModeData.SetHideCursorDuringCapture(false); // As soon as cursor is captured in viewport, we will not hide the cursor
+	SetInputMode(InputModeData);
+}
+
+void AAuraPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent); // Will purposefully crash if this cast fails
+	
+	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
+}
+
+void AAuraPlayerController::SetMappingContext()
+{
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()); // (Only one subsystem can exist for the duration of the program)
+	if (Subsystem)
+	{
+		Subsystem->AddMappingContext(AuraContext, 0); // Can set a priority for the mapping context as it is possible to have multiple
+	}
+}
+
+void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
+{
+	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
+
+	const FRotator Rotation = GetControlRotation();
+	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
+
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y); 
+
+	APawn* ControlledPawn = GetPawn<APawn>();
+	if (ControlledPawn)
+	{
+		ControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y);
+		ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X);
+	}
 }
 
 void AAuraPlayerController::CursorTrace()
 {
-
 	FHitResult CursorHit;
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
 	if (!CursorHit.bBlockingHit) return;
-	
+
 	// Cast REMOVED, see TScriptInterface wrapper in the .h file
 	LastActor = ThisActor;
-	ThisActor = CursorHit.GetActor(); 
+	ThisActor = CursorHit.GetActor();
 
-	/**
+	/*
 	* Line trace from cursor. There are several scenarios:
 	* A. LastActor is null and ThisActor is null
 	*    - Do nothing
@@ -49,7 +95,6 @@ void AAuraPlayerController::CursorTrace()
 
 	if (LastActor == nullptr)
 	{
-
 		if (ThisActor != nullptr)
 		{
 			// Case B
@@ -62,7 +107,6 @@ void AAuraPlayerController::CursorTrace()
 	}
 	else // LastActor is valid
 	{
-
 		if (ThisActor == nullptr)
 		{
 			// Case C
@@ -82,63 +126,6 @@ void AAuraPlayerController::CursorTrace()
 			}
 		}
 	}
-
-}
-
-void AAuraPlayerController::BeginPlay()
-{
-
-	Super::BeginPlay();
-    check(AuraContext); // Check is going to halt execution if the condition pointed to by AuraContext. AuraContext will be evaluated as 'false' if it hasn't been set yet
-
-	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()); // Used to add mapping contexts
-	if (Subsystem)
-	{
-
-		Subsystem->AddMappingContext(AuraContext, 0);
-
-	}
-	
-
-	bShowMouseCursor = true;
-	DefaultMouseCursor = EMouseCursor::Default;
-
-	FInputModeGameAndUI InputModeData; // Enables use of input from keyboard + input, and can use input to affect UI such as widgets
-	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	InputModeData.SetHideCursorDuringCapture(false); // As soon as cursor is captured in viewport, we will not hide the cursor
-	SetInputMode(InputModeData);
-
-}
-
-void AAuraPlayerController::SetupInputComponent()
-{
-
-	Super::SetupInputComponent();
-
-	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent); // Will crash if this cast fails
-
-	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
-
-}
-
-void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
-{
-
-	const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>(); // Input action value in the form of a 2D vector
-	const FRotator Rotation = GetControlRotation();
-	const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
-
-	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X); // Gives us the normalised forward vector that corresponds to the yaw rotation vector
-	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y); // "" right ""
-
-	if (APawn* ControlledPawn = GetPawn<APawn>())
-	{
-
-		ControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y);
-		ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X);
-
-	}
-
 }
 
 

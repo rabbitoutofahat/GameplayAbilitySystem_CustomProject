@@ -1,6 +1,5 @@
 // Copyright Druid Mechanics
 
-
 #include "Character/AuraCharacterBase.h"
 
 AAuraCharacterBase::AAuraCharacterBase()
@@ -8,9 +7,8 @@ AAuraCharacterBase::AAuraCharacterBase()
 	PrimaryActorTick.bCanEverTick = false;
 
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
-	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket")); // Creates a socket on the skeleton that we can attach weapons to
-	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision); // The socket should not have collision
-
+	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
+	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision); // The weapon does not need collision for this project
 }
 
 UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
@@ -21,7 +19,6 @@ UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 void AAuraCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AAuraCharacterBase::InitAbilityActorInfo()

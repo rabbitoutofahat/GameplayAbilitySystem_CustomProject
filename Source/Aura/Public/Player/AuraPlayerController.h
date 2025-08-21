@@ -6,7 +6,6 @@
 #include "GameFramework/PlayerController.h"
 #include "AuraPlayerController.generated.h"
 
-// Forward declarations
 class UInputMappingContext; 
 class UInputAction;
 struct FInputActionValue;
@@ -28,19 +27,18 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
-
 private:
+	void SetMappingContext();
+	void Move(const FInputActionValue& InputActionValue);
+	void CursorTrace();
+
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> AuraContext;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
 	
-	void Move(const FInputActionValue& InputActionValue);
-
-	void CursorTrace();
-
-	TScriptInterface<IEnemyInterface> LastActor;
+	// TScriptInterface is a special wrapper used for storing member variables in an interface and removes the need to check whether the actor implements the interface (using a cast)
+	TScriptInterface<IEnemyInterface> LastActor; 
 	TScriptInterface<IEnemyInterface> ThisActor;
-
 };

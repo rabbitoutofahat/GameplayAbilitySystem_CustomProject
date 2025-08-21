@@ -7,10 +7,8 @@
 #include "GameplayEffectTypes.h"
 #include "AuraEffectActor.generated.h"
 
-// Forward Declarations
 class UGameplayEffect;
 class UAbilitySystemComponent;
-
 
 // When creating variables of Enum Effect Policies later, call the Enum using TEnumAsByte<>
 UENUM(BlueprintType)
@@ -20,6 +18,7 @@ enum EEffectApplicationPolicy
 	ApplyOnEndOverlap,
 	DoNotApply
 };
+
 // Primarily for infinite gameplay effects
 UENUM(BlueprintType)
 enum EEffectRemovalPolicy
@@ -51,11 +50,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	bool bDestroyOnEffectRemoval = false;
 
+	// We can make our own gameplay effect blueprints, and then assign them as a gameplay effect class to our effect actors
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	TSubclassOf<UGameplayEffect> InstantGameplayEffectClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
-	TEnumAsByte<EEffectApplicationPolicy> InstantEffectApplicationPolicy = EEffectApplicationPolicy::DoNotApply; // Sets DoNotApply as default value
+	TEnumAsByte<EEffectApplicationPolicy> InstantEffectApplicationPolicy = EEffectApplicationPolicy::DoNotApply; 
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	TSubclassOf<UGameplayEffect> DurationGameplayEffectClass;
@@ -72,9 +72,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	TEnumAsByte<EEffectRemovalPolicy> InfiniteEffectRemovalPolicy = EEffectRemovalPolicy::RemoveOnEndOverlap;
 
-	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandles;
-
+	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandles; // Used for infinite effect removal policy
+    
+	/* 
+	* For use in UE editor curve tables for gameplay effect scalable floats.
+	* For example, the actor level on a health potion maps to a value on the "healing curve" which represents how much health will be restored by the gameplay effect
+	*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
-	float ActorLevel = 1.f;
-
+	float ActorLevel = 1.f; 
 };

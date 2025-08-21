@@ -7,6 +7,9 @@
 #include "GameplayTagContainer.h" // For FGameplayTag MessageTag = FGameplayTag(); to work
 #include "OverlayWidgetController.generated.h"
 
+struct FOnAttributeChangeData;
+class UAuraUserWidget;
+
 USTRUCT(BlueprintType)
 struct FUIWidgetRow : public FTableRowBase // Creates a data table structure we can use for our data table blueprint in the UE editor; the below properties act as columns
 {
@@ -19,19 +22,19 @@ struct FUIWidgetRow : public FTableRowBase // Creates a data table structure we 
 	FText Message = FText();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<class UAuraUserWidget> MessageWidget; // Also a forward declaration
+	TSubclassOf<UAuraUserWidget> MessageWidget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UTexture2D* Image = nullptr;
-
 };
 
-// Forward Declarations
-struct FOnAttributeChangeData;
-class UAuraUserWidget;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue); // 'Signature' specifies that the delegate type is OnAttributeChanged, capable of broadcasting one float
-
+/*
+* Dynamic - ability to assign events in UE blueprints, Multicast - multiple blueprint widgets may want to bind to this delegate.
+* 'Signature' specifies the delegate type, and is capable of broadcasting a certain data type, with a given name.
+* For example, We have a signature of type FMessageWidgetRowSignature that can broadcast a value of type FUIWidgetRow which we call Row. 
+* We define a member variable with the signature type, called MessageWidgetRowDelegate, which we can use to broadcast FUIWidgetRows - MessageWidgetRowDelegate.Broadcast(Row).
+*/
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue); 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
 
 /**
@@ -62,7 +65,7 @@ public:
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
 
 protected:
-	// Creates a widget data property for OverlayWidgetController blueprint(s), lets us perform lookup of tags in our MessageWidgetDataTable here in C++
+	// Creates a widget data property for OverlayWidgetController blueprint(s) that lets us lookup tags in our MessageWidgetDataTable here in C++
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data") 
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
 
@@ -74,5 +77,9 @@ protected:
 template<typename T>
 inline T* UOverlayWidgetController::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
 {
-	return DataTable->FindRow<T>(Tag.GetTagName(), TEXT("")); // Kind of an ugly line so we can use GetDataTableRowByTag instead
+	/*
+	* Kind of an ugly line so we refactor into GetDataTableRowByTag() instead.
+	* Needs a context string but we don't actually need one so pass in an empty text string.
+	*/
+	return DataTable->FindRow<T>(Tag.GetTagName(), TEXT("")); 
 }

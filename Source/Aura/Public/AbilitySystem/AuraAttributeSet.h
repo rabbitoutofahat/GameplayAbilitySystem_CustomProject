@@ -7,7 +7,7 @@
 #include "AbilitySystemComponent.h"
 #include "AuraAttributeSet.generated.h"
 
-// For using the ATTRIBUTE_ACCESSORS macro
+// For using the ATTRIBUTE_ACCESSORS macro, which defines a set of helper functions for accessing and initialising attributes
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
 GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
 GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
@@ -19,7 +19,7 @@ struct FEffectProperties
 {
 	GENERATED_BODY()
 
-	FEffectProperties(){} // Default constructor that takes no arguments and does nothing
+	FEffectProperties() {} // Default constructor (takes no arguments and does nothing)
 
 	FGameplayEffectContextHandle EffectContextHandle;
 
@@ -59,6 +59,7 @@ class AURA_API UAuraAttributeSet : public UAttributeSet
 
 public:
 	UAuraAttributeSet();
+
 	/**
 	* When creating a replicated attribute, we must do the following:
 	* 1. Add the ReplicatedUsing specifier and assign a RepNotify
@@ -66,13 +67,14 @@ public:
 	* 3. Notify the Ability System of the replication with GAMEPLAYATTRIBUTE_REPNOTIFY (see .cpp file)
 	*/
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	
 	// Method for clamping
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Vital Attributes") // Whenever an attribute is replicated down to the client, the client gets a rep notify, in this case called "OnRep_Health"
 	FGameplayAttributeData Health;
-	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Health); // Macro that creates the accessor function for the health attribute (i.e. GetHealthAttribute). Requires class name and property name
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Health);
     
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Vital Attributes")
 	FGameplayAttributeData MaxHealth;
@@ -99,7 +101,5 @@ public:
 	void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) const;
 	
 private:
-
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const; // Reference just renames FEffectProperties to Props in the declaration?
-
 };

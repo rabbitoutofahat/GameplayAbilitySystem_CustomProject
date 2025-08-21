@@ -9,7 +9,6 @@
 #include "AbilitySystemInterface.h"
 #include "AuraPlayerState.generated.h"
 
-// Forward Declarations
 class UAbilitySystemComponent;
 class UAttributeSet;
 
@@ -23,8 +22,9 @@ class AURA_API AAuraPlayerState : public APlayerState, public IAbilitySystemInte
 
 public:
 	AAuraPlayerState();
+
 	// Pointers for our ability system component and attribute set after implementing AbilitySystemInterface above, helps everything in the system interact with eachother cleanly
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override; // Pure virtual function of IAbilitySystemInterface
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override; // Pure virtual function of IAbilitySystemInterface from AbilitySystemInterface.h
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 protected:

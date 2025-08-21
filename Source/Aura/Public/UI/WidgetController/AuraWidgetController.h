@@ -1,5 +1,4 @@
 // Copyright Druid Mechanics
-// A widget controller interacts with and sets 4 variables/classes - Player Controller, Player State, Ability System Component, and Attribute Set
 
 #pragma once
 
@@ -7,7 +6,6 @@
 #include "UObject/NoExportTypes.h"
 #include "AuraWidgetController.generated.h"
 
-// Forward Declarations
 class UAbilitySystemComponent;
 class UAttributeSet;
 
@@ -35,7 +33,7 @@ struct FWidgetControllerParams
 };
 
 /**
- * 
+ * A widget controller interacts with and sets 4 variables/classes - Player Controller, Player State, Ability System Component, and Attribute Set
  */
 UCLASS()
 class AURA_API UAuraWidgetController : public UObject
@@ -44,12 +42,11 @@ class AURA_API UAuraWidgetController : public UObject
 	
 public:
 	UFUNCTION(BlueprintCallable)
-	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
+	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams); // Initialises the values of the WidgetControllersParams struct we made above
 	virtual void BroadcastInitialValues();
 	virtual void BindCallbacksToDependencies();
 
 protected:
-
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
 	TObjectPtr<APlayerController> PlayerController;
 	

@@ -21,6 +21,5 @@ public:
 	virtual void OnRep_PlayerState() override;
 
 private:
-	virtual void InitAbilityActorInfo() override; // So we don't have to copy-paste the contents of the function for client and server
-
+	virtual void InitAbilityActorInfo() override;
 };

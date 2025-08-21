@@ -1,5 +1,4 @@
-// Copyright Druid Mechanics
-// Dependencies will be one-way only, from UserWidget to WidgetController
+// Copyright Druid Mechanics 
 
 #pragma once
 
@@ -8,7 +7,7 @@
 #include "AuraUserWidget.generated.h"
 
 /**
- * 
+ * Dependencies will be one-way only, from UserWidget to WidgetController
  */
 UCLASS()
 class AURA_API UAuraUserWidget : public UUserWidget
@@ -24,6 +23,6 @@ public:
 
 protected:
 	UFUNCTION(BlueprintImplementableEvent)
-	void WidgetControllerSet(); // When we set the widget controller for a given widget, call this function to implement anything we want in the blueprint that we would like to do in response to the widget controller set
+	void WidgetControllerSet(); // When we set the widget controller for a given widget, call this function to implement everything in the blueprint that we want to do in response to the widget controller set
 
 };

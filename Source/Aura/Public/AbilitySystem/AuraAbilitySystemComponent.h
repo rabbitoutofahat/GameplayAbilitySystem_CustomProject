@@ -17,7 +17,7 @@ class AURA_API UAuraAbilitySystemComponent : public UAbilitySystemComponent
 	GENERATED_BODY()
 
 public:
-	void AbilityActorInfoSet(); // Allows Aura ASC bind to delegates
+	void AbilityActorInfoSet(); // Allows Aura ASC to bind to delegates
 
 	FEffectAssetTags EffectAssetTags;
 

@@ -7,11 +7,12 @@
 #include "AbilitySystemInterface.h"
 #include "AuraCharacterBase.generated.h"
 
-// Forward Declarations
 class UAbilitySystemComponent;
 class UAttributeSet;
 
-
+/**
+ *
+ */
 UCLASS(Abstract) // Abstract prevents this class base from being dragged into the level
 class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInterface
 {
@@ -20,22 +21,26 @@ class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInte
 public:
 	AAuraCharacterBase();
 	// Pointers for our ability system component and attribute set after implementing AbilitySystemInterface above, helps everything in the system interact with eachother cleanly
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override; // Taken from AbilitySystemInterface.h
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 protected:
 	virtual void BeginPlay() override;
 
+	// TObjectPtr is a pointer wrapper that, unlike raw pointers, lets you track how often the pointer is accessed/dereferenced and ensures assets are not loaded until needed or used (aka lazy loading), among other things
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
-    //These 2 properties are constructed on both AuraEnemy.cpp and AuraPlayerState.cpp
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
-	virtual void InitAbilityActorInfo();
-
+	/*
+	* Where to call InitAbilityActorInfo for player controlled characters:
+	* 1. ASC lives on the pawn -> PossessedBy() on the pawn on the server, AcknowledgePossesion() on the player controller on the client
+	* 2. ASC lives on the player state -> PossessedBy() on the pawn on the server, OnRep_PlayerState() (i.e., via rep notify) on the player controller on the client
+	*/
+	virtual void InitAbilityActorInfo(); // Must be done after possession (the controller has been set for the Pawn)
 };

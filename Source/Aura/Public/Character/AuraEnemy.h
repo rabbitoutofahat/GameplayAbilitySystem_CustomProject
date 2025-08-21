@@ -7,7 +7,6 @@
 #include "Interaction/EnemyInterface.h"
 #include "AuraEnemy.generated.h"
 
-
 /**
  * 
  */
@@ -27,6 +26,10 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void InitAbilityActorInfo() override;
 
+	/*
+     * Where to call InitAbilityActorInfo for AI-controlled characters:
+	 * 1. ASC lives on the pawn -> BeginPlay() on the pawn on the server and the client
+     */ 
+	virtual void InitAbilityActorInfo() override;
 };

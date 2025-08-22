@@ -54,5 +54,5 @@ void AAuraCharacter::InitAbilityActorInfo()
 		}
 	}
 
-	InitialisePrimaryAttributes(); // We want to initialise primary attributes by applying it as a gameplay effect to the character at the beginning of the game
+	InitialiseDefaultAttributes(); // We want to initialise default attributes by applying it as a gameplay effect to the character at the beginning of the game
 }

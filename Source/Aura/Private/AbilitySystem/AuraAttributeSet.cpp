@@ -11,9 +11,7 @@ UAuraAttributeSet::UAuraAttributeSet()
 {
 	// Init sets both the base and current attribute values (note that an attribute's base value is not necessarily the same as their "max" value)
 	InitHealth(50.f);
-	InitMaxHealth(100.f);
 	InitMana(20.f);
-	InitMaxMana(50.f);
 }
 
 void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

@@ -19,10 +19,14 @@ class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
 public:
 	AAuraEnemy();
 
-	/** Enemy Interface */
+	/* Enemy Interface */
 	virtual void HighlightActor() override; 
 	virtual void UnHighlightActor() override;
-	/** end Enemy Interface */
+	/* end Enemy Interface */
+
+	/* Combat Interface */
+	virtual int32 GetPlayerLevel() override;
+	/* end Combat Interface */
 
 protected:
 	virtual void BeginPlay() override;
@@ -32,4 +36,7 @@ protected:
 	 * 1. ASC lives on the pawn -> BeginPlay() on the pawn on the server and the client
      */ 
 	virtual void InitAbilityActorInfo() override;
+ 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
+	int32 Level = 1;
 };

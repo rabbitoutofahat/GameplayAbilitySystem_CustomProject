@@ -4,17 +4,28 @@
 #include "UI/HUD/AuraHUD.h"
 #include "UI/Widget/AuraUserWidget.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
+#include "UI/WidgetController/AttributeMenuWidgetController.h"
+
+template<typename T>
+T* AAuraHUD::GetWidgetController(T* WidgetController, TSubclassOf<T> WidgetControllerClass, const FWidgetControllerParams& WCParams)
+{
+	if (WidgetController == nullptr) // Will construct the overlay widget controller the first time the function is called, and return it all subsequent times
+	{
+		WidgetController = NewObject<T>(this, WidgetControllerClass);
+		WidgetController->SetWidgetControllerParams(WCParams); // Key attributes like health, mana, etc, are set
+	    WidgetController->BindCallbacksToDependencies(); // When attributes or other dependencies are changed, those changes are broadcast
+	}
+	return WidgetController;
+}
 
 UOverlayWidgetController* AAuraHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
 {
-	if (OverlayWidgetController == nullptr) // Will construct the overlay widget controller the first time the function is called, and return it all subsequent times
-	{
-		OverlayWidgetController = NewObject<UOverlayWidgetController>(this, OverlayWidgetControllerClass);
-		OverlayWidgetController->SetWidgetControllerParams(WCParams); // Key attributes like health, mana, etc, are set
-		OverlayWidgetController->BindCallbacksToDependencies(); // When attributes or other dependencies are changed, those changes are broadcast
-		return OverlayWidgetController;
-	}
-	return OverlayWidgetController;
+	return GetWidgetController<UOverlayWidgetController>(OverlayWidgetController, OverlayWidgetControllerClass, WCParams);;
+}
+
+UAttributeMenuWidgetController* AAuraHUD::GetAttributeMenuWidgetController(const FWidgetControllerParams& WCParams)
+{
+	return GetWidgetController<UAttributeMenuWidgetController>(AttributeMenuWidgetController, AttributeMenuWidgetControllerClass, WCParams);
 }
 
 void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
@@ -26,7 +37,7 @@ void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySyst
 	OverlayWidget = Cast<UAuraUserWidget>(Widget);
 	
 	const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS);
-	UOverlayWidgetController* WidgetController = GetOverlayWidgetController(WidgetControllerParams);
+	UOverlayWidgetController* WidgetController = GetWidgetController<UOverlayWidgetController>(OverlayWidgetController, OverlayWidgetControllerClass, WidgetControllerParams);
 
 	OverlayWidget->SetWidgetController(WidgetController);
 	WidgetController->BroadcastInitialValues(); // As long as we're setting the widget controller and binding the blueprint events to it, then we can call BroadcastInitialValues

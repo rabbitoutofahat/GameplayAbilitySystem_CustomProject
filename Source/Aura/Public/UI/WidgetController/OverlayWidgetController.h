@@ -7,11 +7,14 @@
 #include "GameplayTagContainer.h" // For FGameplayTag MessageTag = FGameplayTag(); to work
 #include "OverlayWidgetController.generated.h"
 
-struct FOnAttributeChangeData;
 class UAuraUserWidget;
+struct FOnAttributeChangeData;
 
+/**
+ * A data table structure we can use for our data table blueprint in the UE editor; the below properties act as columns
+ */
 USTRUCT(BlueprintType)
-struct FUIWidgetRow : public FTableRowBase // Creates a data table structure we can use for our data table blueprint in the UE editor; the below properties act as columns
+struct FUIWidgetRow : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -28,12 +31,11 @@ struct FUIWidgetRow : public FTableRowBase // Creates a data table structure we 
 	UTexture2D* Image = nullptr;
 };
 
-/*
-* Dynamic - ability to assign events in UE blueprints, Multicast - multiple blueprint widgets may want to bind to this delegate.
-* 'Signature' specifies the delegate type, and is capable of broadcasting a certain data type, with a given name.
-* For example, We have a signature of type FMessageWidgetRowSignature that can broadcast a value of type FUIWidgetRow which we call Row. 
-* We define a member variable with the signature type, called MessageWidgetRowDelegate, which we can use to broadcast FUIWidgetRows - MessageWidgetRowDelegate.Broadcast(Row).
-*/
+
+// Dynamic - ability to assign events in UE blueprints, Multicast - multiple blueprint widgets may want to bind to this delegate.
+// 'Signature' specifies the delegate type, and is capable of broadcasting a certain data type, with a given name.
+// For example, We have a signature of type FMessageWidgetRowSignature that can broadcast a value of type FUIWidgetRow which we call Row. 
+// We define a member variable with the signature type, called MessageWidgetRowDelegate, which we can use to broadcast FUIWidgetRows - MessageWidgetRowDelegate.Broadcast(Row).
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue); 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
 
@@ -71,15 +73,12 @@ protected:
 
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
-
 };
 
 template<typename T>
 inline T* UOverlayWidgetController::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
 {
-	/*
-	* Kind of an ugly line so we refactor into GetDataTableRowByTag() instead.
-	* Needs a context string but we don't actually need one so pass in an empty text string.
-	*/
+	// Kind of an ugly line so we refactor into GetDataTableRowByTag() instead.
+	// Needs a context string but we don't actually need one so pass in an empty text string.
 	return DataTable->FindRow<T>(Tag.GetTagName(), TEXT("")); 
 }

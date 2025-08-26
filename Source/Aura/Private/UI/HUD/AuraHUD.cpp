@@ -7,7 +7,7 @@
 #include "UI/WidgetController/AttributeMenuWidgetController.h"
 
 template<typename T>
-T* AAuraHUD::GetWidgetController(T* WidgetController, TSubclassOf<T> WidgetControllerClass, const FWidgetControllerParams& WCParams)
+T* AAuraHUD::GetWidgetController(TObjectPtr<T>& WidgetController, TSubclassOf<T> WidgetControllerClass, const FWidgetControllerParams& WCParams)
 {
 	if (WidgetController == nullptr) // Will construct the overlay widget controller the first time the function is called, and return it all subsequent times
 	{

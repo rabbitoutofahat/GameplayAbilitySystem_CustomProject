@@ -23,7 +23,7 @@ class AURA_API AAuraHUD : public AHUD
 
 public:
 	template<typename T>
-	T* GetWidgetController(T* WidgetController, TSubclassOf<T> WidgetControllerClass, const FWidgetControllerParams& WCParams);
+	T* GetWidgetController(TObjectPtr<T>& WidgetController, TSubclassOf<T> WidgetControllerClass, const FWidgetControllerParams& WCParams);
 	
 	// Create public getters for each type of widget controller so the blueprint-exposed properties can remain private
 	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);

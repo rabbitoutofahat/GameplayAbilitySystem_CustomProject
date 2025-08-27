@@ -98,7 +98,6 @@ public:
 	/*
     * Primary Attributes
     */
-
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Strength, Category = "Primary Attributes")
 	FGameplayAttributeData Strength;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Strength);
@@ -130,7 +129,6 @@ public:
 	/*
      * Secondary Attributes
      */
-
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Armour, Category = "Secondary Attributes")
 	FGameplayAttributeData Armour;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Armour);
@@ -204,7 +202,6 @@ public:
 	/*
 	* Vital Attributes
 	*/
-
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Vital Attributes") // Whenever an attribute is replicated down to the client, the client gets a rep notify, in this case called "OnRep_Health"
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Health);
@@ -218,7 +215,6 @@ public:
 
 	UFUNCTION()
 	void OnRep_Mana(const FGameplayAttributeData& OldMana) const;
-
 
 private:
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const; // Reference just renames FEffectProperties to Props in the declaration?

@@ -8,7 +8,7 @@
 /*
  * AuraGameplayTags
  * 
- * Singleton (only one in the whole project) containing native Gameplay Tags
+ * Singleton (only one instance in the whole project) containing native Gameplay Tags
  */
 struct FAuraGameplayTags
 {

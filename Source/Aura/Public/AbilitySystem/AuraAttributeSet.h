@@ -49,6 +49,23 @@ struct FEffectProperties
 
 };
 
+/*
+* TBaseStaticDelegateInstance is a template function delegate that binds a function pointer which takes 0 arguments but returns a value type which we define as the first template argument. 
+* To extend delegates, we implement a policy struct and pass it as the second template argument (see default policy definition).
+* In this case, we've wrapped TBaseStaticDelegateInstance in a true template function pointer capable of storing the address of a function of any function signature that we choose.
+*   
+*   TStaticFuncPtr<float(int32, float, int32)> RandomFunctionPointer;
+*	static float RandomFunction(int32 I, float F, int32 I2); { return 0.f; }
+*
+*	(In .cpp)
+*   RandomFunctionPointer = RandomFunction();
+*   float F = RandomFunctionPointer(0, 0.f, 0);
+* 
+*  typedef is specific to the FGameplayAttribute() signature, but TStaticFuncPtr is generic to any signature chosen.
+*/
+template<class T>
+using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
+
 /**
  * 
  */
@@ -71,6 +88,12 @@ public:
 	// Method for clamping
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+
+	/*
+	* By mapping our Gameplay Tags to static function pointers of type FGameplayAttributes, we can hold static getter functions for each Gameplay Attribute in these function 
+	* pointers and skip the usual process of declaring our own delegate signature and binding functions to it.
+	*/
+	TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributes;
 
 	/*
     * Primary Attributes

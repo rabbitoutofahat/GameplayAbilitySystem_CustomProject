@@ -13,9 +13,14 @@ void UAttributeMenuWidgetController::BroadcastInitialValues()
 {
 	UAuraAttributeSet* AS = CastChecked<UAuraAttributeSet>(AttributeSet);
 	check(AttributeInfo);
-	FAuraAttributeInfo Info = AttributeInfo->FindAttributeInfoForTag(FAuraGameplayTags::Get().Attributes_Primary_Strength);
-	Info.AttributeValue = AS->GetStrength();
-	AttributeInfoDelegate.Broadcast(Info); // Note that our widgets must bind to this delegate broadcast before we broadcast initial values
+
+	for (auto& Pair : AS->TagsToAttributes) // Key = Tag, Value = Attribute Signature Delegate
+	{
+		FAuraAttributeInfo Info = AttributeInfo->FindAttributeInfoForTag(Pair.Key);
+		FGameplayAttribute Attr = Pair.Value(); // Call the function using the function pointer, which returns the matching attribute (see AuraAttributeSet.h)
+		Info.AttributeValue = Attr.GetNumericValue(AS); // GetNumericValue() is a static function so we need to specify which attribute set the attribute is in
+		AttributeInfoDelegate.Broadcast(Info);
+	}
 }
 
 void UAttributeMenuWidgetController::BindCallbacksToDependencies()

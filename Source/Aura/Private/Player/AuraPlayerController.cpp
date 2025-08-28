@@ -37,10 +37,7 @@ void AAuraPlayerController::AutoRun()
 		ControlledPawn->AddMovementInput(Direction); // Move controlled pawn towards closest spline location
 
 		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
-		if (DistanceToDestination <= AutoRunAcceptanceRadius)
-		{
-			bAutoRunning = false;
-		}
+		if (DistanceToDestination <= AutoRunAcceptanceRadius) bAutoRunning = false;
 	}
 }
 
@@ -91,6 +88,7 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 	APawn* ControlledPawn = GetPawn<APawn>();
 	if (ControlledPawn)
 	{
+		bAutoRunning = false;
 		ControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y);
 		ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X);
 	}
@@ -105,54 +103,13 @@ void AAuraPlayerController::CursorTrace()
 	LastActor = ThisActor;
 	ThisActor = CursorHit.GetActor();
 
-	/*
-	* Line trace from cursor. There are several scenarios:
-	* A. LastActor is null and ThisActor is null
-	*    - Do nothing
-	* B. LastActor is null but ThisActor is valid
-	*    - Highlight ThisActor
-	* C. LastActor is valid and ThisActor is null
-	*    - UnHighlight LastActor
-	* D. Both actors are valid, but LastActor != ThisActor
-	*    - UnHighlight LastActor, and Highlight ThisActor
-	* E. Both actors are valid, and are the same actor
-	*    - Do nothing
-	*/
-
-	if (LastActor == nullptr)
+	if (LastActor != ThisActor) // If the actors are different, we need to unhighlight the last actor and highlight the new one
 	{
-		if (ThisActor != nullptr)
-		{
-			// Case B
-			ThisActor->HighlightActor();
-		}
-		else
-		{
-			// Case A - do nothing
-		}
-	}
-	else // LastActor is valid
-	{
-		if (ThisActor == nullptr)
-		{
-			// Case C
-			LastActor->UnHighlightActor();
-		}
-		else // Both actors are valid
-		{
-			if (LastActor != ThisActor)
-			{
-				// Case D
-				LastActor->UnHighlightActor();
-				ThisActor->HighlightActor();
-			}
-			else
-			{
-				// Case E - do nothing
-			}
-		}
+		if (LastActor) LastActor->UnHighlightActor();
+		if (ThisActor) ThisActor->HighlightActor();
 	}
 }
+
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
@@ -167,19 +124,13 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
 	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB)) // If we're not releasing LMB -> activate ability on release
 	{
-		if (GetASC())
-		{
-			GetASC()->AbilityInputTagReleased(InputTag);
-		}
+		if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
 		return;
 	}
 
 	if (bTargeting) // If we are releasing LMB and we're targeting (hovering over an enemy) -> activate ability on LMB release
 	{
-		if (GetASC())
-		{
-			GetASC()->AbilityInputTagReleased(InputTag);
-		}
+		if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
 	}
 	else // If we are releasing LMB and not targeting -> auto run to LMB release (hit) location
 	{
@@ -200,8 +151,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 					const bool bNavLocationFound = NavSys->ProjectPointToNavigation(CachedDestination, ProjectedPoint, LargeExtent, &NavAgentProps);
 					if (bNavLocationFound)
 					{
-						CachedDestination = ProjectedPoint;
-						NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination);
+						NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), ProjectedPoint);
 					}
 				}
 
@@ -226,19 +176,13 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
 	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB)) // If we're not pressing the LMB down -> activate ability on held
 	{
-		if (GetASC())
-		{
-			GetASC()->AbilityInputTagHeld(InputTag);
-		}
+		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 		return;
 	}
 
 	if (bTargeting) // If we are pressing the LMB down and we're targeting (hovering over an enemy) -> activate ability on LMB held
 	{
-		if (GetASC())
-		{
-			GetASC()->AbilityInputTagHeld(InputTag);
-		}
+		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 	}
 	else // If we are pressing the LMB and not targeting -> click to move behaviour
 	{

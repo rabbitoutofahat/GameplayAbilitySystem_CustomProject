@@ -47,7 +47,6 @@ private:
 	// TScriptInterface is a special wrapper used for storing member variables in an interface and removes the need to check whether the actor implements the interface (using a cast)
 	TScriptInterface<IEnemyInterface> LastActor; 
 	TScriptInterface<IEnemyInterface> ThisActor;
-
 	FHitResult CursorHit;
 
 	void AbilityInputTagPressed(FGameplayTag InputTag);

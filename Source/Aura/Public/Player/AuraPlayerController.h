@@ -14,6 +14,7 @@ class IEnemyInterface;
 class UAuraInputConfig;
 class UAuraAbilitySystemComponent;
 class USplineComponent;
+class UNavigationSystemV1;
 
 /**
  * 
@@ -26,6 +27,7 @@ class AURA_API AAuraPlayerController : public APlayerController
 public:
 	AAuraPlayerController();
 	virtual void PlayerTick(float DeltaTime) override;
+	void AutoRun();
 
 protected:
 	virtual void BeginPlay() override;
@@ -45,6 +47,8 @@ private:
 	// TScriptInterface is a special wrapper used for storing member variables in an interface and removes the need to check whether the actor implements the interface (using a cast)
 	TScriptInterface<IEnemyInterface> LastActor; 
 	TScriptInterface<IEnemyInterface> ThisActor;
+
+	FHitResult CursorHit;
 
 	void AbilityInputTagPressed(FGameplayTag InputTag);
 	void AbilityInputTagReleased(FGameplayTag InputTag);
@@ -69,4 +73,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USplineComponent> Spline;
+
+	UPROPERTY()
+	TObjectPtr<UNavigationSystemV1> NavSys;
 };

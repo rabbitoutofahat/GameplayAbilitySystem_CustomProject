@@ -24,6 +24,24 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 
 	CursorTrace();
+	AutoRun();
+}
+
+void AAuraPlayerController::AutoRun()
+{
+	if (!bAutoRunning) return;
+	if (APawn* ControlledPawn = GetPawn())
+	{
+		const FVector LocationOnSpline = Spline->FindLocationClosestToWorldLocation(ControlledPawn->GetActorLocation(), ESplineCoordinateSpace::World); // Location on spline closest to the controlled pawn
+		const FVector Direction = Spline->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World);
+		ControlledPawn->AddMovementInput(Direction); // Move controlled pawn towards closest spline location
+
+		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
+		if (DistanceToDestination <= AutoRunAcceptanceRadius)
+		{
+			bAutoRunning = false;
+		}
+	}
 }
 
 void AAuraPlayerController::BeginPlay()
@@ -39,6 +57,7 @@ void AAuraPlayerController::BeginPlay()
 	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 	InputModeData.SetHideCursorDuringCapture(false); // As soon as cursor is captured in viewport, we will not hide the cursor
 	SetInputMode(InputModeData);
+	NavSys = FNavigationSystem::GetCurrent<UNavigationSystemV1>(GetWorld()); // Get the navigation system for the current world
 }
 
 void AAuraPlayerController::SetupInputComponent()
@@ -79,7 +98,6 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 
 void AAuraPlayerController::CursorTrace()
 {
-	FHitResult CursorHit;
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
 	if (!CursorHit.bBlockingHit) return;
 
@@ -170,13 +188,33 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		{
 			if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination))
 			{
-				Spline->ClearSplinePoints();
-				for (const FVector& PointLoc : NavPath->PathPoints)
+				if (NavPath->PathPoints.Num() == 0)
 				{
-					Spline->AddSplinePoint(PointLoc, ESplineCoordinateSpace::World);
-					DrawDebugSphere(GetWorld(), PointLoc, 8.f, 8, FColor::Green, false, 5.f);
+					/*
+					* Path failed - either outside nav mesh bounds volume or inside but not on the nav mesh
+					* Create a larger projection extent and try to project the point to the nav mesh which we can path to instead
+					*/
+					FNavLocation ProjectedPoint;
+					const FNavAgentProperties& NavAgentProps = ControlledPawn->GetNavAgentPropertiesRef();
+					const FVector LargeExtent(400.f, 400.f, 250.f); // Extended version of FindPathToLocationSynchronously()'s default Query Extent (50.f, 50.f, 250.f)
+					const bool bNavLocationFound = NavSys->ProjectPointToNavigation(CachedDestination, ProjectedPoint, LargeExtent, &NavAgentProps);
+					if (bNavLocationFound)
+					{
+						CachedDestination = ProjectedPoint;
+						NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination);
+					}
 				}
-				bAutoRunning = true;
+
+				if (NavPath && NavPath->PathPoints.Num() > 0)
+				{
+					Spline->ClearSplinePoints();
+					for (const FVector& PointLoc : NavPath->PathPoints)
+					{
+						Spline->AddSplinePoint(PointLoc, ESplineCoordinateSpace::World);
+					}
+					CachedDestination = NavPath->PathPoints.Last();
+					bAutoRunning = true;
+				}
 			}
 		}
 		FollowTime = 0.f;
@@ -205,12 +243,7 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 	else // If we are pressing the LMB and not targeting -> click to move behaviour
 	{
 		FollowTime += GetWorld()->GetDeltaSeconds();
-
-		FHitResult Hit;
-		if (GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, Hit))
-		{
-			CachedDestination = Hit.ImpactPoint;
-		}
+		if (CursorHit.bBlockingHit) CachedDestination = CursorHit.ImpactPoint;
 
 		if (APawn* ControlledPawn = GetPawn())
 		{

@@ -10,8 +10,12 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+}
+
+void UAuraProjectileSpell::SpawnProjectile()
+{
 	// Want to spawn the projectile on the server
-	const bool bIsServer = HasAuthority(&ActivationInfo);
+	bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
 
 	ICombatInterface* CombatInterface = Cast<ICombatInterface>(GetAvatarActorFromActorInfo());

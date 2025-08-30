@@ -3,6 +3,7 @@
 
 #include "AuraAssetManager.h"
 #include "AuraGameplayTags.h"
+#include "AbilitySystemGlobals.h"
 
 UAuraAssetManager& UAuraAssetManager::Get()
 {
@@ -15,4 +16,5 @@ void UAuraAssetManager::StartInitialLoading()
 {
 	Super::StartInitialLoading();
 	FAuraGameplayTags::InitialiseNativeGameplayTags();
+	UAbilitySystemGlobals::Get().InitGlobalData(); // Does a lot of things, in particular it initialises the target data script struct cache for FAbilityTargetData
 }

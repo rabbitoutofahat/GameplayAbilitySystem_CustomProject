@@ -27,4 +27,5 @@ private:
 	virtual void Activate() override; // Automatically called when an ability task is started
 
 	void SendMouseCursorData(); // Call this function if we are locally controlled
+	void OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& DataHandle, FGameplayTag ActivationTag); // Call this function if we are not locally controlled, i.e., the data handle needs to be replicated from the owning client to the server
 };

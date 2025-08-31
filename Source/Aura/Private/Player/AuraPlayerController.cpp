@@ -63,6 +63,8 @@ void AAuraPlayerController::SetupInputComponent()
 
 	UAuraInputComponent* AuraInputComponent = CastChecked<UAuraInputComponent>(InputComponent); // Will purposefully crash if this cast fails
 	AuraInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAuraPlayerController::Move);
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::ShiftPressed);
+	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased);
 	AuraInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 }
 
@@ -110,7 +112,6 @@ void AAuraPlayerController::CursorTrace()
 	}
 }
 
-
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
 	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
@@ -128,11 +129,9 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		return;
 	}
 
-	if (bTargeting) // If we are releasing LMB and we're targeting (hovering over an enemy) -> activate ability on LMB release
-	{
-		if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
-	}
-	else // If we are releasing LMB and not targeting -> auto run to LMB release (hit) location
+	if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
+	// We're telling the ASC that the input tag has been released regardless of whether we're targeting or not, but it's only if we're not targeting and not holding down the shift key that we might want to auto run
+	if (!bTargeting && !bShiftKeyDown)
 	{
 		APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn)
@@ -180,7 +179,7 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 		return;
 	}
 
-	if (bTargeting) // If we are pressing the LMB down and we're targeting (hovering over an enemy) -> activate ability on LMB held
+	if (bTargeting || bShiftKeyDown) // If we are pressing the LMB down and, we're targeting (hovering over an enemy) OR we're not targeting but holding down the shift key -> activate ability on LMB held
 	{
 		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 	}

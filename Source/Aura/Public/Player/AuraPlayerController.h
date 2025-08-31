@@ -43,6 +43,14 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> ShiftAction;
+
+	// If we want to activate an ability standing still without targeting an enemy, we can hold down the shift key and click somewhere on the ground
+	void ShiftPressed() { bShiftKeyDown = true; } 
+	void ShiftReleased() { bShiftKeyDown = false; }
+	bool bShiftKeyDown = false;
 	
 	// TScriptInterface is a special wrapper used for storing member variables in an interface and removes the need to check whether the actor implements the interface (using a cast)
 	TScriptInterface<IEnemyInterface> LastActor; 

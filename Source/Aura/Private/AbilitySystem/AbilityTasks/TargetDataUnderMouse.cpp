@@ -55,7 +55,7 @@ void UTargetDataUnderMouse::SendMouseCursorData()
 
 void UTargetDataUnderMouse::OnTargetDataReplicatedCallback(const FGameplayAbilityTargetDataHandle& DataHandle, FGameplayTag ActivationTag)
 {
-	// Tells the ability system component that we have received the target data, so it can be cleaned up (in the replicated data cache in the Ability Target Data Map)
+	// Tells the ability system component that the server has received the target data, so it can be cleaned up (in the replicated data cache in the Ability Target Data Map)
 	AbilitySystemComponent->ConsumeClientReplicatedTargetData(GetAbilitySpecHandle(), GetActivationPredictionKey());
 	if (ShouldBroadcastAbilityTaskDelegates())
 	{

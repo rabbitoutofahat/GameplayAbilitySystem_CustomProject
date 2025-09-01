@@ -8,6 +8,8 @@
 #include "NiagaraFunctionLibrary.h"
 #include "Components/AudioComponent.h"
 #include "Aura/Aura.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 
 AAuraProjectile::AAuraProjectile()
 {
@@ -43,11 +45,11 @@ void AAuraProjectile::Destroyed()
 	if (!bHit && !HasAuthority())
 	{
 		// If Destroy() replicates before the client's OnSphereOverlap(), the client won't call Destroy(), so we need to play the effects here as well
-		PlayImpactSounds();
+		PlayImpactEffects();
 	}
 }
 
-void AAuraProjectile::PlayImpactSounds()
+void AAuraProjectile::PlayImpactEffects()
 {
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
@@ -56,10 +58,16 @@ void AAuraProjectile::PlayImpactSounds()
 
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	PlayImpactSounds();
+	PlayImpactEffects();
 
 	if (HasAuthority())
 	{
+		// Only need to apply a gameplay effect on the server as it will change an attribute, and that attribute change will replicate to clients automatically
+		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
+		{
+			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+		}
+
 		Destroy();
 	}
 	else

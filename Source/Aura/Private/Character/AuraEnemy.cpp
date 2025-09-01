@@ -46,4 +46,5 @@ void AAuraEnemy::InitAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this); // AI-controlled actors like AuraEnemy are both the owner actor and the avatar actor.
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+	InitialiseDefaultAttributes();
 }

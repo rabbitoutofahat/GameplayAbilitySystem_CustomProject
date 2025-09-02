@@ -220,7 +220,7 @@ public:
 	* Meta Attributes (not replicated, we set and process them on the server and then change any affected attributes based on those calculations)
 	*/
 	UPROPERTY(BluePrintReadOnly, Category = "Meta Attributes")
-	FGameplayAttributeData IncomingDamage;
+	FGameplayAttributeData IncomingDamage; 
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingDamage);
 
 private:

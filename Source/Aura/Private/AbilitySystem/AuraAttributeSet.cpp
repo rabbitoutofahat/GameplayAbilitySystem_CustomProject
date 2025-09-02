@@ -106,6 +106,11 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	}
 	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
+		/*
+	    * Instead of having our gameplay effects change attributes directly, we pass their modifier magnitude into the IncomingDamage meta attribute, where we can 
+		* perform any calculations based on primary and secondary attributes (i.e. the ability's damage may be increased by the source actor's strength or intelligence, 
+		* and/or reduced by the target actor's resilience or block chance), before subtracting the final damage number from the target's health.
+	    */
 		const float LocalIncomingDamage = GetIncomingDamage();
 		SetIncomingDamage(0.f); // Reset incoming damage to 0 after we've taken it into account in its local counterpart
 		if (LocalIncomingDamage > 0.f)

@@ -216,6 +216,13 @@ public:
 	UFUNCTION()
 	void OnRep_Mana(const FGameplayAttributeData& OldMana) const;
 
+	/*
+	* Meta Attributes (not replicated, we set and process them on the server and then change any affected attributes based on those calculations)
+	*/
+	UPROPERTY(BluePrintReadOnly, Category = "Meta Attributes")
+	FGameplayAttributeData IncomingDamage;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingDamage);
+
 private:
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const; // Reference just renames FEffectProperties to Props in the declaration?
 };

@@ -26,7 +26,7 @@ struct FCharacterClassDefaultInfo
 };
 
 /**
- * 
+ * Attribute info for all of our enemy classes, which is stored in Curve Tables and then applied via Gameplay Effect Specs in AuraGameModeBase using the AuraAbilitySystemLibrary
  */
 UCLASS()
 class AURA_API UCharacterClassInfo : public UDataAsset
@@ -44,5 +44,4 @@ public:
 	TSubclassOf<UGameplayEffect> VitalAttributes;
 
 	FCharacterClassDefaultInfo GetClassDefaultInfo(ECharacterClass CharacterClass) const;
-
 };

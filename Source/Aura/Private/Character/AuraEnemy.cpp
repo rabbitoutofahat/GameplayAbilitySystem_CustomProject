@@ -7,6 +7,7 @@
 #include "Aura/Aura.h"
 #include "Components/WidgetComponent.h"
 #include "UI/Widget/AuraUserWidget.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 
 AAuraEnemy::AAuraEnemy()
 {
@@ -52,27 +53,34 @@ void AAuraEnemy::BeginPlay()
 		AuraUserWidget->SetWidgetController(this); // The widget controller is a UObject, meaning anything derived from UObject can be a widget controller
 	}
 
-	// Bind lambdas to broadcast health changes
 	if (const UAuraAttributeSet* AuraAS = Cast<UAuraAttributeSet>(AttributeSet))
 	{
-		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAS->GetHealthAttribute()).AddLambda(
-			[this](const FOnAttributeChangeData& Data)
-			{
-				OnHealthChanged.Broadcast(Data.NewValue);
-			}
-		);
-
-		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAS->GetMaxHealthAttribute()).AddLambda(
-			[this](const FOnAttributeChangeData& Data)
-			{
-				OnMaxHealthChanged.Broadcast(Data.NewValue);
-			}
-		);
-
-		// Broadcast initial health values
-		OnHealthChanged.Broadcast(AuraAS->GetHealth());
-		OnMaxHealthChanged.Broadcast(AuraAS->GetMaxHealth());
+		BindCallbacksToDependencies(AuraAS);
+		BroadcastInitialValues(AuraAS);
 	}
+}
+
+void AAuraEnemy::BroadcastInitialValues(const UAuraAttributeSet* AuraAS)
+{
+	OnHealthChanged.Broadcast(AuraAS->GetHealth());
+	OnMaxHealthChanged.Broadcast(AuraAS->GetMaxHealth());
+}
+
+void AAuraEnemy::BindCallbacksToDependencies(const UAuraAttributeSet* AuraAS)
+{
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAS->GetHealthAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnHealthChanged.Broadcast(Data.NewValue);
+		}
+	);
+
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAS->GetMaxHealthAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnMaxHealthChanged.Broadcast(Data.NewValue);
+		}
+	);
 }
 
 void AAuraEnemy::InitAbilityActorInfo()
@@ -80,4 +88,9 @@ void AAuraEnemy::InitAbilityActorInfo()
 	AbilitySystemComponent->InitAbilityActorInfo(this, this); // AI-controlled actors like AuraEnemy are both the owner actor and the avatar actor.
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 	InitialiseDefaultAttributes();
+}
+
+void AAuraEnemy::InitialiseDefaultAttributes() const
+{
+	UAuraAbilitySystemLibrary::InitialiseDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
 }

@@ -6,9 +6,11 @@
 #include "Character/AuraCharacterBase.h"
 #include "Interaction/EnemyInterface.h"
 #include "UI/WidgetController/OverlayWidgetController.h" // For using the FOnAttributeChangedSignature delegate
+#include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "AuraEnemy.generated.h"
 
 class UWidgetComponent;
+class UAuraAttributeSet;
 
 /**
  * 
@@ -40,14 +42,21 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	void BroadcastInitialValues(const UAuraAttributeSet* AuraAS);
+	void BindCallbacksToDependencies(const UAuraAttributeSet* AuraAS);
+
 	/*
      * Where to call InitAbilityActorInfo for AI-controlled characters:
 	 * 1. ASC lives on the pawn -> BeginPlay() on the pawn on the server and the client
      */ 
 	virtual void InitAbilityActorInfo() override;
+	virtual void InitialiseDefaultAttributes() const override;
  	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
 	int32 Level = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
+	ECharacterClass CharacterClass = ECharacterClass::Warrior;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;

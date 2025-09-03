@@ -224,5 +224,5 @@ public:
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingDamage);
 
 private:
-	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const; // Reference just renames FEffectProperties to Props in the declaration?
+	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const;
 };

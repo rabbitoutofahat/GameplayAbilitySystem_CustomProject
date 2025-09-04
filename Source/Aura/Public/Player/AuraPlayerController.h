@@ -15,6 +15,7 @@ class UAuraInputConfig;
 class UAuraAbilitySystemComponent;
 class USplineComponent;
 class UNavigationSystemV1;
+class UDamageTextComponent;
 
 /**
  * 
@@ -27,7 +28,9 @@ class AURA_API AAuraPlayerController : public APlayerController
 public:
 	AAuraPlayerController();
 	virtual void PlayerTick(float DeltaTime) override;
-	void AutoRun();
+
+	UFUNCTION(Client, Reliable) // RPC (Remote Procedure Call) to show damage numbers on the client
+	void  ShowDamageNumber(float Damage, ACharacter* TargetCharacter);
 
 protected:
 	virtual void BeginPlay() override;
@@ -83,4 +86,9 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UNavigationSystemV1> NavSys;
+
+	void AutoRun();
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDamageTextComponent> DamageTextComponentClass;
 };

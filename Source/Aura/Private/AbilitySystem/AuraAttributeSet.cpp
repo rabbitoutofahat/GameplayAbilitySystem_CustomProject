@@ -74,7 +74,8 @@ void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 {  
 	/*
 	* Changes to CurrentValue BEFORE the change happens - does not permanently change the modifier, just the value returned from querying the modifier.
-	* Primarily used for clamping. If there are operations made later that recalculate the current value from all modifiers, we'll need to clamp again in PostGameplayEffectExecute().
+	* Primarily used for clamping. If there are operations made later (for example, execution calculations) that recalculate the current value from all modifiers, 
+	* we'll need to clamp again in PostGameplayEffectExecute().
 	*/
 
 	Super::PreAttributeChange(Attribute, NewValue);

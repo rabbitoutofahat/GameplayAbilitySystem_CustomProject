@@ -9,6 +9,7 @@
 struct AuraDamageStatics // Raw struct whose scope is entirely contained within this .cpp file, therefore not prefixed with F
 {
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Armour);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(ArmourPierce);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(BlockChance);
 
 	AuraDamageStatics()
@@ -21,6 +22,7 @@ struct AuraDamageStatics // Raw struct whose scope is entirely contained within 
 		* (B) Whether we want to snapshot the attribute when the gameplay effect spec is created (true) or when it is applied (false)
 		*/
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, Armour, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, ArmourPierce, Source, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, BlockChance, Target, false);
 	}
 };
@@ -34,6 +36,7 @@ static const AuraDamageStatics& DamageStatics() // Function that returns a refer
 UExecCalc_Damage::UExecCalc_Damage()
 {
 	RelevantAttributesToCapture.Add(DamageStatics().ArmourDef);
+	RelevantAttributesToCapture.Add(DamageStatics().ArmourPierceDef);
 	RelevantAttributesToCapture.Add(DamageStatics().BlockChanceDef);
 }
 
@@ -57,12 +60,28 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	// Get Damage Set by Caller Magnitude
 	float Damage = Spec.GetSetByCallerMagnitude(FAuraGameplayTags::Get().Damage);
 
-	// Capture BlockChance on Target, and determine if there was a successful Block. If Block, halve the damage
+	// Capture BlockChance on Target, and determine if there was a successful Block
 	float TargetBlockChance = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvaluationParameters, TargetBlockChance); // Pass captured BlockChance attribute value into our local TargetBlockChance variable
 	TargetBlockChance = FMath::Max<float>(TargetBlockChance, 0.f);
+
+	// Halve the damage if there is a successful block
 	const bool bBlocked = FMath::RandRange(0.f, 100.f) < TargetBlockChance;
 	if (bBlocked) Damage *= 0.5f;
+
+	// Capture Armour on Target and ArmourPierce on Source
+	float TargetArmour = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmourDef, EvaluationParameters, TargetArmour); 
+	TargetArmour = FMath::Max<float>(TargetArmour, 0.f);
+
+	float SourceArmourPierce = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmourPierceDef, EvaluationParameters, SourceArmourPierce);
+	SourceArmourPierce = FMath::Max<float>(SourceArmourPierce, 0.f);
+
+	// ArmourPierce ignores a percentage of the Target's Armour
+	const float EffectiveArmour = TargetArmour *= (100 - SourceArmourPierce) / 100.f;
+	// Armour ignores a percentage of incoming damage
+	Damage *= (100 - EffectiveArmour * 0.4f) / 100.f;
 
 	// Fill out an EvaluatedData struct for how we want to modify our target's attribute(s), then pass it into the execution output
 	const FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);

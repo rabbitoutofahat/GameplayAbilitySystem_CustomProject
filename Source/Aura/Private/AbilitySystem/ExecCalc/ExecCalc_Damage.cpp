@@ -5,6 +5,9 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AuraGameplayTags.h"
+#include "AbilitySystem/Data/CharacterClassInfo.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "Interaction/CombatInterface.h"
 
 struct AuraDamageStatics // Raw struct whose scope is entirely contained within this .cpp file, therefore not prefixed with F
 {
@@ -46,8 +49,13 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	const UAbilitySystemComponent* SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
 	const UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
 
-	const AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
-	const AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
+	AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr; // We cannot make these const if we want to get their player level via the combat interface
+	AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
+
+	ICombatInterface* SourceCombatInterface = Cast<ICombatInterface>(SourceAvatar);
+	ICombatInterface* TargetCombatInterface = Cast<ICombatInterface>(TargetAvatar);
+
+	const UCharacterClassInfo* CharacterClassInfo = UAuraAbilitySystemLibrary::GetCharacterClassInfo(SourceAvatar);
 
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
 
@@ -78,10 +86,15 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmourPierceDef, EvaluationParameters, SourceArmourPierce);
 	SourceArmourPierce = FMath::Max<float>(SourceArmourPierce, 0.f);
 
-	// ArmourPierce ignores a percentage of the Target's Armour
-	const float EffectiveArmour = TargetArmour *= (100 - SourceArmourPierce) / 100.f;
+	FRealCurve* ArmourPierceCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(FName("ArmourPenetration"), FString());
+	const float ArmourPierceCoeff = ArmourPierceCurve->Eval(SourceCombatInterface->GetPlayerLevel());
+    // ArmourPierce ignores a percentage of the Target's Armour
+	const float EffectiveArmour = TargetArmour *= (100 - SourceArmourPierce * ArmourPierceCoeff) / 100.f;
+
+	FRealCurve* EffectiveArmourCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(FName("EffectiveArmour"), FString());
+	const float EffectiveArmourCoeff = EffectiveArmourCurve->Eval(TargetCombatInterface->GetPlayerLevel());
 	// Armour ignores a percentage of incoming damage
-	Damage *= (100 - EffectiveArmour * 0.4f) / 100.f;
+	Damage *= (100 - EffectiveArmour * EffectiveArmourCoeff) / 100.f;
 
 	// Fill out an EvaluatedData struct for how we want to modify our target's attribute(s), then pass it into the execution output
 	const FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);

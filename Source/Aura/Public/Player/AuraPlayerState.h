@@ -13,7 +13,7 @@ class UAbilitySystemComponent;
 class UAttributeSet;
 
 /**
- * 
+ * Acts as the 'Owner' Actor (or in the context of Gameplay Effects, the 'Instigator') for our Aura player character, as this is the owner of the Ability System Component
  */
 UCLASS()
 class AURA_API AAuraPlayerState : public APlayerState, public IAbilitySystemInterface

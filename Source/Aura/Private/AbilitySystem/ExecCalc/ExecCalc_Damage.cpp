@@ -14,6 +14,9 @@ struct AuraDamageStatics // Raw struct whose scope is entirely contained within 
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Armour);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(ArmourPierce);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(BlockChance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(CritChance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(CritRes);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(CritDamage);
 
 	AuraDamageStatics()
 	{
@@ -27,6 +30,9 @@ struct AuraDamageStatics // Raw struct whose scope is entirely contained within 
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, Armour, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, ArmourPierce, Source, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, BlockChance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CritChance, Source, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CritRes, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CritDamage, Source, false);
 	}
 };
 
@@ -41,6 +47,9 @@ UExecCalc_Damage::UExecCalc_Damage()
 	RelevantAttributesToCapture.Add(DamageStatics().ArmourDef);
 	RelevantAttributesToCapture.Add(DamageStatics().ArmourPierceDef);
 	RelevantAttributesToCapture.Add(DamageStatics().BlockChanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().CritChanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().CritResDef);
+	RelevantAttributesToCapture.Add(DamageStatics().CritDamageDef);
 }
 
 void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, 
@@ -95,6 +104,30 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	const float EffectiveArmourCoeff = EffectiveArmourCurve->Eval(TargetCombatInterface->GetPlayerLevel());
 	// Armour ignores a percentage of incoming damage
 	Damage *= (100 - EffectiveArmour * EffectiveArmourCoeff) / 100.f;
+
+	// Capture CritChance on Source, and determine if there was a successful Critical Hit
+	float SourceCritChance = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CritChanceDef, EvaluationParameters, SourceCritChance);
+	SourceCritChance = FMath::Max<float>(SourceCritChance, 0.f);
+
+	// Capture CritResistance on Target
+	float TargetCritRes = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CritResDef, EvaluationParameters, TargetCritRes);
+	TargetCritRes = FMath::Max<float>(TargetCritRes, 0.f);
+
+	FRealCurve* CritResCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(FName("CriticalHitResistance"), FString());
+	const float CritResCoeff = CritResCurve->Eval(TargetCombatInterface->GetPlayerLevel());
+	// Critical Hit Resistance reduces the attacker's Critical Hit Chance 
+	const float EffectiveCritChance = SourceCritChance - TargetCritRes * CritResCoeff;
+
+	// Capture CritDamage on Source
+	float SourceCritDamage = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CritDamageDef, EvaluationParameters, SourceCritDamage);
+	SourceCritDamage = FMath::Max<float>(SourceCritDamage, 0.f);
+
+	// If there is a successful Critical Hit, double the base damage and add the Source's CritDamage
+	const bool bCrit = FMath::RandRange(0.f, 100.f) < EffectiveCritChance;
+	if (bCrit) Damage = Damage * 2.f + SourceCritDamage;
 
 	// Fill out an EvaluatedData struct for how we want to modify our target's attribute(s), then pass it into the execution output
 	const FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);

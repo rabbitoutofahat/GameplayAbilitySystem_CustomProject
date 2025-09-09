@@ -18,11 +18,23 @@ public:
 	// Returns the actual struct used for serialization, subclasses must override this
 	virtual UScriptStruct* GetScriptStruct() const
 	{
-		return FGameplayEffectContext::StaticStruct();
+		return StaticStruct();
+	}
+
+	virtual FAuraGameplayEffectContext* Duplicate() const
+	{
+		FAuraGameplayEffectContext* NewContext = new FAuraGameplayEffectContext();
+		*NewContext = *this;
+		if (GetHitResult())
+		{
+			// Does a deep copy of the hit result
+			NewContext->AddHitResult(*GetHitResult(), true);
+		}
+		return NewContext;
 	}
 
 	/*
-	* Custom serialization required for network communication of ability types, subclasses must override this. When serializing, all the objects and variables in this struct become 'bit arrays' (strings of 1s and 0s). 
+	* Custom serialization required for network replication of ability types, subclasses must override this. When serializing, all the objects and variables in this struct become 'bit arrays' (strings of 1s and 0s). 
 	* A Package Map takes these objects and maps them to and from indices, making it easier to determine where in the bit array one object ends and another begins.
 	* The FArchive struct handles the saving, loading, and storing of serialized data. It overloads the << operator to serialize data into or from the archive.
 	* Seriliazed data / bit arrays are an effective way of storing a series of boolean values, such as our GameplayEffectContext's properties (Instigator, EffectCauser, AbilityCDO, etc), 
@@ -36,4 +48,18 @@ protected:
 
 	UPROPERTY()
 	bool bIsCriticalHit = false;
+};
+
+/*
+* Type traits to cover the custom aspects of a script struct, we need two in particular - one for our NetSerialize() function, and one for copying our GameplayEffectContext struct 
+* via its copy assignment operator Duplicate(). See the full list of type traits in Class.h under TStructOpsTypeTraitsBase2.
+*/
+template<>
+struct TStructOpsTypeTraits<FAuraGameplayEffectContext> : public TStructOpsTypeTraitsBase2<FAuraGameplayEffectContext>
+{
+	enum
+	{
+		WithNetSerializer = true,
+		WithCopy = true // Necessary so that TSharedPtr<FHitResult> Data is copied around
+	};
 };

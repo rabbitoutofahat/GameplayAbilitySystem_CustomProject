@@ -4,7 +4,7 @@
 /*
 * Start with an unsigned 8-bit integer (uint8) called RepBits, Each GameplayEffectContext property is represented by a single bit in the RepBits variable.
 * 
-* 1 << n means "1 shifted left by n bits", so 1 << 0 is 00000001, 1 << 1 is 00000010, 1 << 2 is 00000100, and so on. We compare RepBits with these values using the bitwise OR operator (|)
+* 1 << n means "1 shifted left by n bits", so 1 << 0 is 0000 0001, 1 << 1 is 0000 0010, 1 << 2 is 0000 0100, and so on. We compare RepBits with these values using the bitwise OR operator (|)
 * in a set of if statements to determine which properties to serialize or deserialize. Comparing 2 sets of bits using bitwise OR means that if the bit in the n-th position for either set is 1,
 * the n-th bit in the result will be 1, otherwise it will be 0.
 * 
@@ -16,8 +16,6 @@
 * the corresponding property into the archive.
 */
 
-
-//, which is an unsigned 8-bit integer (uint8).
 bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
 {
 	uint8 RepBits = 0;

@@ -30,7 +30,7 @@ public:
 	virtual void PlayerTick(float DeltaTime) override;
 
 	UFUNCTION(Client, Reliable) // RPC (Remote Procedure Call) to show damage numbers on the client
-	void  ShowDamageNumber(float Damage, ACharacter* TargetCharacter);
+	void ShowDamageNumber(float Damage, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit);
 
 protected:
 	virtual void BeginPlay() override;

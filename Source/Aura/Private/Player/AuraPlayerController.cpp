@@ -29,7 +29,7 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 	AutoRun();
 }
 
-void AAuraPlayerController::ShowDamageNumber_Implementation(float Damage, ACharacter* TargetCharacter)
+void AAuraPlayerController::ShowDamageNumber_Implementation(float Damage, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit)
 {
 	if (IsValid(TargetCharacter) && DamageTextComponentClass) // IsValid checks that the pointer is not null and that the object it points to is not "pending kill" (scheduled for destruction by the UE garbage collector)
 	{
@@ -37,7 +37,7 @@ void AAuraPlayerController::ShowDamageNumber_Implementation(float Damage, AChara
 		DamageText->RegisterComponent(); // We've only created components in the constructor before, which automatically registers them, but here we need to register it manually as it is dynamically created
 		DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 		DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); // Detach from the target character so that it doesn't move with them and can play its own animation
-		DamageText->SetDamageText(Damage);
+		DamageText->SetDamageText(Damage, bBlockedHit, bCriticalHit);
 	}
 }
 

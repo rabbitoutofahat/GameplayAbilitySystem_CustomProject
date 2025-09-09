@@ -67,6 +67,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	const UCharacterClassInfo* CharacterClassInfo = UAuraAbilitySystemLibrary::GetCharacterClassInfo(SourceAvatar);
 
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
+	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
 
 	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
 	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
@@ -84,6 +85,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 
 	// Halve the damage if there is a successful block
 	const bool bBlocked = FMath::RandRange(0.f, 100.f) < TargetBlockChance;
+	UAuraAbilitySystemLibrary::SetIsBlockedHit(EffectContextHandle, bBlocked);
 	if (bBlocked) Damage *= 0.5f;
 
 	// Capture Armour on Target and ArmourPierce on Source
@@ -127,6 +129,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 
 	// If there is a successful Critical Hit, double the base damage and add the Source's CritDamage
 	const bool bCrit = FMath::RandRange(0.f, 100.f) < EffectiveCritChance;
+	UAuraAbilitySystemLibrary::SetIsCriticalHit(EffectContextHandle, bCrit);
 	if (bCrit) Damage = Damage * 2.f + SourceCritDamage;
 
 	// Fill out an EvaluatedData struct for how we want to modify our target's attribute(s), then pass it into the execution output

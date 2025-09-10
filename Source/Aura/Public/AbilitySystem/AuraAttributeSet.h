@@ -200,6 +200,37 @@ public:
 	void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) const;
 
 	/*
+	* Damage Resistances
+	*/
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireRes, Category = "Damage Resistances")
+	FGameplayAttributeData FireRes;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, FireRes);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LightningRes, Category = "Damage Resistances")
+	FGameplayAttributeData LightningRes;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, LightningRes);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ArcaneRes, Category = "Damage Resistances")
+	FGameplayAttributeData ArcaneRes;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, ArcaneRes);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalRes, Category = "Damage Resistances")
+	FGameplayAttributeData PhysicalRes;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, PhysicalRes);
+
+	UFUNCTION()
+	void OnRep_FireRes(const FGameplayAttributeData& OldFireRes) const;
+
+	UFUNCTION()
+	void OnRep_LightningRes(const FGameplayAttributeData& OldLightningRes) const;
+
+	UFUNCTION()
+	void OnRep_ArcaneRes(const FGameplayAttributeData& OldArcaneRes) const;
+
+	UFUNCTION()
+	void OnRep_PhysicalRes(const FGameplayAttributeData& OldPhysicalRes) const;
+
+	/*
 	* Vital Attributes
 	*/
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Vital Attributes") // Whenever an attribute is replicated down to the client, the client gets a rep notify, in this case called "OnRep_Health"

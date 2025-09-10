@@ -62,8 +62,12 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
 		for (auto& Pair : DamageTypes)
 		{
+			/*
+			* Take each damage type tag present in DamageTypes and assign a Damage value based on the associated curve table
+			* For example, FireBolt only has the Damage_Fire tag, so it does [ScaledDamage] Fire damage, 0 Lightning damage, 0 Arcane damage, and 0 Physical damage.
+			*/
 			const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
-			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);
+			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage); 
 		}
 		
 		Projectile->DamageEffectSpecHandle = SpecHandle;

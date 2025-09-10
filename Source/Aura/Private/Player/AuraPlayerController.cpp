@@ -31,7 +31,8 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 
 void AAuraPlayerController::ShowDamageNumber_Implementation(float Damage, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit)
 {
-	if (IsValid(TargetCharacter) && DamageTextComponentClass) // IsValid checks that the pointer is not null and that the object it points to is not "pending kill" (scheduled for destruction by the UE garbage collector)
+	// IsValid checks that the pointer is not null and that the object it points to is not "pending kill" (scheduled for destruction by the UE garbage collector)
+	if (IsValid(TargetCharacter) && DamageTextComponentClass && IsLocalController()) 
 	{
 		UDamageTextComponent* DamageText = NewObject<UDamageTextComponent>(TargetCharacter, DamageTextComponentClass);
 		DamageText->RegisterComponent(); // We've only created components in the constructor before, which automatically registers them, but here we need to register it manually as it is dynamically created

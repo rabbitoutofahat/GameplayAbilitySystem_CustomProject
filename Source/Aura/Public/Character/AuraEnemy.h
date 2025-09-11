@@ -11,6 +11,8 @@
 
 class UWidgetComponent;
 class UAuraAttributeSet;
+class UBehaviorTree;
+class AAuraAIController;
 
 /**
  * 
@@ -23,6 +25,7 @@ class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
 // As soon as we added the pure virtual functions Highlight/UnhighlightActor, this became an abstract class which cannot be instantiated without overriding
 public:
 	AAuraEnemy();
+	virtual void PossessedBy(AController* NewController) override;
 
 	/* Enemy Interface */
 	virtual void HighlightActor() override; 
@@ -73,4 +76,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;
+
+	UPROPERTY(EditAnywhere, Category = "AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+
+	UPROPERTY()
+	TObjectPtr<AAuraAIController> AuraAIController;
 };

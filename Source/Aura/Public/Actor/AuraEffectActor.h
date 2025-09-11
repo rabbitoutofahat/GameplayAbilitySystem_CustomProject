@@ -48,7 +48,10 @@ protected:
 	void OnEndOverlap(AActor* TargetActor);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
-	bool bDestroyOnEffectRemoval = false;
+	bool bDestroyOnEffectApplication = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
+	bool bApplyEffectsToEnemies = false; // Want enemies to ignore certain effect actors, such as potions, and be affected by others, such as fire areas
 
 	// We can make our own gameplay effect blueprints, and then assign them as a gameplay effect class to our effect actors
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")

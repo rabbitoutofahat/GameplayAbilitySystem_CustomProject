@@ -11,5 +11,4 @@ AAuraAIController::AAuraAIController()
 	check(Blackboard);
 	BehaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>("BehaviourTreeComponent");
 	check(BehaviorTreeComponent);
-
 }

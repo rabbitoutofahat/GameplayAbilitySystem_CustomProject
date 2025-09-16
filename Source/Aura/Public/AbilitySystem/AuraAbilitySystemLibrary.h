@@ -55,4 +55,7 @@ public:
 	// See UGameplayStatics::ApplyRadialDamageWithFalloff() and FCollisionQueryParams for more context on these input parameters and the function definition itself
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
 	static void GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& SphereOrigin);
+
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
+	static bool IsOnSameTeam(const AActor* FirstActor, const AActor* SecondActor);
 };

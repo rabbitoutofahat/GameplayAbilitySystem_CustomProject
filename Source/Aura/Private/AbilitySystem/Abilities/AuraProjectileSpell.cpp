@@ -20,7 +20,7 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
 
-	const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(), FAuraGameplayTags::Get().Montage_Attack_Weapon); // GetCombbatSocketLocation is a Blueprint Native Event so we call Execute_GetCombatSocketLocation()
+	const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(), FAuraGameplayTags::Get().Montage_Attack_Weapon); // GetCombatSocketLocation is a Blueprint Native Event so we call Execute_GetCombatSocketLocation()
 	FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
 
 	FTransform SpawnTransform;

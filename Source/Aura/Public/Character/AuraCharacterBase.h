@@ -49,7 +49,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	// TObjectPtr is a pointer wrapper that, unlike raw pointers, lets you track how often the pointer is accessed/dereferenced and ensures assets are not loaded until needed or used (aka lazy loading), among other things
-	UPROPERTY(EditAnywhere, Category = "Combat")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")

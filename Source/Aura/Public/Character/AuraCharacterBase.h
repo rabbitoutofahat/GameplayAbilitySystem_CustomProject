@@ -15,6 +15,7 @@ class UGameplayAbility;
 class UAnimMontage;
 class UMaterialInstance;
 class UMaterialInstanceDynamic;
+class UNiagaraSystem;
 
 /**
  *
@@ -37,6 +38,7 @@ public:
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation() override;
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
+	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
 	/* End Combat Interface */
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -90,6 +92,9 @@ protected:
 
 	// Abilities granted via the same function on the Aura ASC as that's where we can directly access the Ability Spec
 	void AddCharacterAbilities();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UNiagaraSystem> BloodEffect;
 
 	/* Dissolve Effects */
 

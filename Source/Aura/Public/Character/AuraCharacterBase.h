@@ -95,8 +95,11 @@ protected:
 	// Abilities granted via the same function on the Aura ASC as that's where we can directly access the Ability Spec
 	void AddCharacterAbilities();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<UNiagaraSystem> BloodEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<USoundBase> DeathSound;
 
 	/* Dissolve Effects */
 

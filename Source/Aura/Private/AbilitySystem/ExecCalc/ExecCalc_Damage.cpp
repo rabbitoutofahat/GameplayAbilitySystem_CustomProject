@@ -123,7 +123,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		Resistance = FMath::Clamp<float>(Resistance, 0.f, 100.f);
 
 		// Get the Gameplay Ability's Set By Caller Magnitudes for each Damage Type Tag. For example, the only non-zero Magnitude for FireBolt should be for the Damage_Fire tag
-		float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag);
+		float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag, false); // bool WarnIfNotFound set to false to turn off log warnings
 		DamageTypeValue += (100.f - Resistance) / 100.f;
 		Damage += DamageTypeValue;
 	}

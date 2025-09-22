@@ -9,8 +9,9 @@
 
 class UAuraUserWidget;
 struct FOnAttributeChangeData;
+class UAbilityInfo;
 
-/**
+/*
  * A data table structure we can use for our data table blueprint in the UE editor; the below properties act as columns
  */
 USTRUCT(BlueprintType)
@@ -31,11 +32,12 @@ struct FUIWidgetRow : public FTableRowBase
 	UTexture2D* Image = nullptr;
 };
 
-
-// Dynamic - ability to assign events in UE blueprints, Multicast - multiple blueprint widgets may want to bind to this delegate.
-// 'Signature' specifies the delegate type, and is capable of broadcasting a certain data type, with a given name.
-// For example, We have a signature of type FMessageWidgetRowSignature that can broadcast a value of type FUIWidgetRow which we call Row. 
-// We define a member variable with the signature type, called MessageWidgetRowDelegate, which we can use to broadcast FUIWidgetRows - MessageWidgetRowDelegate.Broadcast(Row).
+/*
+ * Dynamic - ability to assign events in UE blueprints, Multicast - multiple blueprint widgets may want to bind to this delegate.
+ * 'Signature' specifies the delegate type, and is capable of broadcasting a certain data type, with a given name.
+ * For example, We have a signature of type FMessageWidgetRowSignature that can broadcast a value of type FUIWidgetRow which we call Row. 
+ * We define a member variable with the signature type, called MessageWidgetRowDelegate, which we can use to broadcast FUIWidgetRows - MessageWidgetRowDelegate.Broadcast(Row).
+ */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue); 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
 
@@ -70,6 +72,9 @@ protected:
 	// Creates a widget data property for OverlayWidgetController blueprint(s) that lets us lookup tags in our MessageWidgetDataTable here in C++
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data") 
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
+	TObjectPtr<UAbilityInfo> AbilityInfo;
 
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);

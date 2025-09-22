@@ -10,6 +10,7 @@
 class UAuraUserWidget;
 struct FOnAttributeChangeData;
 class UAbilityInfo;
+class UAuraAbilitySystemComponent;
 
 /*
  * A data table structure we can use for our data table blueprint in the UE editor; the below properties act as columns
@@ -78,6 +79,8 @@ protected:
 
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
+
+	void OnInitialiseStartupAbilities(UAuraAbilitySystemComponent* AuraAbilitySystemComponent);
 };
 
 template<typename T>

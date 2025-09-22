@@ -11,7 +11,7 @@ class UOverlayWidgetController;
 class UAttributeMenuWidgetController;
 
 /**
- * 
+ * Custom library of static functions (static such that we do not need an object of this class to execute its member functions)
  */
 UCLASS()
 class AURA_API UAuraAbilitySystemLibrary : public UBlueprintFunctionLibrary

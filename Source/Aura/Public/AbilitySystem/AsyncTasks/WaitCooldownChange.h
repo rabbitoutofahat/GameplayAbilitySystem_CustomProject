@@ -16,7 +16,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCooldownChangeSignature, float, Tim
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, meta = (ExposedAsyncProxy = "Async Task")) // This meta specifier allows us to promote the WaitForCooldownChange Async Task to its own variable, such that, if it's already valid, we can end the task before creating another one
 class AURA_API UWaitCooldownChange : public UBlueprintAsyncActionBase
 {
 	GENERATED_BODY()

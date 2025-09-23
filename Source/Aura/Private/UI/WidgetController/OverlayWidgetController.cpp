@@ -25,10 +25,10 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 		}
 		else // Startup Abilities have not yet been given => there's time to bind OnInitialiseStartupAbilities() to the AbilitiesGiven delegate before the broadcast goes out
 		{
-			AuraASC->AbilitiesGiven.AddUObject(this, &UOverlayWidgetController::OnInitialiseStartupAbilities);
+			AuraASC->AbilitiesGivenDelegate.AddUObject(this, &UOverlayWidgetController::OnInitialiseStartupAbilities);
 		}
 
-		AuraASC->EffectAssetTags.AddLambda(
+		AuraASC->EffectAssetTagsDelegate.AddLambda(
 			[this](const FGameplayTagContainer& AssetTags) // [Class capture] (Input parameter list) {Function body}
 			/*
 			* When the Aura ASC broadcasts to this delegate, the lambda (aka an anonymous function) will be called, receiving the broadcast from the delegate as the input, given the input
@@ -87,7 +87,7 @@ void UOverlayWidgetController::OnInitialiseStartupAbilities(UAuraAbilitySystemCo
 	// Get information about all given abilities, look up their ability info, and broadcast it to widgets.
 	if (!AuraAbilitySystemComponent->bStartupAbilitiesGiven) return;
 
-	FForEachAbility BroadcastDelegate;
+	FForEachAbilitySignature BroadcastDelegate;
 	BroadcastDelegate.BindLambda( // Static version of a Lambda Delegate
 		[this, AuraAbilitySystemComponent](const FGameplayAbilitySpec& AbilitySpec)
 		{

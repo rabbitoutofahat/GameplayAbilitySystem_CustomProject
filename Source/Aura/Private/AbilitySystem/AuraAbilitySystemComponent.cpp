@@ -24,7 +24,7 @@ void UAuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf
 		}
 	}
 	bStartupAbilitiesGiven = true; 
-	AbilitiesGiven.Broadcast(this);
+	AbilitiesGivenDelegate.Broadcast(this);
 }
 
 void UAuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
@@ -58,7 +58,7 @@ void UAuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& In
 	}
 }
 
-void UAuraAbilitySystemComponent::ForEachAbility(const FForEachAbility& Delegate)
+void UAuraAbilitySystemComponent::ForEachAbility(const FForEachAbilitySignature& Delegate)
 {
 	// As we loop over abilities, we have to keep in mind that abilities can change in status, e.g., they are blocked by a certain Gameplay Tag, so we should lock this Activatable Abilities container until the for loop is done
 	FScopedAbilityListLock ActiveScopeLock(*this);
@@ -99,6 +99,17 @@ FGameplayTag UAuraAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbi
 	return FGameplayTag();
 }
 
+void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
+{
+	Super::OnRep_ActivateAbilities();
+
+	if (!bStartupAbilitiesGiven)
+	{
+		bStartupAbilitiesGiven = true; // Every time ActivateAbilities replicates, it only broadcasts the delegate the first time
+		AbilitiesGivenDelegate.Broadcast(this);
+	}
+}
+
 void UAuraAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySystemComponent* AbilitySystemComponent,
 	const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle) // When an effect is applied, call this function (we want to show stuff in the HUD)
 {
@@ -106,5 +117,5 @@ void UAuraAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySys
 	EffectSpec.GetAllAssetTags(TagContainer); // Fill the tag container with our GameplayEffectAssetTags (NOT GrantedTags)
 	
 	// Any class that binds to our EffectAssetTag's delegate will receive a tag container filled with the asset tags (in this case we want to bind our overlay widget controller)
-	EffectAssetTags.Broadcast(TagContainer); 
+	EffectAssetTagsDelegate.Broadcast(TagContainer); 
 }

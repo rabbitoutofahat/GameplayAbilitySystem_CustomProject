@@ -34,6 +34,9 @@ public:
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 
+	UFUNCTION(BlueprintPure)
+	UGameplayAbility* GetGameplayAbilityFromTag(const FGameplayTag& AbilityTag);
+
 protected:
 	// AddCharacterAbilities() is only executed on the server, but the ASC's ActivatableAbilities Tag Container is replicated using OnRep_ActivateAbilities() which is virtual
 	virtual void OnRep_ActivateAbilities() override;

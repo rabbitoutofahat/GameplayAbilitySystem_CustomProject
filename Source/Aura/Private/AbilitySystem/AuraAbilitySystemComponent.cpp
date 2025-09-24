@@ -99,6 +99,19 @@ FGameplayTag UAuraAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbi
 	return FGameplayTag();
 }
 
+UGameplayAbility* UAuraAbilitySystemComponent::GetGameplayAbilityFromTag(const FGameplayTag& AbilityTag)
+{
+	UGameplayAbility* DesiredAbility = nullptr;
+	for (const FGameplayAbilitySpec& Spec : GetActivatableAbilities())
+	{
+		if (Spec.Ability && Spec.Ability->AbilityTags.HasTag(AbilityTag))
+		{
+			DesiredAbility = Spec.Ability;
+		}
+	}
+	return DesiredAbility;
+}
+
 void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
 {
 	Super::OnRep_ActivateAbilities();

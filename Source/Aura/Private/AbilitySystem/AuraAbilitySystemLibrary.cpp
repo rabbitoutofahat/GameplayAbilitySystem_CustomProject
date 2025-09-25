@@ -9,6 +9,7 @@
 #include "Game/AuraGameModeBase.h"
 #include "AuraAbilityTypes.h"
 #include "Interaction/CombatInterface.h"
+#include "AbilitySystem/Data/CharacterClassInfo.h"
 
 UOverlayWidgetController* UAuraAbilitySystemLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
 {
@@ -153,4 +154,15 @@ bool UAuraAbilitySystemLibrary::IsOnSameTeam(const AActor* FirstActor, const AAc
 	const bool bBothAreEnemies = FirstActor->ActorHasTag(FName("Enemy")) && SecondActor->ActorHasTag(FName("Enemy"));
 	const bool bSameTeam = bBothArePlayers || bBothAreEnemies;
 	return bSameTeam;
+}
+
+int32 UAuraAbilitySystemLibrary::GetCharacterClassXPReward(const UObject* WorldContextObject, const ECharacterClass CharacterClass, int32 Level)
+{
+	UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
+	if (CharacterClassInfo == nullptr) return 0;
+
+	const FCharacterClassDefaultInfo& DesiredClassInfo = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
+	const float XPReward = DesiredClassInfo.XPReward.GetValueAtLevel(Level);
+
+	return static_cast<int32>(XPReward);
 }

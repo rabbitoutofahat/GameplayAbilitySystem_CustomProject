@@ -138,11 +138,13 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			const bool bFatal = NewHealth <= 0.f;
 			if (bFatal)
 			{
+				// If the enemy takes fatal damage, the enemy dies and rewards XP to the actor that dealt the fatal blow
 				ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
 				if (CombatInterface)
 				{
 					CombatInterface->Die();
 				}
+				SendXPEvent(Props);
 			}
 			else // If damage is non-fatal, try to activate hit react ability on target
 			{
@@ -316,3 +318,18 @@ void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float D
 	}
 }
 
+void UAuraAttributeSet::SendXPEvent(const FEffectProperties& Props)
+{
+	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor))
+	{
+		const int32 TargetLevel = CombatInterface->GetPlayerLevel();
+		const ECharacterClass TargetClass = ICombatInterface::Execute_GetCharacterClass(Props.TargetCharacter);
+		const int32 XPReward = UAuraAbilitySystemLibrary::GetCharacterClassXPReward(Props.TargetCharacter, TargetClass, TargetLevel);
+
+		const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
+		FGameplayEventData Payload; // Event Data payload is needed to send through the magnitude our ability is going to use in its Set By Caller Magnitude on our Event-based Gameplay Effect
+		Payload.EventTag = GameplayTags.Attributes_Meta_IncomingXP;
+		Payload.EventMagnitude = XPReward;
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Props.SourceCharacter, GameplayTags.Attributes_Meta_IncomingXP, Payload);
+	}
+}

@@ -118,7 +118,7 @@ void UOverlayWidgetController::OnXPChanged(int32 NewXP) const
 	{
 		const int32 LevelUpRequirement = AuraLevelUpInfo[Level].LevelUpRequirement;
 		const int32 PreviousLevelUpRequirement = AuraLevelUpInfo[Level - 1].LevelUpRequirement;
-		const float XPBarPercent = static_cast<float>(NewXP - LevelUpRequirement) / static_cast<float>(LevelUpRequirement - PreviousLevelUpRequirement);
+		const float XPBarPercent = static_cast<float>(NewXP - PreviousLevelUpRequirement) / static_cast<float>(LevelUpRequirement - PreviousLevelUpRequirement);
 
 		OnXPPercentChanged.Broadcast(XPBarPercent);
 	}

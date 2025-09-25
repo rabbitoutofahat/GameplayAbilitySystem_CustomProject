@@ -73,6 +73,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
 	FAbilityInfoSignature AbilityInfoDelegate;
 
+	UPROPERTY(BlueprintAssignable, Category = "GAS|XP")
+	FOnAttributeChangedSignature OnXPPercentChanged; // Using the Attribute Changed Signature as it broadcasts floats (despite us not classifying XP as an attribute)
+
 protected:
 	// Creates a widget data property for OverlayWidgetController blueprint(s) that lets us lookup tags in our MessageWidgetDataTable here in C++
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data") 
@@ -85,6 +88,7 @@ protected:
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
 
 	void OnInitialiseStartupAbilities(UAuraAbilitySystemComponent* AuraAbilitySystemComponent);
+	void OnXPChanged(int32 NewXP) const;
 };
 
 template<typename T>

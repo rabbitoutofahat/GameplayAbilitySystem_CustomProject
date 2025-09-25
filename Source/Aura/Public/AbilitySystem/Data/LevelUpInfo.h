@@ -33,5 +33,5 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FAuraLevelUpInfo> LevelUpInformation; // Index by level, therefore we must make the first element in the data asset ('level 0') a placeholder
 
-	int32 FindLevelForXP(int32 Experience);
+	int32 FindLevelForXP(int32 Experience) const;
 };

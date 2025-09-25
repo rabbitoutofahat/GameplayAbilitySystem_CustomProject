@@ -11,6 +11,7 @@
 
 class UAbilitySystemComponent;
 class UAttributeSet;
+class ULevelUpInfo;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChangedSignature, int32 /*StatValue*/);
 
@@ -30,6 +31,9 @@ public:
 	// Pointers for our ability system component and attribute set after implementing AbilitySystemInterface above, helps everything in the system interact with eachother cleanly
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override; // Pure virtual function of IAbilitySystemInterface from AbilitySystemInterface.h
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<ULevelUpInfo> LevelUpInfo; // Keeping this on the Player State instead of a Widget Controller as Player States exist on both the clients and server
 
 	FOnPlayerStatChangedSignature OnLevelChangedDelegate;
 	FOnPlayerStatChangedSignature OnXPChangedDelegate;

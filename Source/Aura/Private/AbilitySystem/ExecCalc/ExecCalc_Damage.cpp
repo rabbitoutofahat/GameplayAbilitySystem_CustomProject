@@ -93,8 +93,17 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr; // We cannot make these const if we want to get their player level via the combat interface
 	AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
 
-	ICombatInterface* SourceCombatInterface = Cast<ICombatInterface>(SourceAvatar);
-	ICombatInterface* TargetCombatInterface = Cast<ICombatInterface>(TargetAvatar);
+	int32 SourceLevel = 1;
+	if (SourceAvatar->Implements<UCombatInterface>())
+	{
+		SourceLevel = ICombatInterface::Execute_GetPlayerLevel(SourceAvatar);
+	}
+
+	int32 TargetLevel = 1;
+	if (TargetAvatar->Implements<UCombatInterface>())
+	{
+		TargetLevel = ICombatInterface::Execute_GetPlayerLevel(TargetAvatar);
+	}
 
 	const UCharacterClassInfo* CharacterClassInfo = UAuraAbilitySystemLibrary::GetCharacterClassInfo(SourceAvatar);
 
@@ -148,14 +157,14 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	SourceArmourPierce = FMath::Max<float>(SourceArmourPierce, 0.f);
 
 	FRealCurve* ArmourPierceCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(FName("ArmourPenetration"), FString());
-	const float ArmourPierceCoeff = ArmourPierceCurve->Eval(SourceCombatInterface->GetPlayerLevel());
+	const float ArmourPierceCoeff = ArmourPierceCurve->Eval(SourceLevel);
     // ArmourPierce ignores a percentage of the Target's Armour
 	const float EffectiveArmour = TargetArmour *= (100 - SourceArmourPierce * ArmourPierceCoeff) / 100.f;
 
 	FRealCurve* EffectiveArmourCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(FName("EffectiveArmour"), FString());
-	const float EffectiveArmourCoeff = EffectiveArmourCurve->Eval(TargetCombatInterface->GetPlayerLevel());
+	const float EffectiveArmourCoeff = EffectiveArmourCurve->Eval(TargetLevel);
 	// Armour ignores a percentage of incoming damage
-	Damage *= (100 - EffectiveArmour * EffectiveArmourCoeff) / 100.f;
+	Damage *= (100.f - EffectiveArmour * EffectiveArmourCoeff) / 100.f;
 
 	// Capture CritChance on Source, and determine if there was a successful Critical Hit
 	float SourceCritChance = 0.f;
@@ -168,7 +177,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	TargetCritRes = FMath::Max<float>(TargetCritRes, 0.f);
 
 	FRealCurve* CritResCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(FName("CriticalHitResistance"), FString());
-	const float CritResCoeff = CritResCurve->Eval(TargetCombatInterface->GetPlayerLevel());
+	const float CritResCoeff = CritResCurve->Eval(TargetLevel);
 	// Critical Hit Resistance reduces the attacker's Critical Hit Chance 
 	const float EffectiveCritChance = SourceCritChance - TargetCritRes * CritResCoeff;
 

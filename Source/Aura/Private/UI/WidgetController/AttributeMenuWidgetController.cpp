@@ -4,6 +4,7 @@
 #include "UI/WidgetController/AttributeMenuWidgetController.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/AttributeInfo.h"
+#include "Player/AuraPlayerState.h"
 
 /*
 * Take attribute initial values from our attribute set and pass them into our attribute info data set by looking up their respective tag, then broadcast to widgets bound to the attribute info delegate
@@ -21,16 +22,29 @@ void UAttributeMenuWidgetController::BroadcastInitialValues()
 
 void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 {
-	UAuraAttributeSet* AS = CastChecked<UAuraAttributeSet>(AttributeSet);
-	for (auto& Pair : AS->TagsToAttributes)
+	UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
+	for (auto& Pair : AuraAttributeSet->TagsToAttributes)
 	{
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Pair.Value()).AddLambda(
 			[this, Pair](const FOnAttributeChangeData& Data) // Capture Pair by value, not reference, as it will be out of scope by the time this attribute changes and the delegate broadcasts 
 			{
 				BroadcastAttributeInfo(Pair.Key, Pair.Value());
-			}
-		);
+			});
 	}
+
+	AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
+	
+	AuraPlayerState->OnPlayerAttributePointChangedDelegate.AddLambda(
+		[this](int32 NewPoints) 
+		{
+			OnAttributePointChangedDelegate.Broadcast(NewPoints);
+		});
+
+	AuraPlayerState->OnPlayerSpellPointChangedDelegate.AddLambda(
+		[this](int32 NewPoints)
+		{
+			OnSpellPointChangedDelegate.Broadcast(NewPoints);
+		});
 }
 
 void UAttributeMenuWidgetController::BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const

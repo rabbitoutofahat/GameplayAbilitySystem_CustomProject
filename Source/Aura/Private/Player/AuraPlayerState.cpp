@@ -2,7 +2,7 @@
 
 
 #include "Player/AuraPlayerState.h"
-#include <Net/UnrealNetwork.h>
+#include "Net/UnrealNetwork.h"
 
 AAuraPlayerState::AAuraPlayerState()
 {

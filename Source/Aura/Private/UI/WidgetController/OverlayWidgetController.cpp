@@ -42,11 +42,11 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 				for (const FGameplayTag& Tag : AssetTags)
 				{
 					/*
-					* Checks to see if a given asset tag is a message tag (I.e., "Message" is the root of the tag hierarchy).
-					* For example, say Tag = Message.HealthPotion :
-					* "Message.HealthPotion".MatchesTag("Message") will return True,
-					* "Message".MatchesTag("Message.HealthPotion") will return False.
-					*/
+					 * Checks to see if a given asset tag is a message tag (I.e., "Message" is the root of the tag hierarchy).
+					 * For example, say Tag = Message.HealthPotion :
+					 * "Message.HealthPotion".MatchesTag("Message") will return True,
+					 * "Message".MatchesTag("Message.HealthPotion") will return False.
+					 */
 					FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
 					if (Tag.MatchesTag(MessageTag))
 					{
@@ -64,7 +64,7 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 		{
 			OnLevelChangedDelegate.Broadcast(NewLevel);
 		});
-
+	
 	const UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute()).AddLambda(

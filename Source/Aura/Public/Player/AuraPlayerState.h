@@ -35,7 +35,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<ULevelUpInfo> LevelUpInfo; // Keeping this on the Player State instead of a Widget Controller as Player States exist on both the clients and server
 
-	FOnPlayerStatChangedSignature OnLevelChangedDelegate;
+	FOnPlayerStatChangedSignature OnPlayerLevelChangedDelegate;
 	FOnPlayerStatChangedSignature OnXPChangedDelegate;
 
 	FORCEINLINE int32 GetPlayerLevel() const { return Level; }

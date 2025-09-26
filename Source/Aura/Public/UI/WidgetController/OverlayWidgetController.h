@@ -39,7 +39,8 @@ struct FUIWidgetRow : public FTableRowBase
  * For example, We have a signature of type FMessageWidgetRowSignature that can broadcast a value of type FUIWidgetRow which we call Row. 
  * We define a member variable with the signature type, called MessageWidgetRowDelegate, which we can use to broadcast FUIWidgetRows - MessageWidgetRowDelegate.Broadcast(Row).
  */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue); 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStatChangedSignature, int32, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FAuraAbilityInfo&, Info);
 
@@ -67,14 +68,17 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FOnAttributeChangedSignature OnMaxManaChanged;
 
+	UPROPERTY(BlueprintAssignable, Category = "GAS|XP")
+	FOnAttributeChangedSignature OnXPPercentChanged; // Using the Attribute Changed Signature as it broadcasts floats (despite us not classifying XPPercent as an attribute)
+
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
 	FAbilityInfoSignature AbilityInfoDelegate;
 
-	UPROPERTY(BlueprintAssignable, Category = "GAS|XP")
-	FOnAttributeChangedSignature OnXPPercentChanged; // Using the Attribute Changed Signature as it broadcasts floats (despite us not classifying XP as an attribute)
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Level")
+	FOnStatChangedSignature OnLevelChangedDelegate;
 
 protected:
 	// Creates a widget data property for OverlayWidgetController blueprint(s) that lets us lookup tags in our MessageWidgetDataTable here in C++

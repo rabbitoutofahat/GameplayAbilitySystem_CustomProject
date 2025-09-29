@@ -38,6 +38,11 @@ public:
 	UFUNCTION(BlueprintPure)
 	UGameplayAbility* GetGameplayAbilityFromTag(const FGameplayTag& AbilityTag);
 
+	void UpgradeAttribute(const FGameplayTag& AttributeTag);
+
+	UFUNCTION(Server, Reliable)
+	void ServerUpgradeAttribute(const FGameplayTag& AttributeTag);
+
 protected:
 	// AddCharacterAbilities() is only executed on the server, but the ASC's ActivatableAbilities Tag Container is replicated using OnRep_ActivateAbilities() which is virtual
 	virtual void OnRep_ActivateAbilities() override;

@@ -50,9 +50,16 @@ void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 		});
 }
 
+void UAttributeMenuWidgetController::UpgradeAttribute(const FGameplayTag& AttributeTag)
+{
+	// "Middle-man" function to call UpgradeAttribute on the ASC
+	UAuraAbilitySystemComponent* AuraASC = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+	AuraASC->UpgradeAttribute(AttributeTag);
+}
+
 void UAttributeMenuWidgetController::BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const
 {
-	/*
+    /*
 	* Look up attribute tags, call the function using the function pointer stored in Pair.Value(), which returns the matching attribute (see AuraAttributeSet.h), set the attribute's
 	* value from the corresponding attribute set, then broadcast the attribute's info to widgets. Note that GetNumericValue() is a static function so we need to specify which 
 	* attribute set the attribute is in.

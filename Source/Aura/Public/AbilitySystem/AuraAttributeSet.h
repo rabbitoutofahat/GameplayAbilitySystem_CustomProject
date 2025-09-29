@@ -77,7 +77,7 @@ class AURA_API UAuraAttributeSet : public UAttributeSet
 public:
 	UAuraAttributeSet();
 
-	/**
+	/*
 	* When creating a replicated attribute, we must do the following:
 	* 1. Add the ReplicatedUsing specifier and assign a RepNotify
 	* 2. Register the variable for replication in GetLifetimeReplicatedProps
@@ -88,6 +88,7 @@ public:
 	// Method for clamping
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
 
 	/*
 	* By mapping our Gameplay Tags to static function pointers of type FGameplayAttributes, we can hold static getter functions for each Gameplay Attribute in these function 
@@ -127,8 +128,8 @@ public:
 	void OnRep_Vigor(const FGameplayAttributeData& OldVigor) const;
 
 	/*
-     * Secondary Attributes
-     */
+    * Secondary Attributes
+    */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Armour, Category = "Secondary Attributes")
 	FGameplayAttributeData Armour;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Armour);
@@ -262,4 +263,6 @@ private:
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const;
 	void ShowFloatingText(const FEffectProperties& Props, float Damage, bool bBlockedHit, bool bCriticalHit) const;
 	void SendXPEvent(const FEffectProperties& Props);
+	bool bTopOffHealth = false;
+	bool bTopOffMana = false;
 };

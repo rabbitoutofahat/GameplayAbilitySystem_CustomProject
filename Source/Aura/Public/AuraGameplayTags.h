@@ -6,10 +6,10 @@
 #include "GameplayTagContainer.h"
 
 /*
- * AuraGameplayTags
- * 
- * Singleton (only one instance in the whole project) containing native Gameplay Tags
- */
+* AuraGameplayTags
+* 
+* Singleton (only one instance in the whole project) containing native Gameplay Tags
+*/
 struct FAuraGameplayTags
 {
 public:

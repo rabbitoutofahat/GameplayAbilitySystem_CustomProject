@@ -157,7 +157,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			ShowFloatingText(Props, LocalIncomingDamage, bBlock, bCrit);
 		}
 	}
-	if (Data.EvaluatedData.Attribute == GetIncomingXPAttribute())
+	if (Data.EvaluatedData.Attribute == GetIncomingXPAttribute()) // Level Up functionality
 	{
 		const float LocalIncomingXP = GetIncomingXP();
 		SetIncomingXP(0.f);

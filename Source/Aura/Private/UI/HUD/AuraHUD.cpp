@@ -5,14 +5,15 @@
 #include "UI/Widget/AuraUserWidget.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
 #include "UI/WidgetController/AttributeMenuWidgetController.h"
+#include "UI/WidgetController/SpellMenuWidgetController.h"
 
 template<typename T>
 T* AAuraHUD::GetWidgetController(TObjectPtr<T>& WidgetController, TSubclassOf<T> WidgetControllerClass, const FWidgetControllerParams& WCParams)
 {
-	if (WidgetController == nullptr) // Will construct the overlay widget controller the first time the function is called, and return it all subsequent times
+	if (WidgetController == nullptr) // Will construct the widget controller the first time the function is called, and return it all subsequent times
 	{
 		WidgetController = NewObject<T>(this, WidgetControllerClass);
-		WidgetController->SetWidgetControllerParams(WCParams); // Key attributes like health, mana, etc, are set
+		WidgetController->SetWidgetControllerParams(WCParams); // Key attributes are set, for example for the overlay widget controller this would include health and mana
 	    WidgetController->BindCallbacksToDependencies(); // When attributes or other dependencies are changed, those changes are broadcast
 	}
 	return WidgetController;
@@ -26,6 +27,11 @@ UOverlayWidgetController* AAuraHUD::GetOverlayWidgetController(const FWidgetCont
 UAttributeMenuWidgetController* AAuraHUD::GetAttributeMenuWidgetController(const FWidgetControllerParams& WCParams)
 {
 	return GetWidgetController<UAttributeMenuWidgetController>(AttributeMenuWidgetController, AttributeMenuWidgetControllerClass, WCParams);
+}
+
+USpellMenuWidgetController* AAuraHUD::GetSpellMenuWidgetController(const FWidgetControllerParams& WCParams)
+{
+	return GetWidgetController<USpellMenuWidgetController>(SpellMenuWidgetController, SpellMenuWidgetControllerClass, WCParams);
 }
 
 void AAuraHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)

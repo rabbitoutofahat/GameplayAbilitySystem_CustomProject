@@ -34,6 +34,7 @@ public:
 
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+	static FGameplayTag GetStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 
 	UFUNCTION(BlueprintPure)
 	UGameplayAbility* GetGameplayAbilityFromTag(const FGameplayTag& AbilityTag);

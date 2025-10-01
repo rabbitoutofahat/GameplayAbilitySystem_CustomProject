@@ -37,12 +37,6 @@ void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 		{
 			OnAttributePointChangedDelegate.Broadcast(NewPoints);
 		});
-
-	GetAuraPS()->OnPlayerSpellPointChangedDelegate.AddLambda(
-		[this](int32 NewPoints)
-		{
-			OnSpellPointChangedDelegate.Broadcast(NewPoints);
-		});
 }
 
 void UAttributeMenuWidgetController::UpgradeAttribute(const FGameplayTag& AttributeTag)

@@ -18,6 +18,9 @@ struct FAuraAbilityInfo
 	UPROPERTY(BlueprintReadOnly) // Want to bind tags in C++
 	FGameplayTag InputTag = FGameplayTag(); 
 
+	UPROPERTY(BlueprintReadOnly)
+	FGameplayTag StatusTag = FGameplayTag();
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly) 
 	FGameplayTag CooldownTag = FGameplayTag(); 
 

@@ -7,6 +7,8 @@
 #include "Aura/AuraLogChannels.h"
 #include "Interaction/PlayerInterface.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
 
 void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 {
@@ -123,6 +125,22 @@ FGameplayTag UAuraAbilitySystemComponent::GetStatusTagFromSpec(const FGameplayAb
 	return FGameplayTag();
 }
 
+FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetAbilitySpecFromTag(const FGameplayTag& AbilityTag)
+{
+	FScopedAbilityListLock ActiveScopeLock(*this);
+	for (FGameplayAbilitySpec& Spec : GetActivatableAbilities())
+	{
+		for (FGameplayTag Tag : Spec.Ability.Get()->AbilityTags)
+		{
+			if (Tag.MatchesTag(AbilityTag))
+			{
+				return &Spec;
+			}
+		}
+	}
+	return nullptr;
+}
+
 UGameplayAbility* UAuraAbilitySystemComponent::GetGameplayAbilityFromTag(const FGameplayTag& AbilityTag)
 {
 	UGameplayAbility* DesiredAbility = nullptr;
@@ -158,6 +176,23 @@ void UAuraAbilitySystemComponent::ServerUpgradeAttribute_Implementation(const FG
 	if (GetAvatarActor()->Implements<UPlayerInterface>())
 	{
 		IPlayerInterface::Execute_AddToAttributePoints(GetAvatarActor(), -1);
+	}
+}
+
+void UAuraAbilitySystemComponent::UpdateAbilityStatuses(int32 Level)
+{
+	UAbilityInfo* AbilityInfo = UAuraAbilitySystemLibrary::GetAbilityInfo(GetAvatarActor());
+	for (const FAuraAbilityInfo& Info : AbilityInfo->AbilityInformation)
+	{
+		if (!Info.AbilityTag.IsValid()) continue; // If the ability tag is valid
+		if (Level < Info.LevelRequirement) continue; // If we meet the level requirement for this ability
+		if (GetAbilitySpecFromTag(Info.AbilityTag) == nullptr) // If we don't already have this ability
+		{
+			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Info.Ability, 1);
+			AbilitySpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Eligible); // Change its status from locked to eligible
+			GiveAbility(AbilitySpec);
+			MarkAbilitySpecDirty(AbilitySpec); // Force this spec to replicate right away
+		}
 	}
 }
 

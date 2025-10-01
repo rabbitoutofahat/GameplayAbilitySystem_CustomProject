@@ -12,6 +12,7 @@ enum class ECharacterClass : uint8;
 class USpellMenuWidgetController;
 struct FWidgetControllerParams;
 class AAuraHUD;
+class UAbilityInfo;
 
 /**
  * Custom library of static functions (static such that we do not need an object of this class to execute its member functions)
@@ -47,6 +48,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
 	static UCharacterClassInfo* GetCharacterClassInfo(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|AbilityInfo")
+	static UAbilityInfo* GetAbilityInfo(const UObject* WorldContextObject);
 
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static bool IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle);

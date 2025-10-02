@@ -5,6 +5,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
 #include "Player/AuraPlayerState.h"
+#include "AuraGameplayTags.h"
 
 void USpellMenuWidgetController::BroadcastInitialValues()
 {
@@ -30,4 +31,33 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 		{
 			OnSpellPointChangedDelegate.Broadcast(NewPoints);
 		});
+}
+
+void USpellMenuWidgetController::SpellGlobeSelected(const FGameplayTag& AbilityTag)
+{
+	// Eligible status already covered by the bools' default values
+	bool bEquipButtonEnabled = false;
+	bool bSpendPointButtonEnabled = GetAuraPS()->GetSpellPoints() > 0;
+
+	FGameplayAbilitySpec* AbilitySpec = GetAuraASC()->GetAbilitySpecFromTag(AbilityTag);
+	if (AbilitySpec == nullptr)
+	{
+		// Once the Spell Menu is filled out, this if check should simply return
+
+		bSpendPointButtonEnabled = false; 
+		OnUpdateSpellMenuButtonDelegate.Broadcast(bSpendPointButtonEnabled, bEquipButtonEnabled);
+		return;
+	}
+
+	FGameplayTag StatusTag = GetAuraASC()->GetStatusTagFromSpec(*AbilitySpec);
+	if (StatusTag.MatchesTagExact(FAuraGameplayTags::Get().Abilities_Status_Equipped) || StatusTag.MatchesTagExact(FAuraGameplayTags::Get().Abilities_Status_Unlocked))
+	{
+		bEquipButtonEnabled = true;
+	}
+	if (StatusTag.MatchesTagExact(FAuraGameplayTags::Get().Abilities_Status_Locked))
+	{
+		bSpendPointButtonEnabled = false;
+	}
+
+	OnUpdateSpellMenuButtonDelegate.Broadcast(bSpendPointButtonEnabled, bEquipButtonEnabled);
 }

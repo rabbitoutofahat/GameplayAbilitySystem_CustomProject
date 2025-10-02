@@ -143,15 +143,15 @@ FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetAbilitySpecFromTag(const F
 
 UGameplayAbility* UAuraAbilitySystemComponent::GetGameplayAbilityFromTag(const FGameplayTag& AbilityTag)
 {
-	UGameplayAbility* DesiredAbility = nullptr;
+	// UGameplayAbility* DesiredAbility = nullptr;
 	for (const FGameplayAbilitySpec& Spec : GetActivatableAbilities())
 	{
 		if (Spec.Ability && Spec.Ability->AbilityTags.HasTag(AbilityTag))
 		{
-			DesiredAbility = Spec.Ability;
+			return Spec.Ability;
 		}
 	}
-	return DesiredAbility;
+	return nullptr;
 }
 
 void UAuraAbilitySystemComponent::UpgradeAttribute(const FGameplayTag& AttributeTag)

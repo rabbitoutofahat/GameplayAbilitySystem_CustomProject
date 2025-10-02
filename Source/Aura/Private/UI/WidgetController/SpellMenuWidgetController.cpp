@@ -5,7 +5,6 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
 #include "Player/AuraPlayerState.h"
-#include "AuraGameplayTags.h"
 
 void USpellMenuWidgetController::BroadcastInitialValues()
 {
@@ -18,6 +17,12 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 	GetAuraASC()->AbilityStatusChangedDelegate.AddLambda(
 		[this](const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag)
 		{
+			if (SelectedAbility.Ability.MatchesTagExact(AbilityTag))
+			{
+				SelectedAbility.Status = StatusTag;
+				ShouldEnableButtons(StatusTag, CurrentSpellPoints); // E.g., for Spell Globes that change from Locked to Eligible
+			}
+
 			if (AbilityInfo)
 			{
 				FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
@@ -30,26 +35,36 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 		[this](int32 NewPoints)
 		{
 			OnSpellPointChangedDelegate.Broadcast(NewPoints);
+
+			// We don't know which delegate will be broadcast first, so we make execute ShouldEnableButtons() for both, updating Ability Status and Current Spell Points as we go
+			CurrentSpellPoints = NewPoints;
+			ShouldEnableButtons(SelectedAbility.Status, CurrentSpellPoints);
 		});
 }
 
 void USpellMenuWidgetController::SpellGlobeSelected(const FGameplayTag& AbilityTag)
 {
-	// Eligible status already covered by the bools' default values
-	bool bEquipButtonEnabled = false;
-	bool bSpendPointButtonEnabled = GetAuraPS()->GetSpellPoints() > 0;
-
 	FGameplayAbilitySpec* AbilitySpec = GetAuraASC()->GetAbilitySpecFromTag(AbilityTag);
+	FGameplayTag StatusTag = FGameplayTag();
 	if (AbilitySpec == nullptr)
 	{
-		// Once the Spell Menu is filled out, this if check should simply return
-
-		bSpendPointButtonEnabled = false; 
-		OnUpdateSpellMenuButtonDelegate.Broadcast(bSpendPointButtonEnabled, bEquipButtonEnabled);
-		return;
+		StatusTag = FAuraGameplayTags::Get().Abilities_Status_Locked;
 	}
+	else StatusTag = GetAuraASC()->GetStatusTagFromSpec(*AbilitySpec);
 
-	FGameplayTag StatusTag = GetAuraASC()->GetStatusTagFromSpec(*AbilitySpec);
+	// Cache the selected ability's tags for updating spell menu button states on level up
+	SelectedAbility.Ability = AbilityTag;
+	SelectedAbility.Status = StatusTag;
+
+	ShouldEnableButtons(StatusTag, CurrentSpellPoints);
+}
+
+void USpellMenuWidgetController::ShouldEnableButtons(const FGameplayTag& StatusTag, int32 SpellPoints)
+{
+	// Eligible status already covered by the bools' default values
+	bool bEquipButtonEnabled = false;
+	bool bSpendPointButtonEnabled = SpellPoints > 0;
+	
 	if (StatusTag.MatchesTagExact(FAuraGameplayTags::Get().Abilities_Status_Equipped) || StatusTag.MatchesTagExact(FAuraGameplayTags::Get().Abilities_Status_Unlocked))
 	{
 		bEquipButtonEnabled = true;

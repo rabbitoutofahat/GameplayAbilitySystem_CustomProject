@@ -54,6 +54,12 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 					}
 				}
 			});
+
+		GetAuraASC()->AbilityStatusChangedDelegate.AddLambda(
+			[this](const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 NewLevel)
+			{
+				AbilityLevelChangedDelegate.Broadcast(NewLevel);
+			});
 	}
 
 	GetAuraPS()->OnXPChangedDelegate.AddUObject(this, &UOverlayWidgetController::OnXPChanged);

@@ -41,6 +41,8 @@ struct FUIWidgetRow : public FTableRowBase
  */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityLevelChangedSignature, int32, NewLevel);
+
 
 /**
  * 
@@ -74,6 +76,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Level")
 	FOnStatChangedSignature OnLevelChangedDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Abilities")
+	FAbilityLevelChangedSignature AbilityLevelChangedDelegate;
 
 protected:
 	// Creates a widget data property for OverlayWidgetController blueprint(s) that lets us lookup tags in our MessageWidgetDataTable here in C++

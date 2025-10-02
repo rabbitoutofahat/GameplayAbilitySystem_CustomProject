@@ -143,7 +143,6 @@ FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetAbilitySpecFromTag(const F
 
 UGameplayAbility* UAuraAbilitySystemComponent::GetGameplayAbilityFromTag(const FGameplayTag& AbilityTag)
 {
-	// UGameplayAbility* DesiredAbility = nullptr;
 	for (const FGameplayAbilitySpec& Spec : GetActivatableAbilities())
 	{
 		if (Spec.Ability && Spec.Ability->AbilityTags.HasTag(AbilityTag))

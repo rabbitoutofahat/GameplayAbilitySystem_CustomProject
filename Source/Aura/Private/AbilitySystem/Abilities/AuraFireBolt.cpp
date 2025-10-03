@@ -61,7 +61,7 @@ FString UAuraFireBolt::GetNextLevelDescription(int32 Level)
 
 	return FString::Printf(TEXT(
 		// Title
-		"<Title>Next Level:</>\n\n"
+		"<Title>Next Level</>\n\n"
 		
 		// Details
 		"<Small>Level: </><Level>%d</>\n"

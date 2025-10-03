@@ -232,8 +232,16 @@ bool UAuraAbilitySystemComponent::GetDescriptionsByAbilityTag(const FGameplayTag
 			return true;
 		}
 	}
-	UAbilityInfo* AbilityInfo = UAuraAbilitySystemLibrary::GetAbilityInfo(GetAvatarActor());
-	OutDescription = UAuraGameplayAbility::GetLockedDescription(AbilityInfo->FindAbilityInfoForTag(AbilityTag).LevelRequirement);  // If we don't find a valid ability spec, assume the ability is locked
+	const UAbilityInfo* AbilityInfo = UAuraAbilitySystemLibrary::GetAbilityInfo(GetAvatarActor());
+	if (!AbilityTag.IsValid() || AbilityTag.MatchesTagExact(FGameplayTag().EmptyTag))
+	{
+		OutDescription = FString();
+	}
+	else
+	{
+		OutDescription = UAuraGameplayAbility::GetLockedDescription(AbilityInfo->FindAbilityInfoForTag(AbilityTag).LevelRequirement);  // If we don't find a valid ability spec, assume the ability is locked
+
+	}
 	OutNextLevelDescription = FString();
 	return false;
 }

@@ -1,39 +1,12 @@
 // Copyright Druid Mechanics
 
+
 #include "AbilitySystem/Abilities/AuraProjectileSpell.h"
 #include "Actor/AuraProjectile.h"
 #include "Interaction/CombatInterface.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "Aura/Public/AuraGameplayTags.h"
-
-FString UAuraProjectileSpell::GetDescription(int32 Level)
-{
-	int32 Damage = 0;
-	for (auto& Pair : DamageTypes)
-	{
-		Damage += Pair.Value.GetValueAtLevel(Level);
-	}
-	if (Level == 1)
-	{
-		return FString::Printf(TEXT("<Title>FireBolt</> \n\n<Default>Launches a bolt of fire, exploding on impact and dealing: </><Damage>%d </><Default>fire damage with a chance to burn</> \n\n<Small>Level: </><Level>%d </>"), Damage, Level);
-	}
-	else
-	{
-		return FString::Printf(TEXT("<Title>FireBolt</> \n\n<Default>Launches %d bolts of fire, exploding on impact and dealing: </><Damage>%d </><Default>fire damage with a chance to burn</> \n\n<Small>Level: </><Level>%d </>"), FMath::Min(Level, MaxProjectiles), Damage, Level);
-	}
-}
-
-FString UAuraProjectileSpell::GetNextLevelDescription(int32 Level)
-{
-	int32 Damage = 0;
-	for (auto& Pair : DamageTypes)
-	{
-		Damage += Pair.Value.GetValueAtLevel(Level);
-	}
-	const int32 Damage = DamageTypes[FAuraGameplayTags::Get().Damage_Fire].GetValueAtLevel(Level);
-	return FString::Printf(TEXT("<Title>Next Level:</> \n\n<Default>Launches %d bolts of fire, exploding on impact and dealing: </><Damage>%d </><Default>fire damage with a chance to burn</> \n\n<Small>Level: </><Level>%d </>"), FMath::Min(Level, MaxProjectiles), Damage, Level);
-}
 
 void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)

@@ -8,7 +8,7 @@
 #include "AuraGameplayTags.h"
 #include "SpellMenuWidgetController.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdateSpellMenuButtonSignature, bool, bSpendPointButtonEnabled, bool, bEquipButtonEnabled);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnUpdateSpellMenuSignature, bool, bSpendPointButtonEnabled, bool, bEquipButtonEnabled, FString, DescriptionString, FString, NextLevelDescriptionString);
 
 struct FSelectedAbility
 {
@@ -32,7 +32,7 @@ public:
 	FOnStatChangedSignature OnSpellPointChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Level")
-	FOnUpdateSpellMenuButtonSignature OnUpdateSpellMenuButtonDelegate;
+	FOnUpdateSpellMenuSignature OnUpdateSpellMenuDelegate;
 
 	UFUNCTION(BlueprintCallable)
 	void SpellGlobeSelected(const FGameplayTag& AbilityTag);

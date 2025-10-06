@@ -53,12 +53,19 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void EquipButtonPressed();
 
+	UFUNCTION(BlueprintCallable)
+	void SpellRowGlobePressed(const FGameplayTag& InputSlot, const FGameplayTag& AbilityType);
+
+	void OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& NewInputSlot, const FGameplayTag& OldInputSlot);
+
 private:
 	FSelectedAbility SelectedAbility = { FGameplayTag().EmptyTag, FAuraGameplayTags::Get().Abilities_Status_Locked };
 	int32 CurrentSpellPoints = 0;
+	FGameplayTag SelectedSlot;
 
 	// Must be static to set button states even if the Spell Menu hasn't been opened yet
 	static void ShouldEnableButtons(const FGameplayTag& StatusTag, int32 SpellPoints, bool& bEnableSpendPointsButton, bool& bEnableEquipButton);
 
 	bool bWaitingForEquipSelection = false; // Ensures we only play the EquippedSpellRow's "Hide Selection" animations if we are currently waiting to equip
+
 };

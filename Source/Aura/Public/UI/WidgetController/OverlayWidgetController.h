@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "UI/WidgetController/AuraWidgetController.h"
-#include "GameplayTagContainer.h" // For FGameplayTag MessageTag = FGameplayTag(); to work
 #include "OverlayWidgetController.generated.h"
 
 class UAuraUserWidget;
@@ -89,6 +88,8 @@ protected:
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
 
 	void OnXPChanged(int32 NewXP);
+
+	void OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& NewInputSlot, const FGameplayTag& OldInputSlot) const;
 };
 
 template<typename T>

@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "UI/WidgetController/AuraWidgetController.h"
-#include "GameplayTagContainer.h"
 #include "AuraGameplayTags.h"
 #include "SpellMenuWidgetController.generated.h"
 

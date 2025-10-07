@@ -75,6 +75,14 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	GameplayTags.Debuff_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Physical"), FString("Debuff for Physical Damage"));
 
 	/*
+	* Debuff Parameters
+	*/
+	GameplayTags.Debuff_Info_Chance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Info.Chance"), FString("Chance to apply the debuff"));
+	GameplayTags.Debuff_Info_Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Info.Damage"), FString("Damage applied by the debuff"));
+	GameplayTags.Debuff_Info_Duration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Info.Duration"), FString("Duration of the debuff"));
+	GameplayTags.Debuff_Info_Frequency = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Info.Frequency"), FString("Tick rate of the debuff"));
+
+	/*
     * Abilities
     */
 	GameplayTags.Abilities_None = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.None"), FString("Empty Aura Ability Tag"));

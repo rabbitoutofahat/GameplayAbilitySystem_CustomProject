@@ -59,6 +59,11 @@ public:
 	FGameplayTag Debuff_Arcane;
 	FGameplayTag Debuff_Physical;
 
+	FGameplayTag Debuff_Info_Chance;
+	FGameplayTag Debuff_Info_Damage;
+	FGameplayTag Debuff_Info_Duration;
+	FGameplayTag Debuff_Info_Frequency;
+
 	FGameplayTag Abilities_None;
 	FGameplayTag Abilities_Attack;
 	FGameplayTag Abilities_Summon;

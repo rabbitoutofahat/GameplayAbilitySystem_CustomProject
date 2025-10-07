@@ -159,18 +159,6 @@ FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetAbilitySpecFromTag(const F
 	return nullptr;
 }
 
-UGameplayAbility* UAuraAbilitySystemComponent::GetGameplayAbilityFromTag(const FGameplayTag& AbilityTag)
-{
-	for (const FGameplayAbilitySpec& Spec : GetActivatableAbilities())
-	{
-		if (Spec.Ability && Spec.Ability->AbilityTags.HasTag(AbilityTag))
-		{
-			return Spec.Ability;
-		}
-	}
-	return nullptr;
-}
-
 void UAuraAbilitySystemComponent::UpgradeAttribute(const FGameplayTag& AttributeTag)
 {
 	if (GetAvatarActor()->Implements<UPlayerInterface>())
@@ -264,13 +252,13 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 			MarkAbilitySpecDirty(*AbilitySpec);
 		}
 
-		ClientEquipAbility(AbilityTag, GameplayTags.Abilities_Status_Equipped, InputSlot, PrevSlot);
+		ClientEquipAbility(AbilityTag, GameplayTags.Abilities_Status_Equipped, AbilitySpec->Level, InputSlot, PrevSlot);
 	}
 }
 
-void UAuraAbilitySystemComponent::ClientEquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& NewInputSlot, const FGameplayTag& OldInputSlot)
+void UAuraAbilitySystemComponent::ClientEquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const int32 Level, const FGameplayTag& NewInputSlot, const FGameplayTag& OldInputSlot)
 {
-	AbilityEquippedDelegate.Broadcast(AbilityTag, Status, NewInputSlot, OldInputSlot);
+	AbilityEquippedDelegate.Broadcast(AbilityTag, Status, Level, NewInputSlot, OldInputSlot);
 }
 
 bool UAuraAbilitySystemComponent::GetDescriptionsByAbilityTag(const FGameplayTag& AbilityTag, FString& OutDescription, FString& OutNextLevelDescription)

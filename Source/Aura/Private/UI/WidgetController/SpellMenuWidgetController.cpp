@@ -141,7 +141,7 @@ void USpellMenuWidgetController::SpellRowGlobePressed(const FGameplayTag& InputS
 	GetAuraASC()->ServerEquipAbility(SelectedAbility.Ability, InputSlot);
 }
 
-void USpellMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& NewInputSlot, const FGameplayTag& OldInputSlot)
+void USpellMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const int32 Level, const FGameplayTag& NewInputSlot, const FGameplayTag& OldInputSlot)
 {
 	bWaitingForEquipSelection = false;
 
@@ -153,11 +153,13 @@ void USpellMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTa
 	LastSlotInfo.StatusTag = GameplayTags.Abilities_Status_Unlocked;
 	LastSlotInfo.InputTag = OldInputSlot;
 	LastSlotInfo.AbilityTag = GameplayTags.Abilities_None;
+	LastSlotInfo.Level = 0;
 	AbilityInfoDelegate.Broadcast(LastSlotInfo); // Broadcast empty info if OldInputSlot is a valid slot. Only if equipping an already equipped ability
 
 	FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
 	Info.StatusTag = Status;
 	Info.InputTag = NewInputSlot;
+	Info.Level = Level;
 	AbilityInfoDelegate.Broadcast(Info);
 
 	StopWaitingForEquipDelegate.Broadcast(AbilityInfo->FindAbilityInfoForTag(AbilityTag).AbilityType);

@@ -35,6 +35,9 @@ struct FAuraAbilityInfo
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGameplayAbility> Ability;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FCurveTableRowHandle CostCurve;
+
 	// Want to bind these in C++
 
 	UPROPERTY(BlueprintReadOnly)
@@ -42,6 +45,10 @@ struct FAuraAbilityInfo
 
 	UPROPERTY(BlueprintReadOnly)
 	FGameplayTag StatusTag = FGameplayTag();
+
+	UPROPERTY(BlueprintReadOnly)
+
+	int32 Level = 1;
 };
 
 /**

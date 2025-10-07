@@ -77,10 +77,10 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	/*
 	* Debuff Parameters
 	*/
-	GameplayTags.Debuff_Info_Chance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Info.Chance"), FString("Chance to apply the debuff"));
-	GameplayTags.Debuff_Info_Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Info.Damage"), FString("Damage applied by the debuff"));
-	GameplayTags.Debuff_Info_Duration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Info.Duration"), FString("Duration of the debuff"));
-	GameplayTags.Debuff_Info_Frequency = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Info.Frequency"), FString("Tick rate of the debuff"));
+	GameplayTags.Debuff_Params_Chance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Params.Chance"), FString("Chance to apply the debuff"));
+	GameplayTags.Debuff_Params_Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Params.Damage"), FString("Damage applied by the debuff"));
+	GameplayTags.Debuff_Params_Duration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Params.Duration"), FString("Duration of the debuff"));
+	GameplayTags.Debuff_Params_Frequency = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Debuff.Params.Frequency"), FString("Tick rate of the debuff"));
 
 	/*
     * Abilities

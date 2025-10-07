@@ -13,6 +13,7 @@ class USpellMenuWidgetController;
 struct FWidgetControllerParams;
 class AAuraHUD;
 class UAbilityInfo;
+struct FDamageEffectParams;
 
 /**
  * Custom library of static functions (static such that we do not need an object of this class to execute its member functions)
@@ -74,4 +75,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
 	static int32 GetCharacterClassXPReward(const UObject* WorldContextObject, const ECharacterClass CharacterClass, int32 Level);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffect")
+	static FGameplayEffectContextHandle ApplyDamageGameplayEffectToTarget(const FDamageEffectParams& Params);
 };

@@ -77,5 +77,5 @@ public:
 	static int32 GetCharacterClassXPReward(const UObject* WorldContextObject, const ECharacterClass CharacterClass, int32 Level);
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffect")
-	static FGameplayEffectContextHandle ApplyDamageGameplayEffectToTarget(const FDamageEffectParams& Params);
+	static FGameplayEffectContextHandle ApplyDamageEffectToTarget(const FDamageEffectParams& Params);
 };

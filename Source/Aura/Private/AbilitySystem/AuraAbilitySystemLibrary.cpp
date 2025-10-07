@@ -198,16 +198,22 @@ int32 UAuraAbilitySystemLibrary::GetCharacterClassXPReward(const UObject* WorldC
 	return static_cast<int32>(XPReward);
 }
 
-FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageGameplayEffectToTarget(const FDamageEffectParams& Params)
+FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffectToTarget(const FDamageEffectParams& Params)
 {
 	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
 	const UAbilitySystemComponent* SourceASC = Params.SourceAbilitySystemComponent;
 	const AActor* SourceAvatarActor = SourceASC->GetAvatarActor();
 
 	FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
-	EffectContextHandle.AddSourceObject(SourceAvatarActor);
+	EffectContextHandle.AddSourceObject(SourceAvatarActor); // Object this effect was created from
+
+	// By packaging Set By Caller Magnitudes into an outgoing Gameplay Effect Spec Handle on the Source ASC, the Target ASC will know what effect to apply on hit
 	FGameplayEffectSpecHandle DamageEffectSpecHandle = SourceASC->MakeOutgoingSpec(Params.DamageGameplayEffectClass, Params.AbilityLevel, EffectContextHandle);
 
+	/*
+	* Set by caller magnitude for the corresponding damage type, such that the damage dealt is determined by the ability itself (via the damage Curve Table)
+	* (Whereas the damage Gameplay Effect simply passes the value through our meta attribute IncomingDamage)
+	*/
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageEffectSpecHandle, Params.DamageType, Params.BaseDamage);
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageEffectSpecHandle, GameplayTags.Debuff_Params_Chance, Params.DebuffChance);
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageEffectSpecHandle, GameplayTags.Debuff_Params_Damage, Params.DebuffDamage);

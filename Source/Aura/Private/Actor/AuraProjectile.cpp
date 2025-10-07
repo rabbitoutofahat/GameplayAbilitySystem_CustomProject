@@ -37,17 +37,14 @@ void AAuraProjectile::BeginPlay()
 	Super::BeginPlay();
 	SetLifeSpan(LifeSpan);	
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AAuraProjectile::OnSphereOverlap);
-	
 	LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent());
 }
 
 void AAuraProjectile::Destroyed()
 {
-	if (!bHit && !HasAuthority())
-	{
-		// If Destroy() replicates before the client's OnSphereOverlap(), the client won't call Destroy(), so we need to play the effects here as well
-		PlayImpactEffects();
-	}
+	// If Destroy() replicates before the client's OnSphereOverlap(), the client won't call Destroy(), so we need to play the effects here as well
+	if (!bHit && !HasAuthority()) PlayImpactEffects();
+	Super::Destroyed();
 }
 
 void AAuraProjectile::PlayImpactEffects()
@@ -60,30 +57,20 @@ void AAuraProjectile::PlayImpactEffects()
 
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (!DamageEffectSpecHandle.Data.IsValid() || DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor) return;
-
-	if (UAuraAbilitySystemLibrary::IsOnSameTeam(DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser(), OtherActor))
-	{
-		return; // Prevents friendly fire
-	}
-
-	if (!bHit)
-	{
-		PlayImpactEffects();
-	}
+	AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+	if (SourceAvatarActor == OtherActor) return; // Prevents self damage
+	if (UAuraAbilitySystemLibrary::IsOnSameTeam(SourceAvatarActor, OtherActor)) return; // Prevents friendly fire
+	if (!bHit) PlayImpactEffects();
 
 	if (HasAuthority())
 	{
 		// Only need to apply a gameplay effect on the server as it will change an attribute, and that attribute change will replicate to clients automatically
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 		{
-			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+			DamageEffectParams.TargetAbilitySystemComponent = TargetASC; // Now we have a TargetASC we can update our DamageEffectParams struct
+			UAuraAbilitySystemLibrary::ApplyDamageEffectToTarget(DamageEffectParams);
 		}
-
 		Destroy();
 	}
-	else
-	{
-		bHit = true;
-	}
+	else bHit = true;
 }

@@ -42,6 +42,7 @@ public:
 	
 	FGameplayTag GetStatusFromAbilityTag(const FGameplayTag& AbilityTag); // Can't be static because it relies on GetStatusTagFromSpec()
 	FGameplayTag GetInputFromAbilityTag(const FGameplayTag& AbilityTag); 
+
 	FGameplayAbilitySpec* GetAbilitySpecFromTag(const FGameplayTag& AbilityTag);
 
 	void UpgradeAttribute(const FGameplayTag& AttributeTag);

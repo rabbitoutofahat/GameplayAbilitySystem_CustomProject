@@ -53,19 +53,12 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContextHandle);
 
 	/*
-	 * Set by caller magnitude for each present damage type, such that the damage dealt is determined by the ability itself (via the damage Curve Table),
-	 * whereas the damage Gameplay Effect simply passes the value through our meta attribute IncomingDamage.
-	 */
+	* Set by caller magnitude for the corresponding damage type, such that the damage dealt is determined by the ability itself (via the damage Curve Table),
+	* whereas the damage Gameplay Effect simply passes the value through our meta attribute IncomingDamage.
+	*/
 	FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
-	for (auto& Pair : DamageTypes)
-	{
-		/*
-		 * Take each damage type tag present in DamageTypes and assign a Damage value based on the associated curve table
-		 * For example, FireBolt only has the Damage_Fire tag, so it does [ScaledDamage] Fire damage, 0 Lightning damage, 0 Arcane damage, and 0 Physical damage.
-		 */
-		const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);
-	}
+	const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, DamageType, ScaledDamage);
 
 	Projectile->DamageEffectSpecHandle = SpecHandle;
 	Projectile->FinishSpawning(SpawnTransform);

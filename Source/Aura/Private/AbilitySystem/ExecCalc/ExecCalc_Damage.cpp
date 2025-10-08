@@ -232,10 +232,10 @@ void UExecCalc_Damage::DetermineDebuff(const FGameplayEffectSpec& Spec, const FG
 				const float SourceDebuffFrequency = Spec.GetSetByCallerMagnitude(GameplayTags.Debuff_Params_Frequency, false, -1.f);
 
 				UAuraAbilitySystemLibrary::SetIsSuccessfulDebuff(EffectContextHandle, bDebuff);
+				UAuraAbilitySystemLibrary::SetDamageType(EffectContextHandle, DamageType);
 				UAuraAbilitySystemLibrary::SetDebuffDamage(EffectContextHandle, SourceDebuffDamage);
 				UAuraAbilitySystemLibrary::SetDebuffDuration(EffectContextHandle, SourceDebuffDuration);
 				UAuraAbilitySystemLibrary::SetDebuffFrequency(EffectContextHandle, SourceDebuffFrequency);
-				UAuraAbilitySystemLibrary::SetDamageType(EffectContextHandle, DamageType);
 			}
 		}
 	}

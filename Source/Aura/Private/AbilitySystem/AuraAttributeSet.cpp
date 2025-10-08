@@ -11,6 +11,7 @@
 #include "Player/AuraPlayerController.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Interaction/PlayerInterface.h"
+#include "AuraAbilityTypes.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -111,6 +112,8 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	// Take the clamped value returned from querying the modifier in PreAttributeChange() and set our actual attributes to those clamped values
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props);
+
+	if (Props.TargetCharacter->Implements<UCombatInterface>() && ICombatInterface::Execute_IsDead(Props.TargetCharacter)) return;
 
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
@@ -286,11 +289,10 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 
 		const bool bBlock = UAuraAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
 		const bool bCrit = UAuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
+		
 		ShowFloatingText(Props, LocalIncomingDamage, bBlock, bCrit);
-		if (UAuraAbilitySystemLibrary::IsSuccessfulDebuff(Props.EffectContextHandle))
-		{
-			Debuff(Props);
-		}
+		
+		if (UAuraAbilitySystemLibrary::IsSuccessfulDebuff(Props.EffectContextHandle)) Debuff(Props);
 	}
 }
 
@@ -330,6 +332,45 @@ void UAuraAttributeSet::HandleIncomingXP(const FEffectProperties& Props)
 
 void UAuraAttributeSet::Debuff(const FEffectProperties& Props)
 {
+	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
+
+	// This is a new effect context, not to cause the debuff, but which applies the debuff's parameters via a dynamic Gameplay Effect we create here in C++
+	FGameplayEffectContextHandle EffectContext = Props.SourceASC->MakeEffectContext(); 
+	EffectContext.AddSourceObject(Props.SourceAvatarActor);
+
+	const FGameplayTag DamageType = UAuraAbilitySystemLibrary::GetDamageType(Props.EffectContextHandle);
+	const float DebuffDamage = UAuraAbilitySystemLibrary::GetDebuffDamage(Props.EffectContextHandle);
+	const float DebuffDuration = UAuraAbilitySystemLibrary::GetDebuffDuration(Props.EffectContextHandle);
+	const float DebuffFrequency = UAuraAbilitySystemLibrary::GetDebuffFrequency(Props.EffectContextHandle);
+
+	FString DebuffName = FString::Printf(TEXT("DynamicDebuff_%s"), *DamageType.ToString());
+	UGameplayEffect* Effect = NewObject<UGameplayEffect>(GetTransientPackage(), FName(DebuffName));
+
+	Effect->DurationPolicy = EGameplayEffectDurationType::HasDuration;
+	Effect->Period = DebuffFrequency;
+	Effect->DurationMagnitude = FScalableFloat(DebuffDuration);
+
+	Effect->InheritableOwnedTagsContainer.AddTag(GameplayTags.DamageTypesToDebuffs[DamageType]);
+
+	Effect->StackingType = EGameplayEffectStackingType::AggregateBySource;
+	Effect->StackLimitCount = 1;
+
+	const int32 Index = Effect->Modifiers.Num(); // If we want to add an n-th modifier to the array, the index of that new modifier would be n-1, i.e., the actual number of modifiers currently in the array
+	Effect->Modifiers.Add(FGameplayModifierInfo());
+	FGameplayModifierInfo& ModifierInfo = Effect->Modifiers[Index];
+
+	ModifierInfo.ModifierMagnitude = FScalableFloat(DebuffDamage);
+	ModifierInfo.ModifierOp = EGameplayModOp::Additive;
+	ModifierInfo.Attribute = UAuraAttributeSet::GetIncomingDamageAttribute();
+
+	FGameplayEffectSpec* MutableSpec = new FGameplayEffectSpec(Effect, EffectContext, 1.f);
+	if (MutableSpec)
+	{
+		FAuraGameplayEffectContext* AuraContext = static_cast<FAuraGameplayEffectContext*>(MutableSpec->GetContext().Get());
+		TSharedPtr<FGameplayTag> DebuffDamageType = MakeShareable(new FGameplayTag(DamageType)); // MakeShareable() here instead of MakeShared() as we're constructing a new FGameplayTag
+		AuraContext->SetDamageType(DebuffDamageType);
+		Props.TargetASC->ApplyGameplayEffectSpecToSelf(*MutableSpec);
+	}
 }
 
 void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const // Non-const reference for our effect properties struct as we want to initialise/change the values of its member variables

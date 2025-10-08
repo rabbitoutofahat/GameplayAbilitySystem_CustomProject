@@ -121,7 +121,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
 
-	DetermineDebuff(Spec, ExecutionParams, EvaluationParameters, TagsToCaptureDefs);
+	DetermineDebuff(Spec, ExecutionParams, EvaluationParameters, TagsToCaptureDefs, EffectContextHandle);
 
 	// Get Damage Set by Caller Magnitude for each Damage Type found in our DamageTypesToResistances container
 	float Damage = 0.f;
@@ -203,7 +203,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 }
 
 void UExecCalc_Damage::DetermineDebuff(const FGameplayEffectSpec& Spec, const FGameplayEffectCustomExecutionParameters& ExecutionParams, FAggregatorEvaluateParameters& EvaluationParameters,
-	const TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition>& InTagsToDefs) const
+	const TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition>& InTagsToDefs, FGameplayEffectContextHandle& EffectContextHandle) const
 {
 	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
 	for (const TTuple<FGameplayTag, FGameplayTag>& Pair : GameplayTags.DamageTypesToDebuffs)
@@ -211,6 +211,7 @@ void UExecCalc_Damage::DetermineDebuff(const FGameplayEffectSpec& Spec, const FG
 		const FGameplayTag& DamageType = Pair.Key;
 		const FGameplayTag& DebuffType = Pair.Value;
 		const float TypeDamage = Spec.GetSetByCallerMagnitude(DamageType, false, -1.f);
+		
 		if (TypeDamage > -.1f) // Padding for floating point imprecision
 		{
 			// Determine if there was a successful debuff application
@@ -220,12 +221,19 @@ void UExecCalc_Damage::DetermineDebuff(const FGameplayEffectSpec& Spec, const FG
 			float TargetDebuffRes = 0.f;
 			ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(InTagsToDefs[ResistanceTag], EvaluationParameters, TargetDebuffRes); // Using the damage type's corresponding resistance attribute as its debuff resistance
 			TargetDebuffRes = FMath::Max<float>(TargetDebuffRes, 0.f);
-
+ 
 			const float EffectiveDebuffChance = SourceDebuffChance * (100 - TargetDebuffRes) / 100.f;
 			const bool bDebuff = FMath::RandRange(0.f, 100.f) < EffectiveDebuffChance;
 			if (bDebuff)
 			{
-				// TODO: What do we do here?
+				const float SourceDebuffDamage = Spec.GetSetByCallerMagnitude(GameplayTags.Debuff_Params_Damage, false, -1.f);
+				const float SourceDebuffDuration = Spec.GetSetByCallerMagnitude(GameplayTags.Debuff_Params_Duration, false, -1.f);
+				const float SourceDebuffFrequency = Spec.GetSetByCallerMagnitude(GameplayTags.Debuff_Params_Frequency, false, -1.f);
+
+				UAuraAbilitySystemLibrary::SetIsSuccessfulDebuff(EffectContextHandle, bDebuff);
+				UAuraAbilitySystemLibrary::SetDebuffDamage(EffectContextHandle, SourceDebuffDamage);
+				UAuraAbilitySystemLibrary::SetDebuffDuration(EffectContextHandle, SourceDebuffDuration);
+				UAuraAbilitySystemLibrary::SetDebuffFrequency(EffectContextHandle, SourceDebuffFrequency);
 			}
 		}
 	}

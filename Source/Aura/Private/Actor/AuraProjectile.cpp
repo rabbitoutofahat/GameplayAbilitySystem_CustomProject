@@ -67,7 +67,10 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		// Only need to apply a gameplay effect on the server as it will change an attribute, and that attribute change will replicate to clients automatically
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 		{
-			DamageEffectParams.TargetAbilitySystemComponent = TargetASC; // Now we have a TargetASC we can update our DamageEffectParams struct
+			// Finish filling out our DamageEffectParams with the member variables that depend on a Target, i.e., the Target's ASC and the Death Impulse direction vector (if this projectile is going to kill the target)
+			const FVector DeathImpulse = GetActorForwardVector() * DamageEffectParams.DeathImpulseMagnitude;
+			DamageEffectParams.DeathImpulse = DeathImpulse;
+			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
 			UAuraAbilitySystemLibrary::ApplyDamageEffectToTarget(DamageEffectParams);
 		}
 		Destroy();

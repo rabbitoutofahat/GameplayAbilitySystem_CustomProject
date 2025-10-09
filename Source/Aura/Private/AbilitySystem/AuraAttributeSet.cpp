@@ -273,7 +273,7 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		const bool bFatal = NewHealth <= 0.f;
 		if (bFatal)
 		{
-			// If the enemy takes fatal damage, the enemy dies and rewards XP to the actor that dealt the fatal blow
+			// If the enemy takes fatal damage, the enemy dies and rewards XP to the actor that dealt the fatal blow; TODO: Use Death Impulse
 			ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
 			if (CombatInterface)
 			{

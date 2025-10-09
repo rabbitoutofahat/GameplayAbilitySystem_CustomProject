@@ -36,7 +36,7 @@ public:
 
 	/* Combat Interface */
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
-	virtual void Die() override;
+	virtual void Die(const FVector& DeathImpulse) override;
 	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& SocketTag) override;
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation() override;
@@ -54,7 +54,7 @@ public:
 	FOnDeathSignature OnDeath;
 
 	UFUNCTION(NetMulticast, Reliable)
-	virtual void MulticastHandleDeath(); // For replicating death effects like ragdolls, animations, etc, to all clients
+	virtual void MulticastHandleDeath(const FVector& DeathImpulse); // For replicating death effects like ragdolls, animations, etc, to all clients
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FTaggedMontage> AttackMontages;

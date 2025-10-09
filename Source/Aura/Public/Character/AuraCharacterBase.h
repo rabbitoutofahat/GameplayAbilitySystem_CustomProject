@@ -18,6 +18,7 @@ class UMaterialInstance;
 class UMaterialInstanceDynamic;
 class UNiagaraSystem;
 struct FTaggedMontage;
+class UDebuffNiagaraComponent;
 
 /**
  *
@@ -45,7 +46,12 @@ public:
 	virtual int32 GetMinionCount_Implementation() override;
 	virtual void IncrementMinionCount_Implementation(int32 Amount) override;
 	virtual ECharacterClass GetCharacterClass_Implementation() const override;
+	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() override;
+	virtual FOnDeathSignature& GetOnDeathDelegate() override;
 	/* End Combat Interface */
+
+	FOnASCRegisteredSignature OnASCRegistered;
+	FOnDeathSignature OnDeath;
 
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath(); // For replicating death effects like ragdolls, animations, etc, to all clients
@@ -128,6 +134,10 @@ protected:
 
 	/* Minions */
 	int32 MinionCount = 0;
+
+	/* Debuff Niagara Components */
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UDebuffNiagaraComponent> BurnDebuffComponent;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Abilities")

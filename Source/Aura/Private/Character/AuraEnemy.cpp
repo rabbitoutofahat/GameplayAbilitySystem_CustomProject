@@ -156,6 +156,7 @@ void AAuraEnemy::InitAbilityActorInfo()
 	{
 		InitialiseDefaultAttributes(); // Should only really be done on the server
 	}
+	OnASCRegistered.Broadcast(AbilitySystemComponent); // For Debuff Niagara Component (can do this on AuraCharacterBase instead, but then remember to call Super after the above code)
 }
 
 void AAuraEnemy::InitialiseDefaultAttributes() const

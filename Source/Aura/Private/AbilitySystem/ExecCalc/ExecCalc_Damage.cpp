@@ -198,8 +198,9 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	if (bCrit) Damage = Damage * 2.f + SourceCritDamage;
 
 	// Fill out an EvaluatedData struct for how we want to modify our target's attribute(s), then pass it into the execution output
+	// Now we can call GetIncomingDamageAttribute() in our Attribute Set to get the value of our Damage meta-attribute and subtract it from the target's health
 	const FGameplayModifierEvaluatedData EvaluatedData(UAuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage);
-	OutExecutionOutput.AddOutputModifier(EvaluatedData);
+	OutExecutionOutput.AddOutputModifier(EvaluatedData); 
 }
 
 void UExecCalc_Damage::DetermineDebuff(const FGameplayEffectSpec& Spec, const FGameplayEffectCustomExecutionParameters& ExecutionParams, FAggregatorEvaluateParameters& EvaluationParameters,

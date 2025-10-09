@@ -149,13 +149,13 @@ void AAuraCharacter::InitAbilityActorInfo()
 	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
 	check(AuraPlayerState);
 
-	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState, this); // Inputs are owner actor (for mixed replication mode this must be the controller), avatar actor
-	Cast<UAuraAbilitySystemComponent>(AuraPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet(); // For binding gameplay effect delegates
-
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 
-	InitialiseDefaultAttributes(); // We want to initialise default attributes by applying it as a gameplay effect to the character at the beginning of the game
+	AbilitySystemComponent->InitAbilityActorInfo(AuraPlayerState, this); // Inputs are owner actor (for mixed replication mode this must be the controller), avatar actor
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet(); // For binding gameplay effect delegates
+
+	OnASCRegistered.Broadcast(AbilitySystemComponent); // For Debuff Niagara Component (can do this on AuraCharacterBase instead, but then remember to call Super after the above code)
 	
 	if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
 	{
@@ -164,6 +164,8 @@ void AAuraCharacter::InitAbilityActorInfo()
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
+
+	InitialiseDefaultAttributes(); // We want to initialise default attributes by applying it as a gameplay effect to the character at the beginning of the game
 }
 
 void AAuraCharacter::MulticastLevelUpParticles_Implementation() const

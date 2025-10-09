@@ -47,5 +47,5 @@ void UDebuffNiagaraComponent::DebuffTagChanged(const FGameplayTag CallbackTag, i
 
 void UDebuffNiagaraComponent::OnOwnerDeath(AActor* DeadActor)
 {
-	Deactivate();
+	Deactivate(); // TODO: Fix Niagara Component not deactivating if the debuff is applied by an ability instance that is fatal
 }

@@ -32,12 +32,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	FScalableFloat Damage;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	float DeathImpulseMagnitude = 60.f;
+
 	UFUNCTION(BlueprintPure)
 	FTaggedMontage GetRandomTaggedMontageFromArray(const TArray<FTaggedMontage>& TaggedMontages) const;
 
 	/*
-	* Debuff Parameters
-	* (Could make these ScalableFloats)
+	* Debuff Parameters (Could make these ScalableFloats)
 	*/ 
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")

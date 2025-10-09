@@ -201,6 +201,15 @@ FVector UAuraAbilitySystemLibrary::GetDeathImpulse(const FGameplayEffectContextH
 	return FVector::ZeroVector;
 }
 
+FVector UAuraAbilitySystemLibrary::GetKnockback(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FAuraGameplayEffectContext* AuraEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get())) // Get() returns a const GameplayEffectContext pointer
+	{
+		return AuraEffectContext->GetKnockback();
+	}
+	return FVector::ZeroVector;
+}
+
 void UAuraAbilitySystemLibrary::SetIsBlockedHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit)
 {
 	if (FAuraGameplayEffectContext* AuraEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
@@ -266,6 +275,14 @@ void UAuraAbilitySystemLibrary::SetDeathImpulse(UPARAM(ref)FGameplayEffectContex
 	}
 }
 
+void UAuraAbilitySystemLibrary::SetKnockback(UPARAM(ref)FGameplayEffectContextHandle& EffectContextHandle, const FVector& InKnockback)
+{
+	if (FAuraGameplayEffectContext* AuraEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		AuraEffectContext->SetKnockback(InKnockback);
+	}
+}
+
 void UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& SphereOrigin)
 {
 	FCollisionQueryParams SphereParams;
@@ -313,6 +330,7 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffectToTarge
 	FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(SourceAvatarActor); // Object this effect was created from
 	SetDeathImpulse(EffectContextHandle, Params.DeathImpulse);
+	SetKnockback(EffectContextHandle, Params.Knockback);
 
 	// By packaging Set By Caller Magnitudes into an outgoing Gameplay Effect Spec Handle on the Source ASC, the Target ASC will know what effect to apply on hit
 	const FGameplayEffectSpecHandle DamageEffectSpecHandle = SourceASC->MakeOutgoingSpec(Params.DamageGameplayEffectClass, Params.AbilityLevel, EffectContextHandle);

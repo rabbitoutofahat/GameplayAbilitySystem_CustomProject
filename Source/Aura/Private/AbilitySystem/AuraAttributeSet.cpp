@@ -271,28 +271,32 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
 
 		const bool bFatal = NewHealth <= 0.f;
+		ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
+
 		if (bFatal)
 		{
 			// If the enemy takes fatal damage, the enemy dies, we apply a death impulse in the direction of the forward vector of the Actor/Projectile that killed it, and reward XP to the actor that dealt the fatal blow
-			ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
 			if (CombatInterface)
 			{
 				CombatInterface->Die(UAuraAbilitySystemLibrary::GetDeathImpulse(Props.EffectContextHandle));
 			}
 			SendXPEvent(Props);
 		}
-		else // If damage is non-fatal, try to activate hit react ability on target
+		else // If damage is non-fatal, launch/knockback target and try to activate hit react ability
 		{
 			FGameplayTagContainer TagContainer;
 			TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
 			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+			const FVector& Knockback = UAuraAbilitySystemLibrary::GetKnockback(Props.EffectContextHandle);
+			if (!Knockback.IsNearlyZero(1.f))
+			{
+				Props.TargetCharacter->LaunchCharacter(Knockback, true, true);
+			}
 		}
 
 		const bool bBlock = UAuraAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
 		const bool bCrit = UAuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
-		
 		ShowFloatingText(Props, LocalIncomingDamage, bBlock, bCrit);
-		
 		if (UAuraAbilitySystemLibrary::IsSuccessfulDebuff(Props.EffectContextHandle)) Debuff(Props);
 	}
 }

@@ -22,7 +22,6 @@ TArray<FVector> UAuraSummonAbility::GetSpawnLocations()
 
 		SpawnLocations.Add(ChosenSpawnLocation);
 	}
-	
 	return SpawnLocations;
 }
 

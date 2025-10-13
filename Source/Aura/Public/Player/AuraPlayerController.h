@@ -16,6 +16,7 @@ class UAuraAbilitySystemComponent;
 class USplineComponent;
 class UNavigationSystemV1;
 class UDamageTextComponent;
+class UNiagaraSystem;
 
 /**
  * 
@@ -86,6 +87,9 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UNavigationSystemV1> NavSys;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UNiagaraSystem> ClickNiagaraSystem;
 
 	void AutoRun();
 

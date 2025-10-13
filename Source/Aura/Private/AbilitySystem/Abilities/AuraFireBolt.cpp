@@ -3,9 +3,9 @@
 
 #include "AbilitySystem/Abilities/AuraFireBolt.h"
 #include "Interaction/CombatInterface.h"
-#include "Kismet/KismetSystemLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Actor/AuraProjectile.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 FString UAuraFireBolt::GetDescription(int32 Level)
 {
@@ -110,6 +110,25 @@ void UAuraFireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, co
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
 		Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+
+		if (HomingTarget && HomingTarget->Implements<UCombatInterface>())
+		{
+			Projectile->ProjectileMovement->HomingTargetComponent = HomingTarget->GetRootComponent();
+		}
+		else
+		{
+			/*
+			* If the mouse cursor hits some environmental object (e.g., a large floor tile), the homing target will be set to that object's mesh origin, which might not necessarily be where the player clicked. 
+			* To remedy this problem, we create a USceneComponent under the mouse cursor hit result, and set it as the Projectile's HomingTargetComponent. A SceneComponent constructed by NewObject() is not marked 
+			* for garbage collection, so we store it in the HomingTargetSceneComponent member variable in AuraProjectile.h which is marked with UPROPERTY().
+			*/
+			Projectile->HomingTargetSceneComponent = NewObject<USceneComponent>(USceneComponent::StaticClass());
+			Projectile->HomingTargetSceneComponent->SetWorldLocation(ProjectileTargetLocation);
+			Projectile->ProjectileMovement->HomingTargetComponent = Projectile->HomingTargetSceneComponent;
+		}
+
+		Projectile->ProjectileMovement->HomingAccelerationMagnitude = FMath::FRandRange(HomingAccelerationMin, HomingAccelerationMax);
+		Projectile->ProjectileMovement->bIsHomingProjectile = bLaunchHomingProjectiles;
 		Projectile->FinishSpawning(SpawnTransform);
 	}
 }

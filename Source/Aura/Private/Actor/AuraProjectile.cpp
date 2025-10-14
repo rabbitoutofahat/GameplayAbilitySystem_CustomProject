@@ -42,6 +42,12 @@ void AAuraProjectile::BeginPlay()
 
 void AAuraProjectile::Destroyed()
 {
+	if (LoopingSoundComponent)
+	{
+		LoopingSoundComponent->Stop();
+		LoopingSoundComponent->DestroyComponent();
+	}
+
 	// If Destroy() replicates before the client's OnSphereOverlap(), the client won't call Destroy(), so we need to play the effects here as well
 	if (!bHit && !HasAuthority()) PlayImpactEffects();
 	Super::Destroyed();
@@ -51,7 +57,11 @@ void AAuraProjectile::PlayImpactEffects()
 {
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation());
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-	if (LoopingSoundComponent) LoopingSoundComponent->Stop();
+	if (LoopingSoundComponent)
+	{
+		LoopingSoundComponent->Stop();
+		LoopingSoundComponent->DestroyComponent();
+	}
 	bHit = true;
 }
 

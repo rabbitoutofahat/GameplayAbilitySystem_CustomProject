@@ -41,19 +41,40 @@ void UAuraAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSub
 	}
 }
 
-void UAuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
+void UAuraAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)
 {
 	if (!InputTag.IsValid()) return;
-	
+
 	// There are 'activatable' abilities due to the presence of 'blocked' abilities, i.e., activation abilities with certain tags can be 'blocked' by other tags or abilities
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag)) // Adding the input tag to the DynamicAbilityTags container allows us to activate/deactivate abilities.
 		{
 			AbilitySpecInputPressed(AbilitySpec); // Sets a boolean on the ability spec that keeps track of whether or not this particular input is being pressed
+			if (AbilitySpec.IsActive())
+			{
+				// The only point in invoking a replicated event for input pressed is if we're pressing input while the ability is already active
+				InvokeReplicatedEvent(
+					EAbilityGenericReplicatedEvent::InputPressed,
+					AbilitySpec.Handle,
+					AbilitySpec.ActivationInfo.GetActivationPredictionKey());
+			}
+		}
+	}
+}
+
+void UAuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
+{
+	if (!InputTag.IsValid()) return;
+	
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag)) 
+		{
+			AbilitySpecInputPressed(AbilitySpec); 
 			if (!AbilitySpec.IsActive())
 			{
-				TryActivateAbility(AbilitySpec.Handle);
+				TryActivateAbility(AbilitySpec.Handle); // I.e., we are holding down the input but the ability isn't active yet
 			}
 		}
 	}
@@ -65,9 +86,13 @@ void UAuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& In
 
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
-		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag) && AbilitySpec.IsActive())
 		{
 			AbilitySpecInputReleased(AbilitySpec); // Informs the ability that its input is released (don't want to necessarily end the ability when releasing the input however)
+			InvokeReplicatedEvent(
+				EAbilityGenericReplicatedEvent::InputReleased, 
+				AbilitySpec.Handle, 
+				AbilitySpec.ActivationInfo.GetActivationPredictionKey()); // Need to inform the server we are releasing the input for the Wait Input Released blueprint function to work
 		}
 	}
 }

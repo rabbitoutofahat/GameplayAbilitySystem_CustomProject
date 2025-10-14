@@ -121,6 +121,7 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 		bTargeting = ThisActor ? true : false; // Is ThisActor == nullptr?
 	    bAutoRunning = false; // If it's a short press we are going to auto run, but we don't know that until we release the mouse button
 	}
+	if (GetASC()) GetASC()->AbilityInputTagPressed(InputTag);
 }
 
 void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)

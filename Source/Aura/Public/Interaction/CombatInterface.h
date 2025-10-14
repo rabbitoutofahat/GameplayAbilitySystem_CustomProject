@@ -88,9 +88,6 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	ECharacterClass GetCharacterClass() const;
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void SetInShockLoop(bool bInLoop);
-
 	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() = 0;
 	virtual FOnDeathSignature& GetOnDeathDelegate() = 0;
 };

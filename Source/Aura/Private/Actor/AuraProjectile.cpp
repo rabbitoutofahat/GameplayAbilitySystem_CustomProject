@@ -16,6 +16,7 @@ AAuraProjectile::AAuraProjectile()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	bReplicates = true;
+	AActor::SetReplicateMovement(true); // Corrects projectile movement on the client
 
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
 	SetRootComponent(Sphere);
@@ -67,6 +68,8 @@ void AAuraProjectile::PlayImpactEffects()
 
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (!IsValid(DamageEffectParams.SourceAbilitySystemComponent)) return; // Prevents projectiles spawned by clients triggering an unexpected check/assert when colliding with enemies
+
 	AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
 	if (SourceAvatarActor == OtherActor) return; // Prevents self damage
 	if (UAuraAbilitySystemLibrary::IsOnSameTeam(SourceAvatarActor, OtherActor)) return; // Prevents friendly fire

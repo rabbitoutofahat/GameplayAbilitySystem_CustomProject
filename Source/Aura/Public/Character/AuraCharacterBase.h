@@ -46,6 +46,7 @@ public:
 	virtual int32 GetMinionCount_Implementation() override;
 	virtual void IncrementMinionCount_Implementation(int32 Amount) override;
 	virtual ECharacterClass GetCharacterClass_Implementation() const override;
+	virtual USkeletalMeshComponent* GetWeapon_Implementation() override;
 	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() override;
 	virtual FOnDeathSignature& GetOnDeathDelegate() override;
 	/* End Combat Interface */

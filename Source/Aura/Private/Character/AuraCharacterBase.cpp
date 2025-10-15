@@ -142,6 +142,11 @@ ECharacterClass AAuraCharacterBase::GetCharacterClass_Implementation() const
 	return CharacterClass;
 }
 
+USkeletalMeshComponent* AAuraCharacterBase::GetWeapon_Implementation()
+{
+	return Weapon;
+}
+
 FOnASCRegisteredSignature AAuraCharacterBase::GetOnASCRegisteredDelegate()
 {
 	return OnASCRegistered;

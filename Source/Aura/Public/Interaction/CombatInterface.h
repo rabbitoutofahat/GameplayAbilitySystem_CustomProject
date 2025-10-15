@@ -88,6 +88,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	ECharacterClass GetCharacterClass() const;
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	USkeletalMeshComponent* GetWeapon();
+
 	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() = 0;
-	virtual FOnDeathSignature& GetOnDeathDelegate() = 0;
+	virtual FOnDeathSignature& GetOnDeathDelegate() = 0; // Broadcasts when an enemy dies to destroy any active Debuff Niagara Components
 };

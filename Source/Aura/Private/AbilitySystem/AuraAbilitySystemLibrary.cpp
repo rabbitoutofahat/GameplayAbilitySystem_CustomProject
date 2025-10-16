@@ -302,6 +302,80 @@ void UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldC
 	}
 }
 
+void UAuraAbilitySystemLibrary::GetClosestTargets(int32 MaxTargets, const TArray<AActor*>& Actors, TArray<AActor*>& OutClosestTargets, const FVector& Origin)
+{
+	if (Actors.Num() <= MaxTargets)
+	{
+		OutClosestTargets = Actors;
+		return;
+	}
+
+	TMap<AActor*, float> ClosestTargets;
+
+	for (AActor* Actor : Actors)
+	{
+	    if (Actors.Num() == 0) break;
+		const double DistanceToOrigin = (Origin - Actor->GetActorLocation()).Length();
+		if (ClosestTargets.Num() < MaxTargets)
+		{
+			ClosestTargets.Add(Actor);
+			ClosestTargets[Actor] = DistanceToOrigin;
+		}
+		else
+		{
+			double LongestDistance = 0.f;
+			AActor* ActorToRemove = nullptr;
+			for (auto& Pair : ClosestTargets)
+			{
+				if (Pair.Value > LongestDistance) 
+				{
+					LongestDistance = Pair.Value;
+					ActorToRemove = Pair.Key;
+				}
+			}
+			if (DistanceToOrigin < LongestDistance)
+			{
+				ClosestTargets.Remove(ActorToRemove);
+				ClosestTargets.Add(Actor);
+				ClosestTargets[Actor] = DistanceToOrigin;
+			}
+		}
+	}
+	for (auto& Pair : ClosestTargets)
+	{
+		OutClosestTargets.AddUnique(Pair.Key);
+	}
+
+    // COURSE SOLUTION
+	//if (Actors.Num() <= MaxTargets) 
+	//{
+	//	OutClosestTargets = Actors;
+	//	return;
+	//}
+	//
+	//TArray<AActor*> ActorsToCheck = Actors;
+	//int32 NumTargetsFound = 0;
+	//
+	//while (NumTargetsFound < MaxTargets)
+	//{
+	//	if (Actors.Num() == 0) break;
+	//	double ClosestDistance = TNumericLimits<double>::Max();
+	//	AActor* ClosestActor;
+	//	for (AActor* PotentialTarget : ActorsToCheck)
+	//	{
+	//		const double Distance = (PotentialTarget->GetActorLocation() - Origin).Length();
+	//		if (Distance < ClosestDistance)
+	//		{
+	//			ClosestDistance = Distance;
+	//			ClosestActor = PotentialTarget;
+	//		}
+	//	}
+	//	ActorsToCheck.Remove(ClosestActor);
+	//	OutClosestTargets.AddUnique(ClosestActor);
+	//	++NumTargetsFound;
+	//}
+}
+
 bool UAuraAbilitySystemLibrary::IsOnSameTeam(const AActor* FirstActor, const AActor* SecondActor)
 {
 	const bool bBothArePlayers = FirstActor->ActorHasTag(FName("Player")) && SecondActor->ActorHasTag(FName("Player"));

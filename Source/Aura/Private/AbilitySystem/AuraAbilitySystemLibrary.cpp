@@ -315,6 +315,7 @@ void UAuraAbilitySystemLibrary::GetClosestTargets(int32 MaxTargets, const TArray
 	for (AActor* Actor : Actors)
 	{
 	    if (Actors.Num() == 0) break;
+		if (Actor->ActorHasTag(FName("Player"))) continue;
 		const double DistanceToOrigin = (Origin - Actor->GetActorLocation()).Length();
 		if (ClosestTargets.Num() < MaxTargets)
 		{

@@ -282,11 +282,15 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 			}
 			SendXPEvent(Props);
 		}
-		else // If damage is non-fatal, launch/knockback target and try to activate hit react ability
+		else // If damage is non-fatal, launch/knockback target and try to activate hit react or shock loop depending on ability
 		{
-			FGameplayTagContainer TagContainer;
-			TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
-			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+			if (Props.TargetCharacter->Implements<UCombatInterface>() && !ICombatInterface::Execute_IsBeingShocked(Props.TargetCharacter))
+			{
+				FGameplayTagContainer TagContainer;
+				TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
+				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+			}
+		
 			const FVector& Knockback = UAuraAbilitySystemLibrary::GetKnockback(Props.EffectContextHandle);
 			if (!Knockback.IsNearlyZero(1.f))
 			{

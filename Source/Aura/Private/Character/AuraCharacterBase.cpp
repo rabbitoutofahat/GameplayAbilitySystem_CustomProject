@@ -63,7 +63,7 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& Deat
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Dissolve();
 	bDead = true;
-	OnDeath.Broadcast(this); // For turning off any Debuff Niagara Components
+	OnDeath.Broadcast(this);
 }
 
 void AAuraCharacterBase::BeginPlay()

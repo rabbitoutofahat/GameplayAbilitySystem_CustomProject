@@ -92,5 +92,10 @@ public:
 	USkeletalMeshComponent* GetWeapon();
 
 	virtual FOnASCRegisteredSignature GetOnASCRegisteredDelegate() = 0;
-	virtual FOnDeathSignature& GetOnDeathDelegate() = 0; // Broadcasts when an enemy dies to destroy any active Debuff Niagara Components
+
+	/*
+	* Broadcasts when an enemy dies to destroy any active Debuff Niagara Components and end any offensive abilities Aura is channeling on that target
+	* Important to return a reference to the actual delegate on whichever character broadcasts it
+	*/
+	virtual FOnDeathSignature& GetOnDeathDelegate() = 0;
 };

@@ -32,6 +32,8 @@ AAuraEnemy::AAuraEnemy()
 	bUseControllerRotationYaw = false;
 
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+
+	BaseWalkSpeed = 250.f;
 }
 
 void AAuraEnemy::PossessedBy(AController* NewController)
@@ -117,6 +119,16 @@ void AAuraEnemy::BeginPlay()
 	}
 }
 
+void AAuraEnemy::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	Super::StunTagChanged(CallbackTag, NewCount);
+
+	if (AuraAIController && AuraAIController->GetBlackboardComponent())
+	{
+		AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("Stunned"), bIsStunned);
+	}
+}
+
 void AAuraEnemy::BindCallbacksToDependencies(const UAuraAttributeSet* AuraAS)
 {
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAS->GetHealthAttribute()).AddLambda(
@@ -156,7 +168,10 @@ void AAuraEnemy::InitAbilityActorInfo()
 	{
 		InitialiseDefaultAttributes(); // Should only really be done on the server
 	}
-	OnASCRegistered.Broadcast(AbilitySystemComponent); // For Debuff Niagara Component (can do this on AuraCharacterBase instead, but then remember to call Super after the above code)
+
+	// Can put these lines on AuraCharacterBase instead, but then remember to call Super after the above code (i.e., after ASC is valid)
+	OnASCRegistered.Broadcast(AbilitySystemComponent); // For Debuff Niagara Component 
+	AbilitySystemComponent->RegisterGameplayTagEvent(FAuraGameplayTags::Get().Debuff_Stun, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AAuraEnemy::StunTagChanged);
 }
 
 void AAuraEnemy::InitialiseDefaultAttributes() const

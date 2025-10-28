@@ -281,7 +281,7 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 	}
 }
 
-void UAuraAbilitySystemComponent::ClientEquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const int32 Level, const FGameplayTag& NewInputSlot, const FGameplayTag& OldInputSlot)
+void UAuraAbilitySystemComponent::ClientEquipAbility_Implementation(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const int32 Level, const FGameplayTag& NewInputSlot, const FGameplayTag& OldInputSlot)
 {
 	AbilityEquippedDelegate.Broadcast(AbilityTag, Status, Level, NewInputSlot, OldInputSlot);
 }

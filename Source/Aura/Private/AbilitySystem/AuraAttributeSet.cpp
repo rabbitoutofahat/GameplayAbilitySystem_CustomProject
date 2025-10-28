@@ -322,12 +322,9 @@ void UAuraAttributeSet::HandleIncomingXP(const FEffectProperties& Props)
 		const int32 NumLevelUps = NewLevel - CurrentLevel; // Covers cases where the amount of IncomingXP results in multiple level ups
 		if (NumLevelUps > 0)
 		{
-			const int32 AttributePointsReward = IPlayerInterface::Execute_GetAttributePointsReward(Props.SourceCharacter, CurrentLevel);
-			const int32 SpellPointsReward = IPlayerInterface::Execute_GetSpellPointsReward(Props.SourceCharacter, CurrentLevel);
-
 			IPlayerInterface::Execute_AddToPlayerLevel(Props.SourceCharacter, NumLevelUps);
-			IPlayerInterface::Execute_AddToAttributePoints(Props.SourceCharacter, AttributePointsReward);
-			IPlayerInterface::Execute_AddToSpellPoints(Props.SourceCharacter, SpellPointsReward);
+			IPlayerInterface::Execute_AddToAttributePoints(Props.SourceCharacter, NumLevelUps);
+			IPlayerInterface::Execute_AddToSpellPoints(Props.SourceCharacter, NumLevelUps);
 
 			bTopOffHealth = true;
 			bTopOffMana = true;

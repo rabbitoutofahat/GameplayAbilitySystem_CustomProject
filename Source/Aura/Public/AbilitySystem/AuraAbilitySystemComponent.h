@@ -46,7 +46,14 @@ public:
 	FGameplayTag GetStatusFromAbilityTag(const FGameplayTag& AbilityTag); // Can't be static because it relies on GetStatusTagFromSpec()
 	FGameplayTag GetInputFromAbilityTag(const FGameplayTag& AbilityTag); 
 
+	bool InputSlotIsEmpty(const FGameplayTag& Slot);
+	static bool AbilityHasSlot(const FGameplayAbilitySpec& Spec, const FGameplayTag& Slot);
+	static bool AbilityHasAnySlot(const FGameplayAbilitySpec& Spec);
+	bool IsPassiveAbility(const FGameplayAbilitySpec& Spec) const;
+	static void AssignSlotToAbility(FGameplayAbilitySpec& Spec, const FGameplayTag& Slot);
+	 
 	FGameplayAbilitySpec* GetAbilitySpecFromTag(const FGameplayTag& AbilityTag);
+	FGameplayAbilitySpec* GetAbilitySpecFromSlot(const FGameplayTag& Slot);
 
 	void UpgradeAttribute(const FGameplayTag& AttributeTag);
 
@@ -66,7 +73,7 @@ public:
 
 	bool GetDescriptionsByAbilityTag(const FGameplayTag& AbilityTag, FString& OutDescription, FString& OutNextLevelDescription);
 
-	void ClearSlot(FGameplayAbilitySpec* Spec); // Clear the ability of its input slot
+	static void ClearSlot(FGameplayAbilitySpec* Spec); // Clear the ability of its input slot
 	void ClearAbilitiesOfSlot(const FGameplayTag& InputSlot); // Clear the input slot of any equipped abilities
 
 protected:

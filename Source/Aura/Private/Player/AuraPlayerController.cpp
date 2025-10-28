@@ -14,6 +14,7 @@
 #include "GameFramework/Character.h"
 #include "UI/Widget/DamageTextComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "Actor/AuraMagicCircle.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
@@ -28,6 +29,7 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 
 	CursorTrace();
 	AutoRun();
+	UpdateMagicCircleLocation();
 }
 
 void AAuraPlayerController::ShowDamageNumber_Implementation(float Damage, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit)
@@ -41,6 +43,16 @@ void AAuraPlayerController::ShowDamageNumber_Implementation(float Damage, AChara
 		DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); // Detach from the target character so that it doesn't move with them and can play its own animation
 		DamageText->SetDamageText(Damage, bBlockedHit, bCriticalHit);
 	}
+}
+
+void AAuraPlayerController::ShowMagicCircle()
+{
+	if (!IsValid(MagicCircle)) MagicCircle = GetWorld()->SpawnActor<AAuraMagicCircle>(MagicCircleClass);
+}
+
+void AAuraPlayerController::HideMagicCircle()
+{
+	if (IsValid(MagicCircle)) MagicCircle->Destroy();
 }
 
 void AAuraPlayerController::BeginPlay()
@@ -240,5 +252,13 @@ void AAuraPlayerController::AutoRun()
 
 		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
 		if (DistanceToDestination <= AutoRunAcceptanceRadius) bAutoRunning = false;
+	}
+}
+
+void AAuraPlayerController::UpdateMagicCircleLocation()
+{
+	if (IsValid(MagicCircle))
+	{
+		MagicCircle->SetActorLocation(CursorHit.ImpactPoint);
 	}
 }

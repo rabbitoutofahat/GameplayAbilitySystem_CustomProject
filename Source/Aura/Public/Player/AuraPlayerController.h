@@ -17,6 +17,7 @@ class USplineComponent;
 class UNavigationSystemV1;
 class UDamageTextComponent;
 class UNiagaraSystem;
+class AAuraMagicCircle;
 
 /**
  * 
@@ -32,6 +33,12 @@ public:
 
 	UFUNCTION(Client, Reliable) // RPC (Remote Procedure Call) to show damage numbers on the client
 	void ShowDamageNumber(float Damage, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit);
+
+	UFUNCTION(BlueprintCallable)
+	void ShowMagicCircle();
+
+	UFUNCTION(BlueprintCallable)
+	void HideMagicCircle();
 
 protected:
 	virtual void BeginPlay() override;
@@ -95,4 +102,12 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UDamageTextComponent> DamageTextComponentClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AAuraMagicCircle> MagicCircleClass;
+
+	UPROPERTY()
+	TObjectPtr<AAuraMagicCircle> MagicCircle;
+
+	void UpdateMagicCircleLocation();
 };

@@ -98,6 +98,6 @@ public:
 	void SetIsBeingShocked(bool bInShock);
 
 	// Important to return a reference to the actual delegate on whichever character broadcasts it
-	virtual FOnASCRegisteredSignature& GetOnASCRegisteredDelegate() = 0;  // For Debuff Niagara Component
+	virtual FOnASCRegisteredSignature& GetOnASCRegisteredDelegate() = 0;  // For Debuff and Passive Niagara Components
 	virtual FOnDeathSignature& GetOnDeathDelegate() = 0; // Broadcasts when an enemy dies to destroy any active Debuff Niagara Components and end any offensive abilities Aura is channeling on that target
 };

@@ -208,6 +208,11 @@ void UAuraAbilitySystemComponent::AssignSlotToAbility(FGameplayAbilitySpec& Spec
 	Spec.DynamicAbilityTags.AddTag(Slot);
 }
 
+void UAuraAbilitySystemComponent::MulticastActivatePassiveAbility_Implementation(const FGameplayTag& AbilityTag, bool bActivate)
+{
+	ActivatePassiveDelegate.Broadcast(AbilityTag, bActivate);
+}
+
 FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetAbilitySpecFromTag(const FGameplayTag& AbilityTag)
 {
 	FScopedAbilityListLock ActiveScopeLock(*this);
@@ -331,6 +336,7 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 					// Is the ability we're clearing from this slot passive? If so, we need to deactivate it
 					if(IsPassiveAbility(*SpecWithSlot))
 					{
+						MulticastActivatePassiveAbility(GetAbilityTagFromSpec(*SpecWithSlot), false);
 						DeactivatePassiveDelegate.Broadcast(GetAbilityTagFromSpec(*SpecWithSlot));
 					}
 
@@ -341,6 +347,7 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 			if (!AbilityHasAnySlot(*AbilitySpec) && IsPassiveAbility(*AbilitySpec)) // Passive ability doesn't yet have a slot (it's not active) -> needs to be activated when equipped
 			{
 				TryActivateAbility(AbilitySpec->Handle);
+				MulticastActivatePassiveAbility(AbilityTag, true);
 			}
 
 			AssignSlotToAbility(*AbilitySpec, InputSlot);

@@ -24,7 +24,7 @@ void UDebuffNiagaraComponent::BeginPlay()
 	else if (CombatInterface) // In case we try to register the Gameplay Tag Event before the ASC is initialised, have the ASC broadcast a delegate when it is registered
 	{
 		/*
-		* A Weak Lambda takes in an additional parameter, a UObject, which it wraps in a weak pointer, which does not affect it's garbage collection reference count, but nevertheless
+		* A Weak Lambda takes in an additional parameter, a UObject, and it wraps in a weak pointer. This does not affect it's garbage collection reference count, but nevertheless
 		* keeps track of that object and knows when it is no longer valid. Therefore, if the UObject is no longer valid, the Weak Lambda will not be executed.
 		*/
 		CombatInterface->GetOnASCRegisteredDelegate().AddWeakLambda(this,

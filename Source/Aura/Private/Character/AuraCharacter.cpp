@@ -13,6 +13,7 @@
 #include "Camera/CameraComponent.h"
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
+#include "Actor/AuraMagicCircle.h"
 
 AAuraCharacter::AAuraCharacter()
 {
@@ -137,6 +138,22 @@ void AAuraCharacter::AddToSpellPoints_Implementation(int32 InSpellPoints)
 void AAuraCharacter::LevelUp_Implementation()
 {
 	MulticastLevelUpParticles();
+}
+
+void AAuraCharacter::ShowMagicCircle_Implementation(UMaterialInterface* DecalMaterial)
+{
+	if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
+	{
+		AuraPlayerController->ShowMagicCircle(DecalMaterial);
+	}
+}
+
+void AAuraCharacter::HideMagicCircle_Implementation()
+{
+	if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
+	{
+		AuraPlayerController->HideMagicCircle();
+	}
 }
 
 int32 AAuraCharacter::GetPlayerLevel_Implementation()

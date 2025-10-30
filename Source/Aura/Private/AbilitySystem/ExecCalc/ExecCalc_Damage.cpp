@@ -140,6 +140,47 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		// Get the Gameplay Ability's Set By Caller Magnitudes for each Damage Type Tag. For example, the only non-zero Magnitude for FireBolt should be for the Damage_Fire tag
 		float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag, false); // bool WarnIfNotFound set to false to turn off log warnings
 		DamageTypeValue += (100.f - Resistance) / 100.f;
+
+		if (UAuraAbilitySystemLibrary::IsRadialDamage(EffectContextHandle))
+		{
+			// * COURSE SOLUTION *
+			// Apply radial damage with falloff
+			// 1. override TakeDamage in AuraCharacterBase *DONE*
+			// 2. create delegate OnDamageDelegate, broadcast damage received in TakeDamage *DONE*
+			// 3. bind lambda to OnDamageDelegate on the Target here
+			// 4. call UGameplayStatics::ApplyRadialDamageWithFalloff to cause damage (this will result in TakeDamage being called on the Target, which will then broadcast OnDamageDelegate)
+			// 5. in lambda, set DamageTypeValue to the damage received from the broadcast
+			//
+			//if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(TargetAvatar))
+			//{
+			//	CombatInterface->GetOnDamageSignature().AddLambda([&](float DamageAmount)
+			//		{
+			//			DamageTypeValue = DamageAmount;
+			//		});
+			//}
+			//UGameplayStatics::ApplyRadialDamageWithFalloff(
+			//	TargetAvatar,
+			//	DamageTypeValue,
+			//	0.f,
+			//	UAuraAbilitySystemLibrary::GetRadialDamageOrigin(EffectContextHandle),
+			//	UAuraAbilitySystemLibrary::GetRadialDamageInnerRadius(EffectContextHandle),
+			//	UAuraAbilitySystemLibrary::GetRadialDamageOuterRadius(EffectContextHandle),
+			//	1.f,
+			//	UDamageType::StaticClass(),
+			//	TArray<AActor*>(),
+			//	SourceAvatar,
+			//	nullptr);
+
+			DamageTypeValue = UAuraAbilitySystemLibrary::ApplyRadialDamageWithFalloff(
+				TargetAvatar,
+				DamageTypeValue,
+				0.f,
+				UAuraAbilitySystemLibrary::GetRadialDamageOrigin(EffectContextHandle),
+				UAuraAbilitySystemLibrary::GetRadialDamageInnerRadius(EffectContextHandle),
+				UAuraAbilitySystemLibrary::GetRadialDamageOuterRadius(EffectContextHandle),
+				1.f);
+		}
+
 		Damage += DamageTypeValue;
 	}
 

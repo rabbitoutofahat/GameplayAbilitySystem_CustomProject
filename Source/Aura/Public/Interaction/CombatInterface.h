@@ -15,6 +15,7 @@ class UAbilitySystemComponent;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnASCRegisteredSignature, UAbilitySystemComponent*);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeathSignature, AActor*, DeadActor);
+//DECLARE_MULTICAST_DELEGATE_OneParam(FOnDamageSignature, float /*DamageAmount*/);
 
 USTRUCT(BlueprintType)
 struct FTaggedMontage
@@ -100,4 +101,5 @@ public:
 	// Important to return a reference to the actual delegate on whichever character broadcasts it
 	virtual FOnASCRegisteredSignature& GetOnASCRegisteredDelegate() = 0;  // For Debuff and Passive Niagara Components
 	virtual FOnDeathSignature& GetOnDeathDelegate() = 0; // Broadcasts when an enemy dies to destroy any active Debuff Niagara Components and end any offensive abilities Aura is channeling on that target
+	//virtual FOnDamageSignature& GetOnDamageDelegate() = 0;
 };

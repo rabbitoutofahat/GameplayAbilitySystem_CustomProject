@@ -33,7 +33,6 @@ public:
 	AAuraCharacterBase();
 	virtual void Tick(float DeltaTime) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const; // Needed if we're replicating member variables (in this case bIsStunned)
-	//virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	// Pointers for our ability system component and attribute set after implementing IAbilitySystemInterface above, helps everything in the system interact with eachother cleanly
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -56,12 +55,10 @@ public:
 	virtual void SetIsBeingShocked_Implementation(bool bInShock) override;
 	virtual FOnASCRegisteredSignature& GetOnASCRegisteredDelegate() override;
 	virtual FOnDeathSignature& GetOnDeathDelegate() override;
-	//virtual FOnDamageSignature& GetOnDamageDelegate() override;
 	/* End Combat Interface */
 
 	FOnASCRegisteredSignature OnASCRegistered;
 	FOnDeathSignature OnDeath;
-	//FOnDamageSignature OnDamage;
 
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath(const FVector& DeathImpulse); // For replicating death effects like ragdolls, animations, etc, to all clients

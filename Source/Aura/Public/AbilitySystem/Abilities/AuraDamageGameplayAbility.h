@@ -23,6 +23,10 @@ public:
 	UFUNCTION(BlueprintPure)
 	FDamageEffectParams MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr) const;
 
+	// If overriding Death/Knockback impulse direction on character blueprint, apply them with this function
+	UFUNCTION(BlueprintPure)
+	FVector GetImpulse(const AActor* TargetActor, const FVector& OverrideDirection = FVector::ZeroVector, const bool bOverrideDirection = false, const float PitchOverride = 0.f) const;
+
 	UFUNCTION(BlueprintPure)
 	float GetDamageAtLevel() const;
 	
@@ -36,10 +40,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	FScalableFloat Damage;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
 	float DeathImpulseMagnitude = 10000.f;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
 	float KnockbackMagnitude = 200.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")

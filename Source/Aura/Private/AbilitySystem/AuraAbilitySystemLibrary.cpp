@@ -545,8 +545,3 @@ float UAuraAbilitySystemLibrary::ApplyRadialDamageWithFalloff(const AActor* Targ
 	float DamageScale = RadialDamageParams.GetDamageScale((Origin - TargetActor->GetActorLocation()).Length());
 	return BaseDamage * DamageScale;
 }
-
-void UAuraAbilitySystemLibrary::SetIsRadialDamageEffectParam(UPARAM(ref)FDamageEffectParams& DamageEffectParams, bool IsRadial)
-{
-	DamageEffectParams.bIsRadialDamage = IsRadial;
-}

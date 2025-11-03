@@ -504,7 +504,7 @@ TArray<FRotator> UAuraAbilitySystemLibrary::EvenlySpacedRotators(const FVector& 
 	const FVector LeftOfSpread = ForwardVector.RotateAngleAxis(-Spread / 2.f, RotationAxis);
 	if (NumRotators > 1)
 	{
-		const float DeltaSpread = Spread / (NumRotators - 1);
+		const float DeltaSpread = Spread < 360.f ? Spread / (NumRotators - 1) : 360.f / NumRotators; // Prevents first and last rotators from being the same when Spread is 360 degrees
 		for (int32 i = 0; i < NumRotators; i++)
 		{
 			const FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i, FVector::UpVector);

@@ -39,12 +39,14 @@ protected:
 	UFUNCTION()
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	// Boolean used to determine whether or not we still need to play projectile impact effects by the time the projectile is destroyed on the client, i.e., "Has the projectile already hit on the server?"
+	bool bHit = false;
+
+	bool IsValidOverlap(AActor* OtherActor);
+
 private:
 	UPROPERTY(EditDefaultsOnly)
 	float LifeSpan = 15.f;
-
-	// Boolean used to determine whether or not we still need to play projectile impact effects by the time the projectile is destroyed on the client, i.e., "Has the projectile already hit (on the server)?"
-	bool bHit = false;
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> Sphere;

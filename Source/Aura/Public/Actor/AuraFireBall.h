@@ -24,4 +24,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
+
+	UPROPERTY(BlueprintReadWrite)
+	FDamageEffectParams ExplosionDamageParams; // Want separate params for when our fireballs return to Aura and explode (for radial damage)
 };

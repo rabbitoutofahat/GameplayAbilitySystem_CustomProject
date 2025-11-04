@@ -33,9 +33,12 @@ void AAuraFireBall::PlayImpactEffects()
 {
 	if (GetOwner())
 	{
+		/*
+		* If something is already replicated/predicted (for example, animations which are only executed on clients), use these "local" non-replicated Gameplay Cues,
+		* as regular Gameplay Cues result in an expensive multicast RPC, and these should be used sparingly.
+		*/
 		FGameplayCueParameters CueParams;
 		CueParams.Location = GetActorLocation();
-		// If something is already replicated/predicted, use these local (non-replicated) Gameplay Cues. For example, using animations which are only executed on the client, so no need for expensive RPCs
 		UGameplayCueManager::ExecuteGameplayCue_NonReplicated(GetOwner(), FAuraGameplayTags::Get().GameplayCue_FireBlast, CueParams); 
 	}
 

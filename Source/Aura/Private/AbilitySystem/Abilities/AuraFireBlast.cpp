@@ -76,7 +76,7 @@ TArray<AAuraFireBall*> UAuraFireBlast::SpawnFireBalls()
 		AAuraFireBall* FireBall = GetWorld()->SpawnActorDeferred<AAuraFireBall>(
 			FireBallClass,
 			SpawnTransform,
-			GetAvatarActorFromActorInfo(),
+			GetAvatarActorFromActorInfo(), // Setting owner here -> no need for SetOwner()
 			CurrentActorInfo->PlayerController->GetPawn(),
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 

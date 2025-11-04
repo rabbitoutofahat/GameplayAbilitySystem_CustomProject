@@ -4,6 +4,9 @@
 #include "Actor/AuraFireBall.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "Components/AudioComponent.h"
+#include "GameplayCueManager.h"
+#include "AuraGameplayTags.h"
 
 void AAuraFireBall::BeginPlay()
 {
@@ -24,4 +27,22 @@ void AAuraFireBall::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AA
 			UAuraAbilitySystemLibrary::ApplyDamageEffectToTarget(DamageEffectParams);
 		}
 	}
+}
+
+void AAuraFireBall::PlayImpactEffects()
+{
+	if (GetOwner())
+	{
+		FGameplayCueParameters CueParams;
+		CueParams.Location = GetActorLocation();
+		// If something is already replicated/predicted, use these local (non-replicated) Gameplay Cues. For example, using animations which are only executed on the client, so no need for expensive RPCs
+		UGameplayCueManager::ExecuteGameplayCue_NonReplicated(GetOwner(), FAuraGameplayTags::Get().GameplayCue_FireBlast, CueParams); 
+	}
+
+	if (LoopingSoundComponent)
+	{
+		LoopingSoundComponent->Stop();
+		LoopingSoundComponent->DestroyComponent();
+	}
+	bHit = true;
 }

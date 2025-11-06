@@ -22,4 +22,23 @@ public:
 	FSetWidgetSwitcherIndex SetWidgetSwitcherIndex;
 
 	void InitialiseSlot(); // Have this class broadcast its slot index based on whatever its status is whenever we load in data
+
+	UPROPERTY()
+	FString SlotName = FString();
+
+	UPROPERTY()
+	int32 SlotIndex = 0;
+
+	/* -- Field Notifies --
+	* 
+	* Create a Field Notify variable that corresponds to a widget element we wish to change, then bind to that element in the relevant widget blueprint.
+	* For example, we create a PlayerName Field Notify in this Load Slot View Model, which can then be bound to the Text_PlayerName in BP_LoadSlot_Taken.
+	* Now if we make changes to PlayerName in C++, those changes should be reflected in Text_PlayerName in-engine.
+	*/
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter);
+	FString PlayerName;
+	void SetPlayerName(FString InPlayerName);
+	FString GetPlayerName() const { return PlayerName; }
+	
 };

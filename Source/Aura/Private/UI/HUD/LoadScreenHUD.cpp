@@ -9,7 +9,11 @@ void ALoadScreenHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Construct View Models for the Load Screen and its 3 Load Slots 
 	LoadScreenViewModel = NewObject<UMVVM_LoadScreen>(this, LoadScreenViewModelClass);
+	LoadScreenViewModel->InitialiseLoadSlots();
+
 	LoadScreenWidget = CreateWidget<ULoadScreenWidget>(GetWorld(), LoadScreenWidgetClass);
 	LoadScreenWidget->AddToViewport();
+	LoadScreenWidget->BlueprintInitialiseWidget(); // Assign View Models to the Load Slot Widgets
 }

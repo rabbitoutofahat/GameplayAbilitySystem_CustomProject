@@ -24,17 +24,26 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	UMVVM_LoadSlot* GetLoadSlotViewModelByIndex(int32 Index) const;
+
+	UFUNCTION(BlueprintCallable)
+	void NewGameButtonPressed(int32 Slot); // Vacant slot
+
+	UFUNCTION(BlueprintCallable)
+	void NewSlotButtonPressed(int32 Slot, const FString& EnteredName); // EnterName slot
+
+	UFUNCTION(BlueprintCallable)
+	void SelectSlotButtonPressed(int32 Slot); // Taken slot (Slot details such as player name and level will be populated from the view model)
 	
 private:
 	UPROPERTY()
 	TMap<int32, UMVVM_LoadSlot*> LoadSlots;
 
 	UPROPERTY()
-	TObjectPtr<UMVVM_LoadSlot> LoadSlot_0;
+	TObjectPtr<UMVVM_LoadSlot> LoadSlot_0; // 0 = Vacant slot
 
 	UPROPERTY()
-	TObjectPtr<UMVVM_LoadSlot> LoadSlot_1;
+	TObjectPtr<UMVVM_LoadSlot> LoadSlot_1; // 1 = EnterName slot
 	
 	UPROPERTY()
-	TObjectPtr<UMVVM_LoadSlot> LoadSlot_2;
+	TObjectPtr<UMVVM_LoadSlot> LoadSlot_2; // 2 = Taken slot
 };

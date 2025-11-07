@@ -33,5 +33,8 @@ public:
 	FString PlayerName = FString("Default Name"); // Separate variable from slot name
 
 	UPROPERTY()
+	FString MapName = FString("Default Map Name");
+
+	UPROPERTY()
 	TEnumAsByte<ESaveSlotStatus> SlotStatus = ESaveSlotStatus::Vacant;
 };

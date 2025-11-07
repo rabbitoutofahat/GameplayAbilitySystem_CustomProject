@@ -26,7 +26,7 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FEnableSelectSlotButton EnableSelectSlotButton;
 
-	void InitialiseSlot(); // Have this class broadcast its slot index based on whatever its status is whenever we load in data
+	void InitialiseSlot(); // Called whenever we need to change the slot status, have this class broadcast its slot index based on whatever its status is whenever we load in data
 
 	UPROPERTY()
 	FString SlotName = FString();

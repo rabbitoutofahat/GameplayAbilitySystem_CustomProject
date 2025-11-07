@@ -39,6 +39,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SelectSlotButtonPressed(int32 Slot); // Taken slot (Slot details such as player name and level will be populated from the view model)
 
+	UFUNCTION(BlueprintCallable)
+	void DeleteButtonPressed();
+
 	void LoadData();
 	
 private:
@@ -53,4 +56,7 @@ private:
 	
 	UPROPERTY()
 	TObjectPtr<UMVVM_LoadSlot> LoadSlot_2; // 2 = Taken slot
+
+	UPROPERTY()
+	UMVVM_LoadSlot* SelectedSlot;
 };

@@ -10,10 +10,13 @@ void UMVVM_LoadScreen::InitialiseLoadSlots()
 {
 	LoadSlot_0 = NewObject<UMVVM_LoadSlot>(this, LoadSlotViewModelClass);
 	LoadSlot_0->SlotName = FString("LoadSlot_0");
+	LoadSlot_0->SlotIndex = 0;
 	LoadSlot_1 = NewObject<UMVVM_LoadSlot>(this, LoadSlotViewModelClass);
 	LoadSlot_1->SlotName = FString("LoadSlot_1");
+	LoadSlot_1->SlotIndex = 1;
 	LoadSlot_2 = NewObject<UMVVM_LoadSlot>(this, LoadSlotViewModelClass);
 	LoadSlot_2->SlotName = FString("LoadSlot_2");
+	LoadSlot_2->SlotIndex = 2;
 
 	LoadSlots.Add(0, LoadSlot_0); // 0 = Vacant slot
 	LoadSlots.Add(1, LoadSlot_1); // 1 = EnterName slot
@@ -52,6 +55,18 @@ void UMVVM_LoadScreen::SelectSlotButtonPressed(int32 Slot)
 		{
 			LoadSlot.Value->EnableSelectSlotButton.Broadcast(false); // Want to enable the button on all the other load slots
 		}
+	}
+	SelectedSlot = LoadSlots[Slot];
+}
+
+void UMVVM_LoadScreen::DeleteButtonPressed()
+{
+	if (IsValid(SelectedSlot))
+	{
+		AAuraGameModeBase::DeleteSlot(SelectedSlot->SlotName, SelectedSlot->SlotIndex);
+		SelectedSlot->SlotStatus = Vacant;
+		SelectedSlot->InitialiseSlot();
+		SelectedSlot->EnableSelectSlotButton.Broadcast(true); // As we're choosing whether to delete the slot, we can enable the Select Slot button for the next time we come back to that Taken Load Slot widget
 	}
 }
 

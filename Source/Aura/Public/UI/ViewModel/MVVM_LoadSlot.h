@@ -36,15 +36,28 @@ public:
 
 	TEnumAsByte<ESaveSlotStatus> SlotStatus;
 
+private:
 	/* -- Field Notifies --
 	* 
 	* Create a Field Notify variable that corresponds to a widget element we wish to change, then bind to that element in the relevant widget blueprint.
+	* (These member variables are preferred to be private on the course, but field notifies require blueprint read-write access which contradicts this, so we use meta specifiers.)
+	* 
 	* For example, we create a PlayerName Field Notify in this Load Slot View Model, which can then be bound to the Text_PlayerName in BP_LoadSlot_Taken.
 	* Now if we make changes to PlayerName in C++, those changes should be reflected in Text_PlayerName in-engine.
 	*/
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"));
 	FString PlayerName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"));
+	FString MapName;
+
+public:
+	/* Field Notify Setters & Getters */
+
 	void SetPlayerName(FString InPlayerName);
+	void SetMapName(FString InMapName);
+
 	FString GetPlayerName() const { return PlayerName; }
+	FString GetMapName() const { return MapName; }
 };

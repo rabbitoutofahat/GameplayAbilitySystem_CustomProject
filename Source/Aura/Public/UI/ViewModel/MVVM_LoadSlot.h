@@ -47,5 +47,4 @@ public:
 	FString PlayerName;
 	void SetPlayerName(FString InPlayerName);
 	FString GetPlayerName() const { return PlayerName; }
-	
 };

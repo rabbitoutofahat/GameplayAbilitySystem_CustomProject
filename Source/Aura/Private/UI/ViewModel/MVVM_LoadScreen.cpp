@@ -41,6 +41,17 @@ void UMVVM_LoadScreen::NewSlotButtonPressed(int32 Slot, const FString& EnteredNa
 
 void UMVVM_LoadScreen::SelectSlotButtonPressed(int32 Slot)
 {
+	for (const TTuple<int32, UMVVM_LoadSlot*> LoadSlot : LoadSlots)
+	{
+		if (LoadSlot.Key == Slot)
+		{
+			LoadSlot.Value->EnableSelectSlotButton.Broadcast(false); // Want to disable the button once we've clicked it
+		}
+		else
+		{
+			LoadSlot.Value->EnableSelectSlotButton.Broadcast(false); // Want to enable the button on all the other load slots
+		}
+	}
 }
 
 void UMVVM_LoadScreen::LoadData()

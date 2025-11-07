@@ -9,6 +9,7 @@
 
 // The widget switcher has access to the Load Slot view model at the moment it is assigned to its children widgets, where we can broadcast this delegate
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSetWidgetSwitcherIndex, int32, WidgetSwitcherIndex); 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEnableSelectSlotButton, bool, bEnable);
 
 /**
  * 
@@ -21,6 +22,9 @@ class AURA_API UMVVM_LoadSlot : public UMVVMViewModelBase
 public:
 	UPROPERTY(BlueprintAssignable)
 	FSetWidgetSwitcherIndex SetWidgetSwitcherIndex;
+
+	UPROPERTY(BlueprintAssignable)
+	FEnableSelectSlotButton EnableSelectSlotButton;
 
 	void InitialiseSlot(); // Have this class broadcast its slot index based on whatever its status is whenever we load in data
 

@@ -16,4 +16,6 @@ void ALoadScreenHUD::BeginPlay()
 	LoadScreenWidget = CreateWidget<ULoadScreenWidget>(GetWorld(), LoadScreenWidgetClass);
 	LoadScreenWidget->AddToViewport();
 	LoadScreenWidget->BlueprintInitialiseWidget(); // Assign View Models to the Load Slot Widgets
+
+	LoadScreenViewModel->LoadData(); // On startup, should show the correct Load Slot Widget based on the status (Vacant, EnterName, Taken) that we've saved
 }

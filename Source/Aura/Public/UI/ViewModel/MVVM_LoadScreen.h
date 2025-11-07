@@ -33,6 +33,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SelectSlotButtonPressed(int32 Slot); // Taken slot (Slot details such as player name and level will be populated from the view model)
+
+	void LoadData();
 	
 private:
 	UPROPERTY()

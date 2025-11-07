@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MVVMViewModelBase.h"
+#include "Game/LoadScreenSaveGame.h"
 #include "MVVM_LoadSlot.generated.h"
 
 // The widget switcher has access to the Load Slot view model at the moment it is assigned to its children widgets, where we can broadcast this delegate
@@ -28,6 +29,8 @@ public:
 
 	UPROPERTY()
 	int32 SlotIndex = 0;
+
+	TEnumAsByte<ESaveSlotStatus> SlotStatus;
 
 	/* -- Field Notifies --
 	* 

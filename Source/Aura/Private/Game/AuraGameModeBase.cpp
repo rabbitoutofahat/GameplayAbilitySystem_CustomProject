@@ -8,7 +8,7 @@
 
 void AAuraGameModeBase::SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex)
 {
-	DeleteSlot(LoadSlot->SlotName, SlotIndex);
+	DeleteSlot(LoadSlot->GetSlotName(), SlotIndex);
 	USaveGame* SaveGameObject = UGameplayStatics::CreateSaveGameObject(LoadScreenSaveGameClass);
 	ULoadScreenSaveGame* LoadScreenSaveGame = Cast<ULoadScreenSaveGame>(SaveGameObject);
 
@@ -16,7 +16,7 @@ void AAuraGameModeBase::SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex)
 	LoadScreenSaveGame->SlotStatus = Taken;
 	LoadScreenSaveGame->MapName = LoadSlot->GetMapName();
 
-	UGameplayStatics::SaveGameToSlot(LoadScreenSaveGame, LoadSlot->SlotName, SlotIndex);
+	UGameplayStatics::SaveGameToSlot(LoadScreenSaveGame, LoadSlot->GetSlotName(), SlotIndex);
 }
 
 ULoadScreenSaveGame* AAuraGameModeBase::GetSaveSlotData(const FString& SlotName, int32 SlotIndex) const
@@ -42,11 +42,11 @@ void AAuraGameModeBase::DeleteSlot(const FString& SlotName, int32 SlotIndex)
 	}
 }
 
-void AAuraGameModeBase::TravelToMap(UMVVM_LoadSlot* Slot)
+void AAuraGameModeBase::TravelToMap(UMVVM_LoadSlot* LoadSlot)
 {
-	const FString SlotName = Slot->SlotName;
-	const int32 SlotIndex = Slot->SlotIndex;
-	UGameplayStatics::OpenLevelBySoftObjectPtr(Slot, Maps.FindChecked(Slot->GetMapName()));
+	const FString LoadSlotName = LoadSlot->GetSlotName();
+	const int32 LoadSlotIndex = LoadSlot->SlotIndex;
+	UGameplayStatics::OpenLevelBySoftObjectPtr(LoadSlot, Maps.FindChecked(LoadSlot->GetMapName()));
 }
 
 void AAuraGameModeBase::BeginPlay()

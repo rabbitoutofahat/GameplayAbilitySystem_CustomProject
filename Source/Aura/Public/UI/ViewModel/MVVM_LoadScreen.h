@@ -62,4 +62,15 @@ private:
 
 	UPROPERTY()
 	UMVVM_LoadSlot* SelectedSlot;
+
+	/* Field Notifies */
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"));
+	int32 NumLoadSlots; // Need a Field Notify bound to use the Property Path View Model Creation Type
+
+public:
+	/* Field Notify Setters & Getters */
+
+	void SetNumLoadSlots(int32 InNumLoadSlots);
+	int32 GetNumLoadSlots() const { return NumLoadSlots; }
 };

@@ -29,9 +29,6 @@ public:
 	void InitialiseSlot(); // Called whenever we need to change the slot status, have this class broadcast its slot index based on whatever its status is whenever we load in data
 
 	UPROPERTY()
-	FString SlotName = FString();
-
-	UPROPERTY()
 	int32 SlotIndex = 0;
 
 	TEnumAsByte<ESaveSlotStatus> SlotStatus;
@@ -50,14 +47,24 @@ private:
 	FString PlayerName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"));
+	int32 PlayerLevel;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"));
 	FString MapName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess = "true"))
+	FString SlotName; // As of 5.3, every Load Slot blueprint needs a Field Notify bound to it before we can successfully set its Load Slot View Model in blueprint, so we use SlotName
 
 public:
 	/* Field Notify Setters & Getters */
 
 	void SetPlayerName(FString InPlayerName);
+	void SetPlayerLevel(int32 InPlayerLevel);
 	void SetMapName(FString InMapName);
+	void SetSlotName(FString InSlotName);
 
 	FString GetPlayerName() const { return PlayerName; }
+	int32 GetPlayerLevel() const { return PlayerLevel; }
 	FString GetMapName() const { return MapName; }
+	FString GetSlotName() const { return SlotName; }
 };

@@ -17,6 +17,7 @@ void AAuraGameModeBase::SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex)
 	LoadScreenSaveGame->PlayerName = LoadSlot->GetPlayerName();
 	LoadScreenSaveGame->SlotStatus = Taken;
 	LoadScreenSaveGame->MapName = LoadSlot->GetMapName();
+	LoadScreenSaveGame->PlayerStartTag = LoadSlot->PlayerStartTag;
 
 	UGameplayStatics::SaveGameToSlot(LoadScreenSaveGame, LoadSlot->GetSlotName(), SlotIndex);
 }
@@ -56,13 +57,14 @@ AActor* AAuraGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 	UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(GetGameInstance());
 	TArray<AActor*> Actors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), Actors);
+
+	/*
+	* Return the first PlayerStart we find that has our game instance's tag,
+	* or return the first PlayerStart that we find in general if none of them have that particular tag,
+	* or return a nullptr if there are no PlayerStarts in the world
+	*/
 	if (Actors.Num() > 0)
 	{
-		/*
-		* Return the first PlayerStart we find that has our game instance's tag, 
-		* or return the first PlayerStart that we find in general if none of them have that particular tag, 
-		* or return a nullptr if there are no PlayerStarts in the world
-		*/
 		AActor* SelectedActor = Actors[0];
 		for (AActor* Actor : Actors)
 		{

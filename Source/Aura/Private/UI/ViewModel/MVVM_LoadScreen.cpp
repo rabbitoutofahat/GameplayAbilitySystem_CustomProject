@@ -42,7 +42,7 @@ void UMVVM_LoadScreen::NewSlotButtonPressed(int32 Slot, const FString& EnteredNa
 	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
 	LoadSlots[Slot]->SetPlayerName(EnteredName);
 	LoadSlots[Slot]->SetMapName(AuraGameMode->DefaultMapName);
-	LoadSlots[Slot]->SlotStatus = ESaveSlotStatus::Taken;
+	LoadSlots[Slot]->SlotStatus = Taken;
 
 	AuraGameMode->SaveSlotData(LoadSlots[Slot], Slot);
 	LoadSlots[Slot]->InitialiseSlot();
@@ -59,7 +59,7 @@ void UMVVM_LoadScreen::SelectSlotButtonPressed(int32 Slot)
 		}
 		else
 		{
-			LoadSlot.Value->EnableSelectSlotButton.Broadcast(false); // Want to enable the button on all the other load slots
+			LoadSlot.Value->EnableSelectSlotButton.Broadcast(true); // Want to enable the button on all the other load slots
 		}
 	}
 	SelectedSlot = LoadSlots[Slot];
@@ -72,7 +72,7 @@ void UMVVM_LoadScreen::DeleteButtonPressed()
 		AAuraGameModeBase::DeleteSlot(SelectedSlot->GetSlotName(), SelectedSlot->SlotIndex);
 		SelectedSlot->SlotStatus = Vacant;
 		SelectedSlot->InitialiseSlot();
-		SelectedSlot->EnableSelectSlotButton.Broadcast(true); // As we're choosing whether to delete the slot, we can enable the Select Slot button for the next time we come back to that Taken Load Slot widget
+		SelectedSlot->EnableSelectSlotButton.Broadcast(true); // As we're choosing whether to delete the slot, we can enable the Select Slot button for the next time we return to Taken state for that particular Slot
 	}
 }
 

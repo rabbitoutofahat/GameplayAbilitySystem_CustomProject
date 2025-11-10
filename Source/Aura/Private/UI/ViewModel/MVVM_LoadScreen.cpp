@@ -50,11 +50,11 @@ void UMVVM_LoadScreen::NewSlotButtonPressed(int32 Slot, const FString& EnteredNa
 	AuraGameMode->SaveSlotData(LoadSlots[Slot], Slot);
 	LoadSlots[Slot]->InitialiseSlot();
 
-	// Initialise the Game Instance so the game knows what data to load
-	UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(AuraGameMode->GetGameInstance());
-	AuraGameInstance->LoadSlotName = LoadSlots[Slot]->GetSlotName();
-	AuraGameInstance->LoadSlotIndex = LoadSlots[Slot]->SlotIndex;
-	AuraGameInstance->PlayerStartTag = AuraGameMode->DefaultPlayerStartTag;
+	//// Initialise the Game Instance so the game knows what data to load
+	//UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(AuraGameMode->GetGameInstance());
+	//AuraGameInstance->LoadSlotName = LoadSlots[Slot]->GetSlotName();
+	//AuraGameInstance->LoadSlotIndex = LoadSlots[Slot]->SlotIndex;
+	//AuraGameInstance->PlayerStartTag = AuraGameMode->DefaultPlayerStartTag;
 }
 
 void UMVVM_LoadScreen::SelectSlotButtonPressed(int32 Slot)
@@ -89,7 +89,12 @@ void UMVVM_LoadScreen::PlayButtonPressed()
 {
 	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
 	UAuraGameInstance* AuraGameInstance = Cast<UAuraGameInstance>(AuraGameMode->GetGameInstance());
+
+	// Making sure we set actually set a Load Slot Name & Index on the Game Instance so we know which slot to later save the PlayerStartTag to
+	AuraGameInstance->LoadSlotName = SelectedSlot->GetSlotName(); 
+	AuraGameInstance->LoadSlotIndex = SelectedSlot->SlotIndex;
 	AuraGameInstance->PlayerStartTag = SelectedSlot->PlayerStartTag;
+
 	if (IsValid(SelectedSlot)) AuraGameMode->TravelToMap(SelectedSlot);
 }
 

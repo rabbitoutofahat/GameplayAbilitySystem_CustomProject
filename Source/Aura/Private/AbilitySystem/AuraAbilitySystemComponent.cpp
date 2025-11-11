@@ -106,7 +106,7 @@ void UAuraAbilitySystemComponent::ForEachAbility(const FForEachAbilitySignature&
 	FScopedAbilityListLock ActiveScopeLock(*this);
 	for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
-		if (!Delegate.ExecuteIfBound(AbilitySpec)) // Executes the lambda in UOverlayWidgetController::OnInitialiseStartupAbilities
+		if (!Delegate.ExecuteIfBound(AbilitySpec)) // Executes the lambdas in UOverlayWidgetController::OnInitialiseStartupAbilities and AAuraCAAuraCharacter::SaveProgress_Implementation
 		{
 			UE_LOG(LogAura, Error, TEXT("Failed to execute delegate in %hs"), __FUNCTION__);
 		}

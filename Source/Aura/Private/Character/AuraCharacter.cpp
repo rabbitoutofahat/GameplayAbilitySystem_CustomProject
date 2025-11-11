@@ -8,6 +8,7 @@
 #include "Player/AuraPlayerController.h"
 #include "UI/HUD/AuraHUD.h"
 #include "AbilitySystem/Data/LevelUpInfo.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
 #include "NiagaraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -217,6 +218,30 @@ void AAuraCharacter::SaveProgress_Implementation(const FName& CheckpointTag)
 		}
 
 		SaveData->bFirstTimeLoadIn = false; // Set boolean to false so we don't initialise the character with default Primary Attributes on next load-in
+
+		if (!HasAuthority()) return; // UAuraAbilitySystemLibrary::GetAbilityInfo only returns AbilityInfo on the server because only the game mode has it
+
+		UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+
+		FForEachAbilitySignature SaveAbilityDelegate;
+		SaveAbilityDelegate.BindLambda(
+			[this, AuraASC, &SaveData](const FGameplayAbilitySpec& AbilitySpec)
+			{
+				const FGameplayTag AbilityTag = AuraASC->GetAbilityTagFromSpec(AbilitySpec);
+				FAuraAbilityInfo AbilityInfo = UAuraAbilitySystemLibrary::GetAbilityInfo(this)->FindAbilityInfoForTag(AbilityTag);
+				
+				FSavedAbility SavedAbility;
+				SavedAbility.GameplayAbility = AbilityInfo.Ability;
+				SavedAbility.AbilityTag = AbilityTag;
+				SavedAbility.AbilityStatus = AuraASC->GetStatusFromAbilityTag(AbilityTag);
+				SavedAbility.AbilityInput = AuraASC->GetInputFromAbilityTag(AbilityTag);
+				SavedAbility.AbilityType = AbilityInfo.AbilityType;
+				SavedAbility.AbilityLevel = AbilitySpec.Level;
+
+				SaveData->SavedAbilities.Add(SavedAbility);
+			});
+		AuraASC->ForEachAbility(SaveAbilityDelegate); // Fill in SaveData's SavedAbility TArray by executing the lambda above "for each ability"
+
 		AuraGameMode->SaveInGameProgressData(SaveData);
 	}
 }

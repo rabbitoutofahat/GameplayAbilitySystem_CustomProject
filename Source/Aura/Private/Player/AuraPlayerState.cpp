@@ -42,6 +42,18 @@ void AAuraPlayerState::SetXP(int32 InXP)
 	OnXPChangedDelegate.Broadcast(XP);
 }
 
+void AAuraPlayerState::SetAttributePoints(int32 InPoints)
+{
+	AttributePoints = InPoints;
+	OnPlayerAttributePointChangedDelegate.Broadcast(AttributePoints);
+}
+
+void AAuraPlayerState::SetSpellPoints(int32 InPoints)
+{
+	SpellPoints = InPoints;
+	OnPlayerSpellPointChangedDelegate.Broadcast(SpellPoints);
+}
+
 void AAuraPlayerState::AddToLevel(int32 InLevel)
 {
 	Level += InLevel;

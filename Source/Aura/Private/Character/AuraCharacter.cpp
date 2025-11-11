@@ -50,9 +50,38 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 
-	// Init ability actor info for the server
+	// Init ability actor info for the server, load progress from the disk
 	InitAbilityActorInfo();
+	LoadProgress();
+
+	// TODO: Load in abilities from disk
 	AddCharacterAbilities();
+}
+
+void AAuraCharacter::LoadProgress()
+{
+	if (AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	{
+		ULoadScreenSaveGame* SaveData = AuraGameMode->RetrieveInGameSaveData();
+		if (SaveData == nullptr) return;
+
+		if (AAuraPlayerState* AuraPlayerState = Cast<AAuraPlayerState>(GetPlayerState()))
+		{
+			AuraPlayerState->SetLevel(SaveData->PlayerLevel);
+			AuraPlayerState->SetXP(SaveData->XP);
+			AuraPlayerState->SetAttributePoints(SaveData->AttributePoints);
+			AuraPlayerState->SetSpellPoints(SaveData->SpellPoints);
+		}
+		if(SaveData->bFirstTimeLoadIn)
+		{
+			InitialiseDefaultAttributes(); // We want to initialise default attributes by applying it as a gameplay effect to the character at the beginning of the game
+			AddCharacterAbilities();
+		}
+		else
+		{
+
+		}
+	}
 }
 
 void AAuraCharacter::OnRep_PlayerState()
@@ -178,6 +207,7 @@ void AAuraCharacter::SaveProgress_Implementation(const FName& CheckpointTag)
 			SaveData->AttributePoints = AuraPlayerState->GetAttributePoints();
 			SaveData->SpellPoints = AuraPlayerState->GetSpellPoints();
 		}
+
 		if (UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet))
 		{
 			SaveData->Strength = AuraAttributeSet->GetStrength();
@@ -185,6 +215,8 @@ void AAuraCharacter::SaveProgress_Implementation(const FName& CheckpointTag)
 			SaveData->Resilience = AuraAttributeSet->GetResilience();
 			SaveData->Vigor = AuraAttributeSet->GetVigor();
 		}
+
+		SaveData->bFirstTimeLoadIn = false; // Set boolean to false so we don't initialise the character with default Primary Attributes on next load-in
 		AuraGameMode->SaveInGameProgressData(SaveData);
 	}
 }
@@ -236,7 +268,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 
-	AbilitySystemComponent->InitAbilityActorInfo(AuraPlayerState, this); // Inputs are owner actor (for mixed replication mode this must be the controller), avatar actor
+	AbilitySystemComponent->InitAbilityActorInfo(AuraPlayerState, this); // Input params are owner actor (for mixed replication mode this must be the controller), avatar actor
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet(); // For binding gameplay effect delegates
 
 	// Can put these lines on AuraCharacterBase instead, but then remember to call Super after the above code (i.e., after ASC is valid)
@@ -250,10 +282,9 @@ void AAuraCharacter::InitAbilityActorInfo()
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
-
-	InitialiseDefaultAttributes(); // We want to initialise default attributes by applying it as a gameplay effect to the character at the beginning of the game
 }
 
+	InitialiseDefaultAttributes(); 
 void AAuraCharacter::MulticastLevelUpParticles_Implementation() const
 {
 	if (IsValid(LevelUpNiagaraComponent))

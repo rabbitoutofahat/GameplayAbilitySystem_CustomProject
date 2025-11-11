@@ -170,6 +170,21 @@ void AAuraCharacter::SaveProgress_Implementation(const FName& CheckpointTag)
 
 		// Save CheckpointTag to Game Instance
 		SaveData->PlayerStartTag = CheckpointTag;
+
+		if (AAuraPlayerState* AuraPlayerState = Cast<AAuraPlayerState>(GetPlayerState()))
+		{
+			SaveData->PlayerLevel = AuraPlayerState->GetPlayerLevel();
+			SaveData->XP = AuraPlayerState->GetXP();
+			SaveData->AttributePoints = AuraPlayerState->GetAttributePoints();
+			SaveData->SpellPoints = AuraPlayerState->GetSpellPoints();
+		}
+		if (UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet))
+		{
+			SaveData->Strength = AuraAttributeSet->GetStrength();
+			SaveData->Intelligence = AuraAttributeSet->GetIntelligence();
+			SaveData->Resilience = AuraAttributeSet->GetResilience();
+			SaveData->Vigor = AuraAttributeSet->GetVigor();
+		}
 		AuraGameMode->SaveInGameProgressData(SaveData);
 	}
 }

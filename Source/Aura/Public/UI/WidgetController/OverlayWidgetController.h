@@ -39,6 +39,7 @@ struct FUIWidgetRow : public FTableRowBase
  * We define a member variable with the signature type, called MessageWidgetRowDelegate, which we can use to broadcast FUIWidgetRows - MessageWidgetRowDelegate.Broadcast(Row).
  */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLevelChangedSignature, int32, NewLevel, bool, bLevelUp);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityLevelChangedSignature, int32, NewLevel);
 
@@ -74,7 +75,7 @@ public:
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Level")
-	FOnStatChangedSignature OnLevelChangedDelegate;
+	FOnLevelChangedSignature OnLevelChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Abilities")
 	FAbilityLevelChangedSignature AbilityLevelChangedDelegate;

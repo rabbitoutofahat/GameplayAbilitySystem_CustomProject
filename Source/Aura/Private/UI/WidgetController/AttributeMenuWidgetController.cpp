@@ -32,7 +32,7 @@ void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 			});
 	}
 
-	GetAuraPS()->OnPlayerAttributePointChangedDelegate.AddLambda(
+	GetAuraPS()->OnAttributePointChanged.AddLambda(
 		[this](int32 NewPoints) 
 		{
 			OnAttributePointChangedDelegate.Broadcast(NewPoints);

@@ -13,7 +13,9 @@ class UAbilitySystemComponent;
 class UAttributeSet;
 class ULevelUpInfo;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChangedSignature, int32 /*StatValue*/);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChanged, int32 /*StatValue*/);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnLevelChanged, int32 /*StatValue*/, bool /*bLevelUp*/);
+
 
 /**
  * Acts as the 'Owner' Actor (or in the context of Gameplay Effects, the 'Instigator') for our Aura player character, as this is the owner of the Ability System Component
@@ -35,22 +37,22 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<ULevelUpInfo> LevelUpInfo; // Keeping this on the Player State instead of a Widget Controller as Player States exist on both the clients and server
 
-	FOnPlayerStatChangedSignature OnPlayerLevelChangedDelegate;
-	FOnPlayerStatChangedSignature OnXPChangedDelegate;
-	FOnPlayerStatChangedSignature OnPlayerAttributePointChangedDelegate;
-	FOnPlayerStatChangedSignature OnPlayerSpellPointChangedDelegate;
+	FOnLevelChanged OnLevelChanged;
+	FOnPlayerStatChanged OnXPChanged;
+	FOnPlayerStatChanged OnAttributePointChanged;
+	FOnPlayerStatChanged OnSpellPointChanged;
 
 	FORCEINLINE int32 GetPlayerLevel() const { return Level; }
 	FORCEINLINE int32 GetXP() const { return XP; }
 	FORCEINLINE int32 GetAttributePoints() const { return AttributePoints; }
 	FORCEINLINE int32 GetSpellPoints() const { return SpellPoints; }
 
-	void SetLevel(int32 InLevel);
+	void SetLevel(int32 InLevel); // For setting level when loading from disk (don't play level up effects)
 	void SetXP(int32 InXP);
 	void SetAttributePoints(int32 InPoints);
 	void SetSpellPoints(int32 InPoints);
 
-	void AddToLevel(int32 InLevel);
+	void AddToLevel(int32 InLevel); // For levelling up in-game (play level up effects)
 	void AddToXP(int32 InXP);
 	void AddToAttributePoints(int32 InPoints);
 	void AddToSpellPoints(int32 InPoints);
@@ -67,7 +69,7 @@ private:
 	int32 Level = 1;
 
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing=OnRep_XP)
-	int32 XP = 1;
+	int32 XP = 0;
 
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_AttributePoints)
 	int32 AttributePoints = 0;

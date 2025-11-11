@@ -33,67 +33,67 @@ UAbilitySystemComponent* AAuraPlayerState::GetAbilitySystemComponent() const
 void AAuraPlayerState::SetLevel(int32 InLevel)
 {
 	Level = InLevel;
-	OnPlayerLevelChangedDelegate.Broadcast(Level);
+	OnLevelChanged.Broadcast(Level, false);
 }
 
 void AAuraPlayerState::SetXP(int32 InXP)
 {
 	XP = InXP;
-	OnXPChangedDelegate.Broadcast(XP);
+	OnXPChanged.Broadcast(XP);
 }
 
 void AAuraPlayerState::SetAttributePoints(int32 InPoints)
 {
 	AttributePoints = InPoints;
-	OnPlayerAttributePointChangedDelegate.Broadcast(AttributePoints);
+	OnAttributePointChanged.Broadcast(AttributePoints);
 }
 
 void AAuraPlayerState::SetSpellPoints(int32 InPoints)
 {
 	SpellPoints = InPoints;
-	OnPlayerSpellPointChangedDelegate.Broadcast(SpellPoints);
+	OnSpellPointChanged.Broadcast(SpellPoints);
 }
 
 void AAuraPlayerState::AddToLevel(int32 InLevel)
 {
 	Level += InLevel;
-	OnPlayerLevelChangedDelegate.Broadcast(Level);
+	OnLevelChanged.Broadcast(Level, true);
 }
 
 void AAuraPlayerState::AddToXP(int32 InXP)
 {
 	XP += InXP;
-	OnXPChangedDelegate.Broadcast(XP);
+	OnXPChanged.Broadcast(XP);
 }
 
 void AAuraPlayerState::AddToAttributePoints(int32 InPoints)
 {
 	AttributePoints += InPoints;
-	OnPlayerAttributePointChangedDelegate.Broadcast(AttributePoints);
+	OnAttributePointChanged.Broadcast(AttributePoints);
 }
 
 void AAuraPlayerState::AddToSpellPoints(int32 InPoints)
 {
 	SpellPoints += InPoints;
-	OnPlayerSpellPointChangedDelegate.Broadcast(SpellPoints);
+	OnSpellPointChanged.Broadcast(SpellPoints);
 }
 
 void AAuraPlayerState::OnRep_Level(int32 OldLevel) const
 {
-	OnPlayerLevelChangedDelegate.Broadcast(Level);
+	OnLevelChanged.Broadcast(Level, true);
 }
 
 void AAuraPlayerState::OnRep_XP(int32 OldXP) const
 {
-	OnXPChangedDelegate.Broadcast(XP);
+	OnXPChanged.Broadcast(XP);
 }
 
 void AAuraPlayerState::OnRep_AttributePoints(int32 OldAttributePoints) const
 {
-	OnPlayerAttributePointChangedDelegate.Broadcast(AttributePoints);
+	OnAttributePointChanged.Broadcast(AttributePoints);
 }
 
 void AAuraPlayerState::OnRep_SpellPoints(int32 OldSpellPoints) const
 {
-	OnPlayerSpellPointChangedDelegate.Broadcast(SpellPoints);
+	OnSpellPointChanged.Broadcast(SpellPoints);
 }

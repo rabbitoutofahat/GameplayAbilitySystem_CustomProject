@@ -40,7 +40,7 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 			}
 		});
 
-	GetAuraPS()->OnPlayerSpellPointChangedDelegate.AddLambda(
+	GetAuraPS()->OnSpellPointChanged.AddLambda(
 		[this](int32 NewPoints)
 		{
 			OnSpellPointChangedDelegate.Broadcast(NewPoints);

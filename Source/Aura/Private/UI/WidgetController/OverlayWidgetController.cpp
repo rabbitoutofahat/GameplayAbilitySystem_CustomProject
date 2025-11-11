@@ -66,12 +66,12 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 			});
 	}
 
-	GetAuraPS()->OnXPChangedDelegate.AddUObject(this, &UOverlayWidgetController::OnXPChanged);
+	GetAuraPS()->OnXPChanged.AddUObject(this, &UOverlayWidgetController::OnXPChanged);
 
-	GetAuraPS()->OnPlayerLevelChangedDelegate.AddLambda(
-		[this](int32 NewLevel)
+	GetAuraPS()->OnLevelChanged.AddLambda(
+		[this](int32 NewLevel, bool bLevelUp)
 		{
-			OnLevelChangedDelegate.Broadcast(NewLevel);
+			OnLevelChangedDelegate.Broadcast(NewLevel, bLevelUp);
 		});
 
 	GetAuraASC()->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute()).AddLambda(

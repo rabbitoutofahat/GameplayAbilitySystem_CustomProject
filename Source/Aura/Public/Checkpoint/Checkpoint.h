@@ -20,6 +20,11 @@ class AURA_API ACheckpoint : public APlayerStart, public ISaveInterface
 public:
 	ACheckpoint(const FObjectInitializer& ObjectInitializer);
 
+	/* Save Interface */
+	virtual bool ShouldLoadTransform_Implementation() override { return false; } // For checkpoints, don't update transform on load
+	virtual void LoadActor_Implementation() override;
+	/* end Save Interface */
+
 	UPROPERTY(BlueprintReadOnly, SaveGame) // The SaveGame specifier makes it possible to serialise this property into an FSavedActor's Bytes (see AAuraGameModeBase::SaveWorldState)
 	bool bReached = false; // Has this checkpoint been 'reached' already?
 

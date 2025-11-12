@@ -17,7 +17,6 @@
 #include "Actor/AuraMagicCircle.h"
 #include "Game/AuraGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
-#include "Game/AuraGameInstance.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 
 AAuraCharacter::AAuraCharacter()
@@ -55,6 +54,11 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 	// Init ability actor info for the server, load progress from the disk
 	InitAbilityActorInfo();
 	LoadProgress();
+
+	if (AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this)))
+	{
+		AuraGameMode->LoadWorldState(GetWorld());
+	}
 }
 
 void AAuraCharacter::LoadProgress()

@@ -5,6 +5,8 @@
 #include "Components/SphereComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Interaction/PlayerInterface.h"
+#include "Game/AuraGameModeBase.h"
+#include "Kismet/GameplayStatics.h"
 
 ACheckpoint::ACheckpoint(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) // Need the same syntax as found in the APlayerStart Constructor
 {
@@ -27,6 +29,11 @@ ACheckpoint::ACheckpoint(const FObjectInitializer& ObjectInitializer) : Super(Ob
 	Sphere->SetSphereRadius(350.f);
 }
 
+void ACheckpoint::LoadActor_Implementation()
+{
+	if (bReached) HandleGlowEffects();
+}
+
 void ACheckpoint::BeginPlay()
 {
 	Super::BeginPlay();
@@ -38,6 +45,8 @@ void ACheckpoint::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 {
 	if (OtherActor->Implements<UPlayerInterface>())
 	{
+		bReached = true;
+		if (AAuraGameModeBase* AuraGM = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this))) AuraGM->SaveWorldState(GetWorld());
 		IPlayerInterface::Execute_SaveProgress(OtherActor, PlayerStartTag);
 		HandleGlowEffects();
 	}

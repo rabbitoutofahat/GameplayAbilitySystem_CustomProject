@@ -10,6 +10,7 @@
 #include "EngineUtils.h"
 #include "Interaction/SaveInterface.h"
 #include "Serialization/ObjectAndNameAsStringProxyArchive.h"
+#include "Aura/AuraLogChannels.h"
 
 void AAuraGameModeBase::SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex)
 {
@@ -69,7 +70,7 @@ void AAuraGameModeBase::SaveInGameProgressData(ULoadScreenSaveGame* SaveObject)
 	UGameplayStatics::SaveGameToSlot(SaveObject, InGameLoadSlotName, InGameLoadSlotIndex);
 }
 
-void AAuraGameModeBase::SaveWorldState(UWorld* World)
+void AAuraGameModeBase::SaveWorldState(UWorld* World) const
 {
 	FString WorldName = World->GetMapName();
 	WorldName.RemoveFromStart(World->StreamingLevelsPrefix); // A StreamingLevelsPrefix is automatically prepended to every map name, which we must remove to get the true map name
@@ -112,6 +113,48 @@ void AAuraGameModeBase::SaveWorldState(UWorld* World)
 			if (MapToReplace.MapAssetName == WorldName) MapToReplace = SavedMap; // Replace the current map with our SavedMap filled with new data
 		}
 		UGameplayStatics::SaveGameToSlot(SaveGame, AuraGI->LoadSlotName, AuraGI->LoadSlotIndex);
+	}
+}
+
+void AAuraGameModeBase::LoadWorldState(UWorld* World) const
+{
+	FString WorldName = World->GetMapName();
+	WorldName.RemoveFromStart(World->StreamingLevelsPrefix);
+
+	UAuraGameInstance* AuraGI = Cast<UAuraGameInstance>(GetGameInstance());
+	check(AuraGI);
+
+	if (!UGameplayStatics::DoesSaveGameExist(AuraGI->LoadSlotName, AuraGI->LoadSlotIndex)) return;
+	
+	ULoadScreenSaveGame* SaveGame = Cast<ULoadScreenSaveGame>(UGameplayStatics::LoadGameFromSlot(AuraGI->LoadSlotName, AuraGI->LoadSlotIndex));
+	if (SaveGame == nullptr)
+	{
+		UE_LOG(LogAura, Error, TEXT("FailedToLoadSlot"));
+		return;
+	}
+
+	for (FActorIterator It(World); It; ++It)
+	{
+		AActor* Actor = *It;
+		if (!Actor->Implements<USaveInterface>()) continue;
+
+		for (FSavedActor SavedActor : SaveGame->GetSavedMapWithMapName(WorldName).SavedActors)
+		{
+			if (SavedActor.ActorName != Actor->GetFName()) continue;
+
+			if (ISaveInterface::Execute_ShouldLoadTransform(Actor))
+			{
+				// Set transform for any Actors implementing a Save Interface that we've marked for transform (in the course only the checkpoint is viable but we set ShouldLoadTransform to false)
+				Actor->SetActorTransform(SavedActor.Transform); 
+			}
+					
+			FMemoryReader MemoryReader(SavedActor.Bytes);
+			FObjectAndNameAsStringProxyArchive Archive(MemoryReader, true);
+			Archive.ArIsSaveGame = true;
+			Actor->Serialize(Archive); // Despite using the same function as in SaveWorldState, this will convert binary bytes back into variables if used on bytes
+
+			ISaveInterface::Execute_LoadActor(Actor);
+		}
 	}
 }
 

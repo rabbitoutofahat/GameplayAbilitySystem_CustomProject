@@ -9,10 +9,40 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
+#include "Game/LoadScreenSaveGame.h"
 
 void UAuraAbilitySystemComponent::AbilityActorInfoSet()
 {
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UAuraAbilitySystemComponent::ClientEffectApplied);
+}
+
+void UAuraAbilitySystemComponent::AddCharacterAbilitiesFromSaveData(ULoadScreenSaveGame* SaveData)
+{
+	for (const FSavedAbility& Data : SaveData->SavedAbilities)
+	{
+		const TSubclassOf<UGameplayAbility> LoadedAbility = Data.GameplayAbility;
+		FGameplayAbilitySpec LoadedAbilitySpec = FGameplayAbilitySpec(LoadedAbility, Data.AbilityLevel);
+		
+		LoadedAbilitySpec.DynamicAbilityTags.AddTag(Data.AbilityInput);
+		LoadedAbilitySpec.DynamicAbilityTags.AddTag(Data.AbilityStatus);
+		if (Data.AbilityType == FAuraGameplayTags::Get().Abilities_Type_Offensive)
+		{
+			GiveAbility(LoadedAbilitySpec);
+		}
+		else if (Data.AbilityType == FAuraGameplayTags::Get().Abilities_Type_Passive)
+		{
+			if (Data.AbilityStatus.MatchesTagExact(FAuraGameplayTags::Get().Abilities_Status_Equipped))
+			{
+				GiveAbilityAndActivateOnce(LoadedAbilitySpec);
+			}
+			else
+			{
+				GiveAbility(LoadedAbilitySpec); // I.e., it was unlocked but not equipped
+			}
+		}
+	}
+	bStartupAbilitiesGiven = true;
+	AbilitiesGivenDelegate.Broadcast();
 }
 
 void UAuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities)
@@ -37,6 +67,7 @@ void UAuraAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSub
 	for (const TSubclassOf<UGameplayAbility> AbilityClass : StartupPassiveAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		AbilitySpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Equipped); // Set the status so the game knows whether to activate the passive when loading data from disk
 		GiveAbilityAndActivateOnce(AbilitySpec); // These 'startup passives' are designed to be applied once on startup and remain active indefinitely
 	}
 }
@@ -344,10 +375,15 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 				}
 			}
 
-			if (!AbilityHasAnySlot(*AbilitySpec) && IsPassiveAbility(*AbilitySpec)) // Passive ability doesn't yet have a slot (it's not active) -> needs to be activated when equipped
+			if (!AbilityHasAnySlot(*AbilitySpec)) 
 			{
-				TryActivateAbility(AbilitySpec->Handle);
-				MulticastActivatePassiveAbility(AbilityTag, true);
+				if (IsPassiveAbility(*AbilitySpec)) // Passive ability doesn't yet have a slot (it's not active) -> needs to be activated when equipped
+				{
+					TryActivateAbility(AbilitySpec->Handle); 
+					MulticastActivatePassiveAbility(AbilityTag, true);
+				}
+				AbilitySpec->DynamicAbilityTags.RemoveTag(GetStatusTagFromSpec(*AbilitySpec));
+				AbilitySpec->DynamicAbilityTags.AddTag(GameplayTags.Abilities_Status_Equipped);
 			}
 
 			AssignSlotToAbility(*AbilitySpec, InputSlot);

@@ -71,7 +71,10 @@ void AAuraCharacter::LoadProgress()
 		}
 		else
 		{
-			// TODO: Load in abilities from disk
+			if (UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
+			{
+				AuraASC->AddCharacterAbilitiesFromSaveData(SaveData);
+			}
 
 			if (AAuraPlayerState* AuraPlayerState = Cast<AAuraPlayerState>(GetPlayerState()))
 			{
@@ -222,7 +225,7 @@ void AAuraCharacter::SaveProgress_Implementation(const FName& CheckpointTag)
 		if (!HasAuthority()) return; // UAuraAbilitySystemLibrary::GetAbilityInfo only returns AbilityInfo on the server because only the game mode has it
 
 		UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent);
-
+		SaveData->SavedAbilities.Empty(); // If we've changed abilities, they might not be added if they already exist in some form in SavedAbilities
 		FForEachAbilitySignature SaveAbilityDelegate;
 		SaveAbilityDelegate.BindLambda(
 			[this, AuraASC, &SaveData](const FGameplayAbilitySpec& AbilitySpec)
@@ -238,7 +241,7 @@ void AAuraCharacter::SaveProgress_Implementation(const FName& CheckpointTag)
 				SavedAbility.AbilityType = AbilityInfo.AbilityType;
 				SavedAbility.AbilityLevel = AbilitySpec.Level;
 
-				SaveData->SavedAbilities.Add(SavedAbility);
+				SaveData->SavedAbilities.AddUnique(SavedAbility); // Need to overload FSavedAbility's == operator for AddUnique to work
 			});
 		AuraASC->ForEachAbility(SaveAbilityDelegate); // Fill in SaveData's SavedAbility TArray by executing the lambda above "for each ability"
 

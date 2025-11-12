@@ -54,4 +54,6 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	// SaveWorldState() if (!IsValid(SaveObject)) return;
 };

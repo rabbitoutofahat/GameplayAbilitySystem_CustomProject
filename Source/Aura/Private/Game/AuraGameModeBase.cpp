@@ -7,6 +7,9 @@
 #include "Game/LoadScreenSaveGame.h"
 #include "GameFramework/PlayerStart.h"
 #include "Game/AuraGameInstance.h"
+#include "EngineUtils.h"
+#include "Interaction/SaveInterface.h"
+#include "Serialization/ObjectAndNameAsStringProxyArchive.h"
 
 void AAuraGameModeBase::SaveSlotData(UMVVM_LoadSlot* LoadSlot, int32 SlotIndex)
 {
@@ -64,6 +67,52 @@ void AAuraGameModeBase::SaveInGameProgressData(ULoadScreenSaveGame* SaveObject)
 	AuraGameInstance->PlayerStartTag = SaveObject->PlayerStartTag;
 
 	UGameplayStatics::SaveGameToSlot(SaveObject, InGameLoadSlotName, InGameLoadSlotIndex);
+}
+
+void AAuraGameModeBase::SaveWorldState(UWorld* World)
+{
+	FString WorldName = World->GetMapName();
+	WorldName.RemoveFromStart(World->StreamingLevelsPrefix); // A StreamingLevelsPrefix is automatically prepended to every map name, which we must remove to get the true map name
+
+	UAuraGameInstance* AuraGI = Cast<UAuraGameInstance>(GetGameInstance());
+	check(AuraGI);
+
+	if (ULoadScreenSaveGame* SaveGame = GetSaveSlotData(AuraGI->LoadSlotName, AuraGI->LoadSlotIndex))
+	{
+		if (!SaveGame->HasMap(WorldName)) // If we enter this if-statement then that means we haven't saved data for this particular world yet, and we need to add a saved map to our SavedGame's array of SavedMaps
+		{
+			FSavedMap NewSavedMap;
+			NewSavedMap.MapAssetName = WorldName;
+			SaveGame->SavedMaps.Add(NewSavedMap);
+		}
+
+		FSavedMap SavedMap = SaveGame->GetSavedMapWithMapName(WorldName);
+		SavedMap.SavedActors.Empty(); // Clear out the SavedActors array just in case, so we can fill it in with "actors" (FSavedActors)
+
+		for (FActorIterator It(World); It; ++It) // Syntax for iterating over every single actor in the world using FActorIterator
+		{
+			AActor* Actor = *It;
+			if (!IsValid(Actor) || !Actor->Implements<USaveInterface>()) continue;
+			
+			FSavedActor SavedActor;
+			SavedActor.ActorName = Actor->GetFName();
+			SavedActor.Transform = Actor->GetTransform();
+
+			// Write the Actor's Byte Array into Memory, serialise the Actor into the Archive
+			FMemoryWriter MemoryWriter(SavedActor.Bytes);
+			FObjectAndNameAsStringProxyArchive Archive(MemoryWriter, true);
+			Archive.ArIsSaveGame = true; // Serialising this through a SaveGame Object (ULoadScreenSaveGame)
+			Actor->Serialize(Archive);
+
+			SavedMap.SavedActors.AddUnique(SavedActor);
+		}
+
+		for (FSavedMap& MapToReplace : SaveGame->SavedMaps)
+		{
+			if (MapToReplace.MapAssetName == WorldName) MapToReplace = SavedMap; // Replace the current map with our SavedMap filled with new data
+		}
+		UGameplayStatics::SaveGameToSlot(SaveGame, AuraGI->LoadSlotName, AuraGI->LoadSlotIndex);
+	}
 }
 
 void AAuraGameModeBase::TravelToMap(UMVVM_LoadSlot* LoadSlot)

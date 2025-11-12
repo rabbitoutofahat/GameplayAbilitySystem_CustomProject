@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerStart.h"
+#include "Interaction/SaveInterface.h"
 #include "Checkpoint.generated.h"
 
 class USphereComponent;
@@ -12,12 +13,15 @@ class USphereComponent;
  * 
  */
 UCLASS()
-class AURA_API ACheckpoint : public APlayerStart
+class AURA_API ACheckpoint : public APlayerStart, public ISaveInterface
 {
 	GENERATED_BODY()
 	
 public:
 	ACheckpoint(const FObjectInitializer& ObjectInitializer);
+
+	UPROPERTY(BlueprintReadOnly, SaveGame) // The SaveGame specifier makes it possible to serialise this property into an FSavedActor's Bytes (see AAuraGameModeBase::SaveWorldState)
+	bool bReached = false; // Has this checkpoint been 'reached' already?
 
 protected:
 	virtual void BeginPlay() override;

@@ -33,6 +33,8 @@ public:
 	ULoadScreenSaveGame* RetrieveInGameSaveData();
 	void SaveInGameProgressData(ULoadScreenSaveGame* SaveObject);
 
+	void SaveWorldState(UWorld* World);
+
 	void TravelToMap(UMVVM_LoadSlot* LoadSlot);
 
 	UPROPERTY(EditDefaultsOnly)
@@ -54,6 +56,4 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
-	// SaveWorldState() if (!IsValid(SaveObject)) return;
 };

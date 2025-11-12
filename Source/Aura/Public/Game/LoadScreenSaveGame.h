@@ -46,6 +46,40 @@ inline bool operator==(const FSavedAbility& Left, const FSavedAbility& Right)
 	return Left.AbilityTag.MatchesTagExact(Right.AbilityTag); // Overloads FSavedAbility's == operator to compare specifically the ability tags of two operands
 }
 
+
+USTRUCT()
+struct FSavedActor
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FName ActorName = FName();
+
+	UPROPERTY()
+	FTransform Transform = FTransform();
+
+	// Serialised variables from the Actor - only those marked with SaveGame specifier
+	UPROPERTY()
+	TArray<uint8> Bytes;
+};
+
+inline bool operator==(const FSavedActor& Left, const FSavedActor& Right)
+{
+	return Left.ActorName == Right.ActorName;
+}
+
+USTRUCT()
+struct FSavedMap // For saving the world state, given a particular map asset
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FString MapAssetName = FString();
+
+	UPROPERTY()
+	TArray<FSavedActor> SavedActors;
+};
+
 /**
  * 
  */
@@ -108,4 +142,12 @@ public:
 
 	UPROPERTY()
 	TArray<FSavedAbility> SavedAbilities;
+
+	/* World State */
+
+	UPROPERTY()
+	TArray<FSavedMap> SavedMaps;
+
+	FSavedMap GetSavedMapWithMapName(const FString& InMapName);
+	bool HasMap(const FString& InMapName);
 };

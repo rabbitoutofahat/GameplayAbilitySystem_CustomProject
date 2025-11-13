@@ -27,8 +27,11 @@ public:
 	virtual void LoadActor_Implementation() override;
 	/* end Save Interface */
 
-	UPROPERTY(BlueprintReadOnly, SaveGame) // The SaveGame specifier makes it possible to serialise this property into an FSavedActor's Bytes (see AAuraGameModeBase::SaveWorldState)
+	UPROPERTY(BlueprintReadWrite, SaveGame) // The SaveGame specifier makes it possible to serialise this property into an FSavedActor's Bytes (see AAuraGameModeBase::SaveWorldState)
 	bool bReached = false; // Has this checkpoint been 'reached' already?
+
+	UPROPERTY(EditAnywhere)
+	bool bBindOverlapCallback = true; // Let's us control whether we want to bind to the overlap callback (which handles glow effects and saves the game state)
 
 protected:
 	virtual void BeginPlay() override;
@@ -51,6 +54,7 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void CheckpointReached(UMaterialInstanceDynamic* DynamicMaterialInstance);
 
+	UFUNCTION(BlueprintCallable)
 	void HandleGlowEffects();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)

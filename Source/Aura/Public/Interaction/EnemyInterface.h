@@ -26,9 +26,6 @@ class AURA_API IEnemyInterface
 	*/
 
 public:
-	virtual void HighlightActor() = 0; // By adding '=0' we make this a 'pure virtual function' (or 'abstract'), meaning we do not need to provide a definition
-	virtual void UnHighlightActor() = 0;
-
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent) // BlueprintNativeEvents don't require a virtual keyword, instead you override it's Implementation on the desired class (in this case AAuraEnemy)
 	void SetCombatTarget(AActor* InCombatTarget);
 

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Character/AuraCharacterBase.h"
 #include "Interaction/EnemyInterface.h"
+#include "Interaction/HighlightInterface.h"
 #include "UI/WidgetController/OverlayWidgetController.h" // For using the FOnAttributeChangedSignature delegate
 #include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "AuraEnemy.generated.h"
@@ -18,19 +19,18 @@ class AAuraAIController;
  * 
  */
 UCLASS()
-class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
+class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface, public IHighlightInterface
 {
 	GENERATED_BODY()
 
-// As soon as we added the pure virtual functions Highlight/UnhighlightActor, this became an abstract class which cannot be instantiated without overriding
 public:
 	AAuraEnemy();
 	virtual void PossessedBy(AController* NewController) override;
 
-	/* Enemy Interface */
-	virtual void HighlightActor() override; 
+	/* Highlight Interface */
+	virtual void HighlightActor() override; // When we add the pure virtual functions Highlight/UnhighlightActor, AAuraEnemy becomes an abstract class which cannot be instantiated without overriding
 	virtual void UnHighlightActor() override;
-	/* end Enemy Interface */
+	/* end Highlight Interface */
 
 	/* Combat Interface */
 	virtual int32 GetPlayerLevel_Implementation() override;

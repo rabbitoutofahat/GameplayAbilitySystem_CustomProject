@@ -4,7 +4,8 @@
 #include "Player/AuraPlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "Input/AuraInputComponent.h"
-#include "interaction/HighlightInterface.h"
+#include "Interaction/EnemyInterface.h"
+#include "Interaction/HighlightInterface.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Components/SplineComponent.h"
@@ -45,23 +46,6 @@ void AAuraPlayerController::ShowDamageNumber_Implementation(float Damage, AChara
 		DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); // Detach from the target character so that it doesn't move with them and can play its own animation
 		DamageText->SetDamageText(Damage, bBlockedHit, bCriticalHit);
 	}
-}
-
-void AAuraPlayerController::ShowMagicCircle(UMaterialInterface* DecalMaterial)
-{
-	if (!IsValid(MagicCircle)) 
-	{
-		MagicCircle = GetWorld()->SpawnActor<AAuraMagicCircle>(MagicCircleClass);
-		if (DecalMaterial)
-		{
-			MagicCircle->MagicCircleDecal->SetMaterial(0, DecalMaterial);
-		}
-	}
-}
-
-void AAuraPlayerController::HideMagicCircle()
-{
-	if (IsValid(MagicCircle)) MagicCircle->Destroy();
 }
 
 void AAuraPlayerController::BeginPlay()
@@ -125,25 +109,36 @@ void AAuraPlayerController::CursorTrace()
 {
 	if (GetASC() && GetASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_CursorTrace)) // Apply Block_CursorTrace tag, for example, when channeling an ability
 	{
-		if (LastActor) LastActor->UnHighlightActor();
-		if (ThisActor) ThisActor->UnHighlightActor();
+		UnHighlightActor(LastActor);
+		UnHighlightActor(ThisActor);
 		LastActor = nullptr;
 		ThisActor = nullptr;
 		return;
 	}
-	const ECollisionChannel TraceChannel = IsValid(MagicCircle) ? ECC_ExcludePlayers : ECC_Visibility;
+
+	const ECollisionChannel TraceChannel = IsValid(MagicCircle) ? ECC_ExcludePlayers : ECC_Visibility; // Turn off highlight functionality when a Magic Circle is active (e.g., when choosing where to cast Arcane Shards)
 	GetHitResultUnderCursor(TraceChannel, false, CursorHit);
 	if (!CursorHit.bBlockingHit) return;
 
-	// Cast REMOVED, see TScriptInterface wrapper in the .h file
 	LastActor = ThisActor;
-	ThisActor = CursorHit.GetActor();
+	if (IsValid(CursorHit.GetActor()) && CursorHit.GetActor()->Implements<UHighlightInterface>()) ThisActor = CursorHit.GetActor();
+	else ThisActor = nullptr;
 
 	if (LastActor != ThisActor) // If the actors are different, we need to unhighlight the last actor and highlight the new one
 	{
-		if (LastActor) LastActor->UnHighlightActor();
-		if (ThisActor) ThisActor->HighlightActor();
+		UnHighlightActor(LastActor);
+		HighlightActor(ThisActor);
 	}
+}
+
+void AAuraPlayerController::HighlightActor(AActor* InActor)
+{
+	if (IsValid(InActor) && InActor->Implements<UHighlightInterface>()) IHighlightInterface::Execute_HighlightActor(InActor);
+}
+
+void AAuraPlayerController::UnHighlightActor(AActor* InActor)
+{
+	if (IsValid(InActor) && InActor->Implements<UHighlightInterface>()) IHighlightInterface::Execute_UnHighlightActor(InActor);
 }
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
@@ -152,8 +147,10 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 
 	if (InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
-		bTargeting = ThisActor ? true : false; // Is ThisActor == nullptr?
-	    bAutoRunning = false; // If it's a short press we are going to auto run, but we don't know that until we release the mouse button
+		// Is ThisActor implementing the Highlight Interface? If so, are they an enemy or a non-enemy (e.g., a map entrance)
+		if (IsValid(ThisActor)) TargetingStatus = ThisActor->Implements<UEnemyInterface>() ? ETargetingStatus::TargetingEnemy : ETargetingStatus::TargetingNonEnemy;
+		else TargetingStatus = ETargetingStatus::NotTargeting;
+		bAutoRunning = false; // If it's a short press we are going to auto run, but we don't know that until we release the mouse button
 	}
 	if (GetASC()) GetASC()->AbilityInputTagPressed(InputTag);
 }
@@ -170,7 +167,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 	if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
 	// We're telling the ASC that the input tag has been released regardless of whether we're targeting or not, but it's only if we're not targeting and not holding down the shift key that we might want to auto run
-	if (!bTargeting && !bShiftKeyDown)
+	if (TargetingStatus != ETargetingStatus::TargetingEnemy && !bShiftKeyDown)
 	{
 		APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold && ControlledPawn)
@@ -210,7 +207,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 			}
 		}
 		FollowTime = 0.f;
-		bTargeting = false;
+		TargetingStatus = ETargetingStatus::NotTargeting;
 	}
 }
 
@@ -224,7 +221,8 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 		return;
 	}
 
-	if (bTargeting || bShiftKeyDown) // If we are pressing the LMB down and, we're targeting (hovering over an enemy) OR we're not targeting but holding down the shift key -> activate ability on LMB held
+	// If we are pressing the LMB down and, we're targeting (hovering over an enemy) OR we're not targeting but holding down the shift key -> activate ability on LMB held
+	if (TargetingStatus == ETargetingStatus::TargetingEnemy || bShiftKeyDown)
 	{
 		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 	}
@@ -270,4 +268,21 @@ void AAuraPlayerController::UpdateMagicCircleLocation()
 	{
 		MagicCircle->SetActorLocation(CursorHit.ImpactPoint);
 	}
+}
+
+void AAuraPlayerController::ShowMagicCircle(UMaterialInterface* DecalMaterial)
+{
+	if (!IsValid(MagicCircle))
+	{
+		MagicCircle = GetWorld()->SpawnActor<AAuraMagicCircle>(MagicCircleClass);
+		if (DecalMaterial)
+		{
+			MagicCircle->MagicCircleDecal->SetMaterial(0, DecalMaterial);
+		}
+	}
+}
+
+void AAuraPlayerController::HideMagicCircle()
+{
+	if (IsValid(MagicCircle)) MagicCircle->Destroy();
 }

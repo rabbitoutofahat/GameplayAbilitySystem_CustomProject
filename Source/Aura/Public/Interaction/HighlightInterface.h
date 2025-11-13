@@ -23,6 +23,9 @@ class AURA_API IHighlightInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 
 public:
-	virtual void HighlightActor() = 0; // By adding '=0' we make this a 'pure virtual function' (or 'abstract'), meaning we do not need to provide a definition
-	virtual void UnHighlightActor() = 0;
+	UFUNCTION(BlueprintNativeEvent)
+	void HighlightActor(); 
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void UnHighlightActor();
 };

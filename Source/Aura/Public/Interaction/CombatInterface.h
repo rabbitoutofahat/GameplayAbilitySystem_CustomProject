@@ -62,7 +62,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UAnimMontage* GetHitReactMontage();
 
-	virtual void Die(const FVector& DeathImpulse) = 0;
+	virtual void Die(const FVector& DeathImpulse) = 0; // By adding '=0' we make this a 'pure virtual function' (or 'abstract'), so it doesn't need to be defined despite not being a BlueprintNativeEvent
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	bool IsDead() const;

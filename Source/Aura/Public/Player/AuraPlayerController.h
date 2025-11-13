@@ -19,6 +19,13 @@ class UDamageTextComponent;
 class UNiagaraSystem;
 class AAuraMagicCircle;
 
+enum ETargetingStatus : uint8
+{
+	TargetingEnemy,
+	TargetingNonEnemy,
+	NotTargeting
+};
+
 /**
  * 
  */
@@ -34,20 +41,14 @@ public:
 	UFUNCTION(Client, Reliable) // RPC (Remote Procedure Call) to show damage numbers on the client
 	void ShowDamageNumber(float Damage, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit);
 
-	UFUNCTION(BlueprintCallable)
-	void ShowMagicCircle(UMaterialInterface* DecalMaterial = nullptr);
-
-	UFUNCTION(BlueprintCallable)
-	void HideMagicCircle();
-
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
 private:
+	/* Mapping Context and Movement */
 	void SetMappingContext();
 	void Move(const FInputActionValue& InputActionValue);
-	void CursorTrace();
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> AuraContext;
@@ -63,11 +64,15 @@ private:
 	void ShiftReleased() { bShiftKeyDown = false; }
 	bool bShiftKeyDown = false;
 	
-	// TScriptInterface is a special wrapper used for storing member variables in an interface and removes the need to check whether the actor implements the interface (using a cast)
-	TScriptInterface<IHighlightInterface> LastActor; 
-	TScriptInterface<IHighlightInterface> ThisActor;
+	/* Cursor Trace and Highlight */
+	void CursorTrace();
+	TObjectPtr<AActor> LastActor; 
+	TObjectPtr<AActor> ThisActor;
 	FHitResult CursorHit;
+	static void HighlightActor(AActor* InActor);
+	static void UnHighlightActor(AActor* InActor);
 
+	/* Ability Input */
 	void AbilityInputTagPressed(FGameplayTag InputTag);
 	void AbilityInputTagReleased(FGameplayTag InputTag);
 	void AbilityInputTagHeld(FGameplayTag InputTag);
@@ -80,11 +85,15 @@ private:
 
 	UAuraAbilitySystemComponent* GetASC();
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDamageTextComponent> DamageTextComponentClass;
+
+	/* Auto Run */
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;
 	float ShortPressThreshold = 0.5f;
 	bool bAutoRunning = false;
-	bool bTargeting = false;
+	ETargetingStatus TargetingStatus = ETargetingStatus::NotTargeting;
 
 	UPROPERTY(EditDefaultsOnly)
 	float AutoRunAcceptanceRadius = 50.f;
@@ -100,9 +109,7 @@ private:
 
 	void AutoRun();
 
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UDamageTextComponent> DamageTextComponentClass;
-
+	/* Magic Circle */
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AAuraMagicCircle> MagicCircleClass;
 
@@ -110,4 +117,11 @@ private:
 	TObjectPtr<AAuraMagicCircle> MagicCircle;
 
 	void UpdateMagicCircleLocation();
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void ShowMagicCircle(UMaterialInterface* DecalMaterial = nullptr);
+
+	UFUNCTION(BlueprintCallable)
+	void HideMagicCircle();
 };

@@ -41,6 +41,11 @@ void UMVVM_LoadScreen::NewGameButtonPressed(int32 Slot)
 void UMVVM_LoadScreen::NewSlotButtonPressed(int32 Slot, const FString& EnteredName)
 {
 	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+	if (!IsValid(AuraGameMode)) // Enforce Single-Player only for slot creation/selection
+	{
+		GEngine->AddOnScreenDebugMessage(1, 15.f, FColor::Magenta, FString("Please switch to Single Player"));
+		return;
+	}
 
 	// Initialise the selected Load Slot so it displays the right save data
 	LoadSlots[Slot]->SetPlayerName(EnteredName);
@@ -57,14 +62,8 @@ void UMVVM_LoadScreen::SelectSlotButtonPressed(int32 Slot)
 	SlotSelected.Broadcast();
 	for (const TTuple<int32, UMVVM_LoadSlot*> LoadSlot : LoadSlots)
 	{
-		if (LoadSlot.Key == Slot)
-		{
-			LoadSlot.Value->EnableSelectSlotButton.Broadcast(false); // Want to disable the button once we've clicked it
-		}
-		else
-		{
-			LoadSlot.Value->EnableSelectSlotButton.Broadcast(true); // Want to enable the button on all the other load slots
-		}
+		if (LoadSlot.Key == Slot) LoadSlot.Value->EnableSelectSlotButton.Broadcast(false); // Want to disable the button once we've clicked it
+		else LoadSlot.Value->EnableSelectSlotButton.Broadcast(true); // Want to enable the button on all the other load slots
 	}
 	SelectedSlot = LoadSlots[Slot];
 }
@@ -96,6 +95,7 @@ void UMVVM_LoadScreen::PlayButtonPressed()
 void UMVVM_LoadScreen::LoadData()
 {
 	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(this));
+	if (!IsValid(AuraGameMode)) return; // Enforce Single-Player only for slot creation/selection
 	for (const TTuple<int32, UMVVM_LoadSlot*> LoadSlot : LoadSlots)
 	{
 		ULoadScreenSaveGame* SaveObject = AuraGameMode->GetSaveSlotData(LoadSlot.Value->GetSlotName(), LoadSlot.Key);

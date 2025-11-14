@@ -28,7 +28,7 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 
 	/* Highlight Interface */
-	virtual void HighlightActor_Implementation() override; // When we add the pure virtual functions Highlight/UnhighlightActor, AAuraEnemy becomes an abstract class which cannot be instantiated without overriding
+	virtual void HighlightActor_Implementation() override; 
 	virtual void UnHighlightActor_Implementation() override;
 	virtual void SetMoveToLocation_Implementation(FVector& OutDestination) override;
 	/* end Highlight Interface */

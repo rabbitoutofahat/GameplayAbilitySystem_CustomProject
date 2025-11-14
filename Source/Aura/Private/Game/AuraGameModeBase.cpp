@@ -70,7 +70,7 @@ void AAuraGameModeBase::SaveInGameProgressData(ULoadScreenSaveGame* SaveObject)
 	UGameplayStatics::SaveGameToSlot(SaveObject, InGameLoadSlotName, InGameLoadSlotIndex);
 }
 
-void AAuraGameModeBase::SaveWorldState(UWorld* World) const
+void AAuraGameModeBase::SaveWorldState(UWorld* World, const FString& DestinationMapAssetName) const
 {
 	FString WorldName = World->GetMapName();
 	WorldName.RemoveFromStart(World->StreamingLevelsPrefix); // A StreamingLevelsPrefix is automatically prepended to every map name, which we must remove to get the true map name
@@ -80,6 +80,12 @@ void AAuraGameModeBase::SaveWorldState(UWorld* World) const
 
 	if (ULoadScreenSaveGame* SaveGame = GetSaveSlotData(AuraGI->LoadSlotName, AuraGI->LoadSlotIndex))
 	{
+		if (DestinationMapAssetName != FString(""))
+		{
+			SaveGame->MapAssetName = DestinationMapAssetName;
+			SaveGame->MapName = GetMapNameFromMapAssetName(DestinationMapAssetName);
+		}
+
 		if (!SaveGame->HasMap(WorldName)) // If we enter this if-statement then that means we haven't saved data for this particular world yet, and we need to add a saved map to our SavedGame's array of SavedMaps
 		{
 			FSavedMap NewSavedMap;
@@ -110,7 +116,7 @@ void AAuraGameModeBase::SaveWorldState(UWorld* World) const
 
 		for (FSavedMap& MapToReplace : SaveGame->SavedMaps)
 		{
-			if (MapToReplace.MapAssetName == WorldName) MapToReplace = SavedMap; // Replace the current map with our SavedMap filled with new data
+			if (MapToReplace.MapAssetName == WorldName) MapToReplace = SavedMap; // Replace the map currently saved to our load slot with our SavedMap filled with new data
 		}
 		UGameplayStatics::SaveGameToSlot(SaveGame, AuraGI->LoadSlotName, AuraGI->LoadSlotIndex);
 	}
@@ -163,6 +169,18 @@ void AAuraGameModeBase::TravelToMap(UMVVM_LoadSlot* LoadSlot)
 	const FString LoadSlotName = LoadSlot->GetSlotName();
 	const int32 LoadSlotIndex = LoadSlot->SlotIndex;
 	UGameplayStatics::OpenLevelBySoftObjectPtr(LoadSlot, Maps.FindChecked(LoadSlot->GetMapName()));
+}
+
+FString AAuraGameModeBase::GetMapNameFromMapAssetName(const FString& MapAssetName) const
+{
+	for (auto& Map : Maps)
+	{
+		if (Map.Value.ToSoftObjectPath().GetAssetName() == MapAssetName)
+		{
+			return Map.Key; // Map.Value = Map Asset Name, Map.Key = Map Name (User-facing text)
+		}
+	}
+	return FString();
 }
 
 AActor* AAuraGameModeBase::ChoosePlayerStart_Implementation(AController* Player)

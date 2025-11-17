@@ -15,6 +15,7 @@ class AAuraHUD;
 class UAbilityInfo;
 struct FDamageEffectParams;
 class ULoadScreenSaveGame;
+class ULootTiers;
 
 /**
  * Custom library of static functions (static such that we do not need an object of this class to execute its member functions)
@@ -63,10 +64,13 @@ public:
 	static UCharacterClassInfo* GetCharacterClassInfo(const UObject* WorldContextObject);
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
-	static UAbilityInfo* GetAbilityInfo(const UObject* WorldContextObject);
+	static int32 GetCharacterClassXPReward(const UObject* WorldContextObject, const ECharacterClass CharacterClass, int32 Level);
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults")
-	static int32 GetCharacterClassXPReward(const UObject* WorldContextObject, const ECharacterClass CharacterClass, int32 Level);
+	static UAbilityInfo* GetAbilityInfo(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|CharacterClassDefaults", meta = (DefaultToSelf = "WorldContextObject"))
+	static ULootTiers* GetLootTiers(const UObject* WorldContextObject);
 
 	/*
 	* Effect Context Getters

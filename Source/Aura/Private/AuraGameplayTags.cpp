@@ -163,4 +163,11 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	* Gameplay Cues
 	*/
 	GameplayTags.GameplayCue_FireBlast = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.FireBlast"), FString("Gameplay Cue for Fire Blast Ability"));
+
+	/*
+	* Vessel Character Class
+	*/
+	GameplayTags.Abilities_Utility_Haunt = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Utility.Haunt"), FString("Vessel Utility Ability Tag"));
+	GameplayTags.Abilities_Passive_DemonicSoul = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Passive.DemonicSoul"), FString("Vessel Starting Passive Tag"));
+	GameplayTags.Abilties_Vessel_ShadowBolt = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.ShadowBolt"), FString("Vessel Starting Ability Tag"));
 }

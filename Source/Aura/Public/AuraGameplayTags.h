@@ -110,9 +110,9 @@ public:
 	FGameplayTag GameplayCue_FireBlast;
 
 	/* Vessel Character Class */
-	FGameplayTag Vessel_Utility_Haunt;
-	FGameplayTag Vessel_Ability_ShadowBolt;
-	FGameplayTag Vessel_KeyPassive_DemonicSoul;
+	FGameplayTag Abilities_Utility_Haunt;
+	FGameplayTag Abilities_Passive_DemonicSoul;
+	FGameplayTag Abilties_Vessel_ShadowBolt;
 
 private:
 	static FAuraGameplayTags GameplayTags;

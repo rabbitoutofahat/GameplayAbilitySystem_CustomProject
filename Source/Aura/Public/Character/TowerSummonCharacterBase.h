@@ -15,6 +15,6 @@ class AURA_API ATowerSummonCharacterBase : public AAuraEnemy
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadWrite)
 	TObjectPtr<AActor> OwningActor;
 };

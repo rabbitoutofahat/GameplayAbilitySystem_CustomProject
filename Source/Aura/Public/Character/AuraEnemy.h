@@ -25,9 +25,17 @@ public:
 	virtual void SetMoveToLocation_Implementation(FVector& OutDestination) override;
 	/* end Highlight Interface */
 	
+	/* Enemy Interface */
+	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
+	virtual AActor* GetCombatTarget_Implementation() const override;
+	/* end Enemy Interface */
+
 	/* Combat Interface */
 	virtual void Die(const FVector& DeathImpulse) override;
 	/* end Combat Interface */
+
+	UPROPERTY(BlueprintReadWrite, Category = "Combat")
+	TObjectPtr<AActor> CombatTarget;
 
 protected:
 	UFUNCTION(BlueprintImplementableEvent)

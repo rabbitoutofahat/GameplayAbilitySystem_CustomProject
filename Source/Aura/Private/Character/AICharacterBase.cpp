@@ -58,16 +58,6 @@ void AAICharacterBase::Die(const FVector& DeathImpulse)
 	Super::Die(DeathImpulse);
 }
 
-void AAICharacterBase::SetCombatTarget_Implementation(AActor* InCombatTarget)
-{
-	CombatTarget = InCombatTarget;
-}
-
-AActor* AAICharacterBase::GetCombatTarget_Implementation() const
-{
-	return CombatTarget;
-}
-
 void AAICharacterBase::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
 	bHitReacting = NewCount > 0;

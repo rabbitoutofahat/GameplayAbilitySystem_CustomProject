@@ -308,6 +308,16 @@ void AAuraCharacter::OnRep_Burned()
 	else BurnDebuffComponent->Deactivate();
 }
 
+ASummonCharacter* AAuraCharacter::SpawnSummonedMinion(UClass* Class, const FTransform& SpawnTransform, int32 OwnerLevel)
+{
+	ASummonCharacter* Summon = GetWorld()->SpawnActorDeferred<ASummonCharacter>(Class, SpawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
+	Summon->OwnerActor = this;
+	Summon->SetLevel(OwnerLevel); // Set after SpawnSummonedMinion is called in blueprint
+	Summon->FinishSpawning(SpawnTransform);
+	Summon->SpawnDefaultController();
+	return Summon;
+}
+
 void AAuraCharacter::InitAbilityActorInfo()
 {
 	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();

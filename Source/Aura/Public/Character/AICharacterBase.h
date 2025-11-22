@@ -6,12 +6,13 @@
 #include "Character/AuraCharacterBase.h"
 #include "UI/WidgetController/OverlayWidgetController.h" // For using the FOnAttributeChangedSignature delegate
 #include "AbilitySystem/Data/CharacterClassInfo.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "AI/AuraAIController.h"
 #include "AICharacterBase.generated.h"
 
 class UWidgetComponent;
 class UAuraAttributeSet;
 class UBehaviorTree;
-class AAuraAIController;
 
 /**
  * 
@@ -67,7 +68,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI")
+	UPROPERTY(EditAnywhere, Category = "AI")
 	TObjectPtr<UBehaviorTree> BehaviorTree;
 
 	UPROPERTY()

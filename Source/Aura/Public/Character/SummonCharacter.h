@@ -16,12 +16,16 @@ class AURA_API ASummonCharacter : public AAICharacterBase, public ISummonInterfa
 	GENERATED_BODY()
 
 public:
+	virtual void PossessedBy(AController* NewController) override;
+
 	/* Summon Interface */
 	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
 	virtual AActor* GetCombatTarget_Implementation() const override;
-	//virtual void FollowOwner_Implementation(AActor* InOwner);
 	/* end Summon Interface*/
 
 	UPROPERTY(BlueprintReadWrite, Category = "Combat")
 	TObjectPtr<AActor> CombatTarget;
+
+	UPROPERTY()
+	TObjectPtr<AActor> OwnerActor; // For some reason setting owner and setting the OwnerActor Blackboard Key to GetOwner() doesn't work, so we set our own owner variable
 };

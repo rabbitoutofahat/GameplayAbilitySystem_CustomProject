@@ -18,10 +18,10 @@ class AURA_API ASummonCharacter : public AAICharacterBase, public ISummonInterfa
 public:
 	virtual void PossessedBy(AController* NewController) override;
 
-	/* Summon Interface */
+	/* Combat Interface */
 	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
 	virtual AActor* GetCombatTarget_Implementation() const override;
-	/* end Summon Interface*/
+	/* end Combat Interface*/
 
 	UPROPERTY(BlueprintReadWrite, Category = "Combat")
 	TObjectPtr<AActor> CombatTarget;

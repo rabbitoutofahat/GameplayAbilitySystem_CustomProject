@@ -29,6 +29,7 @@ public:
 	/* Combat Interface */
 	virtual int32 GetPlayerLevel_Implementation() override;
 	virtual void Die(const FVector& DeathImpulse) override;
+	virtual float GetAttackRadius_Implementation() const override;
 	/* end Combat Interface */
 
 	UPROPERTY(BlueprintAssignable)
@@ -44,6 +45,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float LifeSpan = 5.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
+	float AttackRadius = 45.f;
 
 	void SetLevel(int32 InLevel) { Level = InLevel; }
 

@@ -56,6 +56,11 @@ void AAICharacterBase::Die(const FVector& DeathImpulse)
 	Super::Die(DeathImpulse);
 }
 
+float AAICharacterBase::GetAttackRadius_Implementation() const
+{
+	return AttackRadius;
+}
+
 void AAICharacterBase::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
 	bHitReacting = NewCount > 0;

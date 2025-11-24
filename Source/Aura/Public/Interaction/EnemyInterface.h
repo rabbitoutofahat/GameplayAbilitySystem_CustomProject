@@ -26,9 +26,5 @@ class AURA_API IEnemyInterface
 	*/
 
 public:
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent) // BlueprintNativeEvents don't require a virtual keyword, instead you override it's Implementation on the desired class (in this case AAuraEnemy)
-	void SetCombatTarget(AActor* InCombatTarget);
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
-	AActor* GetCombatTarget() const;
 };

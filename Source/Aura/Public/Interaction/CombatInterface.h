@@ -50,6 +50,12 @@ class AURA_API ICombatInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent) // BlueprintNativeEvents don't require a virtual keyword, instead you override it's Implementation on the desired class (in this case AAuraEnemy)
+	void SetCombatTarget(AActor* InCombatTarget);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	AActor* GetCombatTarget() const;
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	int32 GetPlayerLevel();
 
@@ -96,6 +102,9 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void SetIsBeingShocked(bool bInShock);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	float GetAttackRadius() const;
 
 	// Important to return a reference to the actual delegate on whichever character broadcasts it
 	virtual FOnASCRegisteredSignature& GetOnASCRegisteredDelegate() = 0;  // For Debuff and Passive Niagara Components

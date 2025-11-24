@@ -84,6 +84,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	bool bApplyEffectsToEnemies = false; // Want enemies to ignore certain effect actors, such as potions, and be affected by others, such as fire areas
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
+	bool bApplyEffectsToSummons = false;
+
 	// We can make our own gameplay effect blueprints, and then assign them as a gameplay effect class to our effect actors
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	TSubclassOf<UGameplayEffect> InstantGameplayEffectClass;

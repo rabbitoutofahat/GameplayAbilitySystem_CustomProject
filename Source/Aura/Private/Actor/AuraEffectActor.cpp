@@ -46,6 +46,7 @@ void AAuraEffectActor::StartRotation()
 void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
 	if (TargetActor->ActorHasTag(FName("Enemy")) && !bApplyEffectsToEnemies) return;
+	if (TargetActor->ActorHasTag(FName("Summon")) && !bApplyEffectsToSummons) return;
 
 	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor); // A better way to get an ASC of any actor in blueprint than casting
 	if (TargetASC == nullptr) return;
@@ -82,6 +83,7 @@ void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGam
 void AAuraEffectActor::OnOverlap(AActor* TargetActor)
 {
 	if (TargetActor->ActorHasTag(FName("Enemy")) && !bApplyEffectsToEnemies) return;
+	if (TargetActor->ActorHasTag(FName("Summon")) && !bApplyEffectsToSummons) return;
 
 	if (InstantEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap)
 	{
@@ -100,6 +102,7 @@ void AAuraEffectActor::OnOverlap(AActor* TargetActor)
 void AAuraEffectActor::OnEndOverlap(AActor* TargetActor)
 {
 	if (TargetActor->ActorHasTag(FName("Enemy")) && !bApplyEffectsToEnemies) return;
+	if (TargetActor->ActorHasTag(FName("Summon")) && !bApplyEffectsToSummons) return;
 
 	if (InstantEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnEndOverlap)
 	{

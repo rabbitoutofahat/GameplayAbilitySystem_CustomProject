@@ -7,6 +7,8 @@
 #include "Interaction/SummonInterface.h"
 #include "SummonCharacter.generated.h"
 
+class UWidgetComponent;
+
 /**
  * 
  */
@@ -16,6 +18,7 @@ class AURA_API ASummonCharacter : public AAICharacterBase, public ISummonInterfa
 	GENERATED_BODY()
 
 public:
+	ASummonCharacter();
 	virtual void PossessedBy(AController* NewController) override;
 
 	/* Combat Interface */
@@ -28,4 +31,10 @@ public:
 
 	UPROPERTY()
 	TObjectPtr<AActor> OwnerActor; // For some reason setting owner and setting the OwnerActor Blackboard Key to GetOwner() doesn't work, so we set our own owner variable
+
+protected:
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UWidgetComponent> HealthBarFrame;
 };

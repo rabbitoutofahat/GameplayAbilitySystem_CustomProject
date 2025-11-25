@@ -2,7 +2,12 @@
 
 
 #include "Character/SummonCharacter.h"
+#include "UI/Widget/AuraUserWidget.h"
+#include "Components/WidgetComponent.h"
 
+ASummonCharacter::ASummonCharacter()
+{
+}
 
 void ASummonCharacter::PossessedBy(AController* NewController)
 {
@@ -19,4 +24,14 @@ void ASummonCharacter::SetCombatTarget_Implementation(AActor* InCombatTarget)
 AActor* ASummonCharacter::GetCombatTarget_Implementation() const
 {
 	return CombatTarget;
+}
+
+void ASummonCharacter::BeginPlay()
+{
+	if (UAuraUserWidget* AuraUserWidget = Cast<UAuraUserWidget>(HealthBarFrame->GetUserWidgetObject()))
+	{
+		AuraUserWidget->SetWidgetController(this);
+	}
+
+	Super::BeginPlay();
 }

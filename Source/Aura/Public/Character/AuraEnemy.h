@@ -8,6 +8,8 @@
 #include "Interaction/HighlightInterface.h"
 #include "AuraEnemy.generated.h"
 
+class UWidgetComponent;
+
 /**
  * 
  */
@@ -35,6 +37,11 @@ public:
 	TObjectPtr<AActor> CombatTarget;
 
 protected:
+	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UWidgetComponent> HealthBar;
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void SpawnLoot();
 };

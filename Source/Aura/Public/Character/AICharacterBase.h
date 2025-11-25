@@ -10,7 +10,6 @@
 #include "AI/AuraAIController.h"
 #include "AICharacterBase.generated.h"
 
-class UWidgetComponent;
 class UAuraAttributeSet;
 class UBehaviorTree;
 
@@ -68,9 +67,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
 	int32 Level = 1;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TObjectPtr<UWidgetComponent> HealthBar;
 
 	UPROPERTY(EditAnywhere, Category = "AI")
 	TObjectPtr<UBehaviorTree> BehaviorTree;

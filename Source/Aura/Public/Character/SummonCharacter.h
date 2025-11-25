@@ -7,7 +7,7 @@
 #include "Interaction/SummonInterface.h"
 #include "SummonCharacter.generated.h"
 
-class UWidgetComponent;
+class UAuraUserWidget;
 
 /**
  * 
@@ -35,6 +35,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TObjectPtr<UWidgetComponent> HealthBarFrame;
+	UPROPERTY()
+	TObjectPtr<UAuraUserWidget> HealthFrame;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UAuraUserWidget> HealthFrameClass;
 };

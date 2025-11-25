@@ -3,8 +3,6 @@
 #include "Character/AICharacterBase.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
-#include "Components/WidgetComponent.h"
-#include "UI/Widget/AuraUserWidget.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AuraGameplayTags.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -19,9 +17,6 @@ AAICharacterBase::AAICharacterBase()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Full); // Minimal gameplay effects are NOT replicated but gameplay cues and tags are. Used for multiplayer AI-controlled actors (set to full to fix enemy health bar issue)
 
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
-
-	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
-	HealthBar->SetupAttachment(GetRootComponent());
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
@@ -79,19 +74,6 @@ void AAICharacterBase::BeginPlay()
 	if (HasAuthority())
 	{
 		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent, CharacterClass);
-	}
-
-	// Set the widget controller for the enemy health bar widget
-	if (UAuraUserWidget* AuraUserWidget = Cast<UAuraUserWidget>(HealthBar->GetUserWidgetObject()))
-	{
-		AuraUserWidget->SetWidgetController(this); // The widget controller is a UObject, meaning anything derived from UObject can be a widget controller
-	}
-
-	if (const UAuraAttributeSet* AuraAS = Cast<UAuraAttributeSet>(AttributeSet))
-	{
-		BindCallbacksToDependencies(AuraAS);
-		BroadcastInitialValues(AuraAS);
-		BindHitReactTagChangeDelegate();
 	}
 }
 

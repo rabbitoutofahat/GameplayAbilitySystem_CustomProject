@@ -4,6 +4,7 @@
 #include "Character/SummonCharacter.h"
 #include "UI/Widget/AuraUserWidget.h"
 #include "Components/WidgetComponent.h"
+#include "AbilitySystem/AuraAttributeSet.h"
 
 ASummonCharacter::ASummonCharacter()
 {
@@ -28,10 +29,20 @@ AActor* ASummonCharacter::GetCombatTarget_Implementation() const
 
 void ASummonCharacter::BeginPlay()
 {
-	if (UAuraUserWidget* AuraUserWidget = Cast<UAuraUserWidget>(HealthBarFrame->GetUserWidgetObject()))
-	{
-		AuraUserWidget->SetWidgetController(this);
-	}
-
 	Super::BeginPlay();
+
+	// TODO: Move to DemonicSoul / Major Summon sub-class, don't need for Minor Summons
+	UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), HealthFrameClass);
+	HealthFrame = Cast<UAuraUserWidget>(Widget);
+	HealthFrame->SetAnchorsInViewport(FAnchors(0.0, 0.5));
+	HealthFrame->SetAlignmentInViewport(FVector2D(-0.5, 1.5));
+	HealthFrame->AddToViewport();
+	HealthFrame->SetWidgetController(this);
+
+	if (const UAuraAttributeSet* AuraAS = Cast<UAuraAttributeSet>(AttributeSet))
+	{
+		BindCallbacksToDependencies(AuraAS);
+		BroadcastInitialValues(AuraAS);
+		BindHitReactTagChangeDelegate();
+	}
 }

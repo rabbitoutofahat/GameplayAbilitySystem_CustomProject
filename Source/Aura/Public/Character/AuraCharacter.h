@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Character/AuraCharacterBase.h"
 #include "Interaction/PlayerInterface.h"
-#include "Character/SummonCharacter.h"
 #include "AuraCharacter.generated.h"
 
 class UNiagaraComponent;
@@ -59,11 +58,6 @@ public:
 
 	virtual void OnRep_Stunned() override;
 	virtual void OnRep_Burned() override;
-
-	/* Vessel Character functions (move when a Vessel C++ class is implemented) */
-	
-	UFUNCTION(BlueprintCallable)
-	ASummonCharacter* SpawnSummonedMinion(UClass* Class, const FTransform& SpawnTransform, int32 OwnerLevel);
 
 private:
 	UPROPERTY(VisibleAnywhere)

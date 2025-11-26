@@ -2,20 +2,20 @@
 
 
 #include "AbilitySystem/Abilities/Vessel/Haunt.h"
-#include "Character/SummonCharacter.h"
 #include "Actor/Vessel/HauntProjectile.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "Character/PlayableClasses/Vessel.h"
 
-void UHaunt::HideDemonicSoul(bool Enable)
+void UHaunt::HideSummon(ASummonCharacter* SummonClass, bool Enable)
 {
-	ASummonCharacter* DemonicSoul = Cast<ASummonCharacter>(DemonicSoulClass);
-	DemonicSoul->SetActorHiddenInGame(Enable);
-	DemonicSoul->SetActorEnableCollision(!Enable);
-	DemonicSoul->SetActorTickEnabled(!Enable);
+	SummonClass->SetActorHiddenInGame(Enable);
+	SummonClass->SetActorEnableCollision(!Enable);
+	SummonClass->SetActorTickEnabled(!Enable);
 }
 
-AHauntProjectile* UHaunt::SpawnReturnProjectile()
+void UHaunt::SpawnReturnProjectile()
 {
-	ASummonCharacter* DemonicSoul = Cast<ASummonCharacter>(DemonicSoulClass);
+	ASummonCharacter* DemonicSoul = Cast<AVessel>(GetAvatarActorFromActorInfo())->DemonicSoul;
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(DemonicSoul->GetActorLocation());
 	SpawnTransform.SetRotation(DemonicSoul->GetActorQuat());
@@ -26,9 +26,15 @@ AHauntProjectile* UHaunt::SpawnReturnProjectile()
 		CurrentActorInfo->PlayerController->GetPawn(),
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
-	HauntProjectile->ReturnToActor = DemonicSoul->OwnerActor;
+	// Copying the Projectile Movement settings for BP_FireBall, since we want the return projectile to "Lerp" from the Demonic Soul's Location back to the Vessel
+	HauntProjectile->ProjectileMovement->SetComponentTickEnabled(false);
+	HauntProjectile->ProjectileMovement->InitialSpeed = 0.f;
+	HauntProjectile->ProjectileMovement->MaxSpeed = 0.f;
+	HauntProjectile->ProjectileMovement->bAutoActivate = false;
 	HauntProjectile->SetActorEnableCollision(false); // Purely cosmetic projectile
-	HideDemonicSoul(true);
+
+	HauntProjectile->ReturnToActor = DemonicSoul->OwnerActor;
+	HideSummon(DemonicSoul, true);
 	HauntProjectile->FinishSpawning(SpawnTransform);
-	return HauntProjectile;
+	HauntProjectile->StartReturnTimeline();
 }

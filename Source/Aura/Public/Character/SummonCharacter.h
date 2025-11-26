@@ -21,20 +21,13 @@ public:
 	ASummonCharacter();
 	virtual void PossessedBy(AController* NewController) override;
 
-	/* Combat Interface */
-	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
-	virtual AActor* GetCombatTarget_Implementation() const override;
-	/* end Combat Interface*/
-
-	UPROPERTY(BlueprintReadWrite, Category = "Combat")
-	TObjectPtr<AActor> CombatTarget;
-
 	UPROPERTY()
 	TObjectPtr<AActor> OwnerActor; // For some reason setting owner and setting the OwnerActor Blackboard Key to GetOwner() doesn't work, so we set our own owner variable
 
 protected:
 	virtual void BeginPlay() override;
 
+	// TODO: Move these to a DemonicSoul Subclass
 	UPROPERTY()
 	TObjectPtr<UAuraUserWidget> HealthFrame;
 

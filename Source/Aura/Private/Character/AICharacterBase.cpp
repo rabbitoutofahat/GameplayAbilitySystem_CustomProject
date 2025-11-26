@@ -39,6 +39,16 @@ void AAICharacterBase::PossessedBy(AController* NewController)
 	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), CharacterClass != ECharacterClass::Warrior);
 }
 
+void AAICharacterBase::SetCombatTarget_Implementation(AActor* InCombatTarget)
+{
+	CombatTarget = InCombatTarget;
+}
+
+AActor* AAICharacterBase::GetCombatTarget_Implementation() const
+{
+	return CombatTarget;
+}
+
 int32 AAICharacterBase::GetPlayerLevel_Implementation()
 {
 	return Level;

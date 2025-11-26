@@ -35,16 +35,6 @@ void AAuraEnemy::SetMoveToLocation_Implementation(FVector& OutDestination)
 	// Do not change OutDestination
 }
 
-void AAuraEnemy::SetCombatTarget_Implementation(AActor* InCombatTarget)
-{
-	CombatTarget = InCombatTarget;
-}
-
-AActor* AAuraEnemy::GetCombatTarget_Implementation() const
-{
-	return CombatTarget;
-}
-
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();

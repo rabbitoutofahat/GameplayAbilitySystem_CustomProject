@@ -26,10 +26,15 @@ public:
 	virtual void PossessedBy(AController* NewController) override;
 
 	/* Combat Interface */
+	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
+	virtual AActor* GetCombatTarget_Implementation() const override;
 	virtual int32 GetPlayerLevel_Implementation() override;
 	virtual void Die(const FVector& DeathImpulse) override;
 	virtual float GetAttackRadius_Implementation() const override;
 	/* end Combat Interface */
+
+	UPROPERTY(BlueprintReadWrite, Category = "Combat")
+	TObjectPtr<AActor> CombatTarget;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnHealthChanged;

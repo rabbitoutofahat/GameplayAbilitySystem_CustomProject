@@ -7,6 +7,7 @@
 #include "Haunt.generated.h"
 
 class ASummonCharacter;
+class AHauntProjectile;
 
 /**
  * 
@@ -22,6 +23,8 @@ public:
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<ASummonCharacter> DemonicSoulClass;
+	TSubclassOf<ASummonCharacter> DemonicSoulClass;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AHauntProjectile> HauntProjectileClass;
 };

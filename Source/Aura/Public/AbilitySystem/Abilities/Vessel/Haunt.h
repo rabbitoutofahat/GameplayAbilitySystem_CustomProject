@@ -18,8 +18,12 @@ class AURA_API UHaunt : public UAuraDamageGameplayAbility
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<AActor> ReturnToActor;
+	UFUNCTION(BlueprintCallable)
+	void HideDemonicSoul(bool Enable);
+	
+	// Disable and hide DemonicSoul (since we still need access to their attributes later), spawn a cosmetic version of AHauntProjectile, which will travel back to the Vessel via blueprint timeline
+	UFUNCTION(BlueprintCallable)
+	AHauntProjectile* SpawnReturnProjectile(); 
 
 private:
 	UPROPERTY(EditDefaultsOnly)

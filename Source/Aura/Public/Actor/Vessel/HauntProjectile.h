@@ -14,4 +14,7 @@ class AURA_API AHauntProjectile : public AAuraProjectile
 {
 	GENERATED_BODY()
 	
+public:
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<AActor> ReturnToActor;
 };

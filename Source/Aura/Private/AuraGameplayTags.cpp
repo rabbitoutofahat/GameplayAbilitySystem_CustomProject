@@ -65,6 +65,7 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	GameplayTags.Damage_Lightning = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Lightning"), FString("Lightning Damage Type"));
 	GameplayTags.Damage_Arcane = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Arcane"), FString("Arcane Damage Type"));
 	GameplayTags.Damage_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Physical"), FString("Physical Damage Type"));
+	GameplayTags.Damage_Shadow = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Shadow"), FString("Shadow Damage Type"));
 
 	/*
 	* Debuffs

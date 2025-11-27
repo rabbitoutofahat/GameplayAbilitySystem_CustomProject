@@ -5,18 +5,7 @@
 #include "Actor/Vessel/HauntProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Character/PlayableClasses/Vessel.h"
-#include "AI/AuraAIController.h"
-#include "BrainComponent.h"
-#include "Character/SummonCharacter.h"
-
-void UHaunt::HideSummon(ASummonCharacter* SummonClass, bool Enable)
-{
-	SummonClass->SetActorHiddenInGame(Enable);
-	SummonClass->SetActorEnableCollision(!Enable);
-	SummonClass->SetActorTickEnabled(!Enable);
-	SummonClass->IsValidTarget = !Enable;
-	if (Enable) Cast<AAuraAIController>(SummonClass->GetController())->GetBrainComponent()->StopLogic(FString("Hide Summon Actor"));
-}
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 
 void UHaunt::SpawnReturnProjectile()
 {
@@ -42,7 +31,30 @@ void UHaunt::SpawnReturnProjectile()
 	HauntProjectile->SetActorEnableCollision(false); // Purely cosmetic projectile
 
 	HauntProjectile->ReturnToActor = DemonicSoul->OwnerActor;
-	HideSummon(DemonicSoul, true);
+	UAuraAbilitySystemLibrary::HideSummon(DemonicSoul, true);
 	HauntProjectile->FinishSpawning(SpawnTransform);
 	HauntProjectile->StartReturnTimeline();
+}
+
+void UHaunt::FireDemonicSoul(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag)
+{
+	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
+	if (!bIsServer) return;
+
+	const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(), SocketTag);
+	FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+
+	FTransform SpawnTransform;
+	SpawnTransform.SetLocation(SocketLocation);
+	SpawnTransform.SetRotation(Rotation.Quaternion());
+
+	AHauntProjectile* HauntProjectile = GetWorld()->SpawnActorDeferred<AHauntProjectile>(
+		HauntProjectileClass,
+		SpawnTransform,
+		GetAvatarActorFromActorInfo(),
+		CurrentActorInfo->PlayerController->GetPawn(),
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+	HauntProjectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+	HauntProjectile->FinishSpawning(SpawnTransform);
 }

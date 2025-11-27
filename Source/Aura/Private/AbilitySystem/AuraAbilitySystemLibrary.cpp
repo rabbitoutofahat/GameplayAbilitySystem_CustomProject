@@ -13,6 +13,9 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AuraGameplayTags.h"
 #include "Engine/DamageEvents.h"
+#include "Character/SummonCharacter.h"
+#include "AI/AuraAIController.h"
+#include "BrainComponent.h"
 
 UOverlayWidgetController* UAuraAbilitySystemLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
 {
@@ -580,4 +583,14 @@ float UAuraAbilitySystemLibrary::ApplyRadialDamageWithFalloff(const AActor* Targ
 	FRadialDamageParams RadialDamageParams(BaseDamage, MinimumDamage, DamageInnerRadius, DamageOuterRadius, DamageFalloff);
 	float DamageScale = RadialDamageParams.GetDamageScale((Origin - TargetActor->GetActorLocation()).Length());
 	return BaseDamage * DamageScale;
+}
+
+void UAuraAbilitySystemLibrary::HideSummon(ASummonCharacter* SummonClass, const bool Enable)
+{
+	SummonClass->SetActorHiddenInGame(Enable);
+	SummonClass->SetActorEnableCollision(!Enable);
+	SummonClass->SetActorTickEnabled(!Enable);
+	SummonClass->IsValidTarget = !Enable;
+	if (Enable) Cast<AAuraAIController>(SummonClass->GetController())->GetBrainComponent()->PauseLogic("Hide Summon Actor");
+	else Cast<AAuraAIController>(SummonClass->GetController())->GetBrainComponent()->ResumeLogic("Show Summon Actor");
 }

@@ -16,6 +16,7 @@ class UAbilityInfo;
 struct FDamageEffectParams;
 class ULoadScreenSaveGame;
 class ULootTiers;
+class ASummonCharacter;
 
 /**
  * Custom library of static functions (static such that we do not need an object of this class to execute its member functions)
@@ -184,4 +185,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
 	static float ApplyRadialDamageWithFalloff(const AActor* TargetActor, float BaseDamage, float MinimumDamage, const FVector& Origin, float DamageInnerRadius, float DamageOuterRadius, float DamageFalloff);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
+	static void HideSummon(ASummonCharacter* SummonClass, const bool Enable);
 };

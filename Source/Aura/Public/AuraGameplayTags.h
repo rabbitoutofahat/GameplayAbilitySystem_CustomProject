@@ -109,6 +109,7 @@ public:
 	FGameplayTag Player_Block_CursorTrace;
 
 	FGameplayTag GameplayCue_FireBlast;
+	FGameplayTag GameplayCue_ArcaneShards;
 
 	/* Vessel Character Class */
 	FGameplayTag Abilities_Utility_Haunt;

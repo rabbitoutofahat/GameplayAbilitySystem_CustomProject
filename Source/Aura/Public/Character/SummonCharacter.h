@@ -24,6 +24,10 @@ public:
 	UPROPERTY()
 	TObjectPtr<AActor> OwnerActor; // For some reason setting owner and setting the OwnerActor Blackboard Key to GetOwner() doesn't work, so we set our own owner variable
 
+	// TODO: Move these to a DemonicSoul Subclass
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsBeingSpawned = false; // Controls when to switch to the Spawn Animation State in the AnimBP, used for "respawning" the Demonic Soul after Haunt ends
+
 protected:
 	virtual void BeginPlay() override;
 

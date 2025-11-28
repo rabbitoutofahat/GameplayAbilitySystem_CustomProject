@@ -25,6 +25,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void FireDemonicSoul(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag);
 
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayEffect> HauntPassiveEffectClass;
+
 private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AHauntProjectile> HauntProjectileClass;

@@ -14,25 +14,22 @@ void AHauntProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent,
 
 	if (HasAuthority())
 	{
-		// Only need to apply a gameplay effect on the server as it will change an attribute, and that attribute change will replicate to clients automatically
-		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
-		{
-			// Finish filling out our DamageEffectParams with the member variables that depend on a Target, i.e., the Target's ASC and the Knockback/Death-Impulse direction vectors
-			const FVector DeathImpulse = GetActorForwardVector() * DamageEffectParams.DeathImpulseMagnitude;
-			const bool bKnockback = FMath::RandRange(1.f, 100.f) < DamageEffectParams.KnockbackChance;
-			if (bKnockback)
-			{
-				FRotator Rotation = GetActorRotation();
-				Rotation.Pitch = 45.f;
-				const FVector KnockbackDirection = Rotation.Vector();
-				const FVector Knockback = KnockbackDirection * DamageEffectParams.KnockbackMagnitude;
-				DamageEffectParams.Knockback = Knockback;
-			}
+		TArray<AActor*> ActorsToIgnore;
+		ActorsToIgnore.Add(Cast<AVessel>(DamageEffectParams.WorldContextObject)); // TODO: If multiplayer, add all player characters
+		ActorsToIgnore.Add(Cast<AVessel>(DamageEffectParams.WorldContextObject)->DemonicSoul);
+		TArray<AActor*> ActorsToDamage;
+		DamageEffectParams.RadialDamageOrigin = GetActorLocation();
+		UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(DamageEffectParams.WorldContextObject, ActorsToDamage, ActorsToIgnore, DamageEffectParams.RadialDamageOuterRadius, DamageEffectParams.RadialDamageOrigin);
 
-			DamageEffectParams.DeathImpulse = DeathImpulse;
-			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
-			UAuraAbilitySystemLibrary::ApplyDamageEffectToTarget(DamageEffectParams);
+		for (AActor* Actor : ActorsToDamage)
+		{
+			if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor))
+			{
+				DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
+				UAuraAbilitySystemLibrary::ApplyDamageEffectToTarget(DamageEffectParams);
+			}
 		}
+
 		Destroy();
 	}
 	else bHit = true;

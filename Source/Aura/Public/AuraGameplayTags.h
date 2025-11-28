@@ -53,7 +53,7 @@ public:
 	FGameplayTag Damage_Lightning;
 	FGameplayTag Damage_Arcane;
 	FGameplayTag Damage_Physical;
-	FGameplayTag Damage_Shadow;
+	//FGameplayTag Damage_Shadow;
 
 	FGameplayTag Debuff_Burn;
 	FGameplayTag Debuff_Stun;

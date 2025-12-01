@@ -114,7 +114,7 @@ public:
 	/* Vessel Character Class */
 	FGameplayTag Abilities_Utility_Haunt;
 	FGameplayTag Abilities_Passive_DemonicSoul;
-	FGameplayTag Abilties_Vessel_ShadowBolt;
+	FGameplayTag Abilties_Vessel_SoulSiphon;
 
 private:
 	static FAuraGameplayTags GameplayTags;

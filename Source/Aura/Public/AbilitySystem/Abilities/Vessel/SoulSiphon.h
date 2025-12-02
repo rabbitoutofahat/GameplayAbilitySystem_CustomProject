@@ -6,7 +6,7 @@
 #include "AbilitySystem/Abilities/AuraDamageGameplayAbility.h"
 #include "SoulSiphon.generated.h"
 
-class UNiagaraSystem;
+class AAuraProjectile;
 
 /**
  * 
@@ -21,16 +21,25 @@ public:
 	void ApplyDamageToTarget(AActor* ActorToDamage);
 
 	UFUNCTION(BlueprintCallable)
-	TArray<UNiagaraComponent*> SpawnSoulOrbsAtTarget(AActor* DamagedActor);
+	void SpawnSoulOrbsAtTarget(AActor* DamagedActor, int32 NumOrbs);
 
 private:
-	UPROPERTY(EditDefaultsOnly, Category = "Soul Orb")
-	TObjectPtr<UNiagaraSystem> SoulOrbEffect;
+	UPROPERTY(EditDefaultsOnly, Category = "SoulOrb")
+	TSubclassOf<AAuraProjectile> SoulOrbClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Soul Orb")
+	UPROPERTY(EditDefaultsOnly, Category = "SoulOrb")
 	float OrbSpawnDistance = 5.f;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Soul Orb")
+	UPROPERTY(EditDefaultsOnly, Category = "SoulOrb")
 	float OrbSpread = 90.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SoulOrb")
+	float HomingAccelerationMin = 1600.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SoulOrb")
+	float HomingAccelerationMax = 3200.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SoulOrb")
+	bool bLaunchHomingProjectiles = true;
 };
 

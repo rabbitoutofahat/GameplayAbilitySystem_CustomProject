@@ -5,30 +5,42 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
-#include "NiagaraFunctionLibrary.h"
+#include "Interaction/EnemyInterface.h"
+#include "Actor/AuraProjectile.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 void USoulSiphon::ApplyDamageToTarget(AActor* ActorToDamage)
 {
-	if (!IsValid(ActorToDamage)) return;
+	if (!IsValid(ActorToDamage) || !ActorToDamage->Implements<UEnemyInterface>()) return;
 	CauseDamage(ActorToDamage);
 }
 
 // Spawn soul orbs with different initial trajectories that will travel from the target to the ability owner (travel path handled in blueprint)
-TArray<UNiagaraComponent*> USoulSiphon::SpawnSoulOrbsAtTarget(AActor* DamagedActor)
+void USoulSiphon::SpawnSoulOrbsAtTarget(AActor* DamagedActor, int32 NumOrbs)
 {
 	bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
-	if (!bIsServer) return TArray<UNiagaraComponent*>();
+	if (!bIsServer) return;
 
-	TArray<UNiagaraComponent*> SoulOrbs;
 	FRotator Rotation = (GetAvatarActorFromActorInfo()->GetActorLocation() - DamagedActor->GetActorLocation()).Rotation(); // Want to spawn orbs facing towards the ability owner
-	TArray<FRotator> SpawnRotations = UAuraAbilitySystemLibrary::EvenlySpacedRotators(Rotation.Vector(), FVector::UpVector, OrbSpread, 3); // Always spawn 3 orbs so hard coding it here
+	TArray<FRotator> SpawnRotations = UAuraAbilitySystemLibrary::EvenlySpacedRotators(Rotation.Vector(), FVector::UpVector, OrbSpread, NumOrbs); // Always spawn 3 orbs on primary target, 1 otherwise
 
 	for (const FRotator& SpawnRotation : SpawnRotations)
 	{
-		FVector SpawnLocation = SpawnRotation.Vector() + DamagedActor->GetActorForwardVector() * OrbSpawnDistance + DamagedActor->GetActorLocation();
-		UNiagaraComponent* SoulOrb = UNiagaraFunctionLibrary::SpawnSystemAtLocation(DamagedActor, SoulOrbEffect, SpawnLocation, SpawnRotation);
-		SoulOrbs.Add(SoulOrb);
-	}
+		FTransform SpawnTransform;
+		SpawnTransform.SetLocation(DamagedActor->GetActorLocation() + DamagedActor->GetActorForwardVector().Normalize() * OrbSpawnDistance);
+		SpawnTransform.SetRotation(SpawnRotation.Quaternion());
 
-	return SoulOrbs;
+		AAuraProjectile* SoulOrb = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
+			SoulOrbClass,
+			SpawnTransform,
+			GetOwningActorFromActorInfo(),
+			Cast<APawn>(GetOwningActorFromActorInfo()),
+			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+		AActor* HomingTarget = GetAvatarActorFromActorInfo();
+		SoulOrb->ProjectileMovement->HomingTargetComponent = HomingTarget->GetRootComponent();
+		SoulOrb->ProjectileMovement->HomingAccelerationMagnitude = FMath::FRandRange(HomingAccelerationMin, HomingAccelerationMax);
+		SoulOrb->ProjectileMovement->bIsHomingProjectile = bLaunchHomingProjectiles;
+		SoulOrb->FinishSpawning(SpawnTransform);
+	}
 }

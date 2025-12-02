@@ -27,7 +27,7 @@ void USoulSiphon::SpawnSoulOrbsAtTarget(AActor* DamagedActor, int32 NumOrbs)
 	for (const FRotator& SpawnRotation : SpawnRotations)
 	{
 		FTransform SpawnTransform;
-		SpawnTransform.SetLocation(DamagedActor->GetActorLocation() + DamagedActor->GetActorForwardVector().Normalize() * OrbSpawnDistance);
+		SpawnTransform.SetLocation(DamagedActor->GetActorLocation() + (Rotation.Vector() * OrbSpawnDistance));
 		SpawnTransform.SetRotation(SpawnRotation.Quaternion());
 
 		AAuraProjectile* SoulOrb = GetWorld()->SpawnActorDeferred<AAuraProjectile>(

@@ -86,6 +86,9 @@ public:
 
 	void SetCharacterClass(ECharacterClass InClass) { CharacterClass = InClass; }
 
+	UFUNCTION(BlueprintCallable)
+	UDebuffNiagaraComponent* GetStunDebuffComponent() const { return StunDebuffComponent; }
+
 protected:
 	virtual void BeginPlay() override;
 

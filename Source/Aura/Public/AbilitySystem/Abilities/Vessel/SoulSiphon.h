@@ -28,16 +28,16 @@ private:
 	TSubclassOf<AAuraProjectile> SoulOrbClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SoulOrb")
-	float OrbSpawnDistance = 5.f;
+	float OrbSpawnDistance = 5.f; // Push the initial spawn location a little bit away from the target's mesh, purely cosmetic
 
 	UPROPERTY(EditDefaultsOnly, Category = "SoulOrb")
 	float OrbSpread = 90.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SoulOrb")
-	float HomingAccelerationMin = 1600.f;
+	float HomingAccelerationMin = 6400.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SoulOrb")
-	float HomingAccelerationMax = 3200.f;
+	float HomingAccelerationMax = 10000.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SoulOrb")
 	bool bLaunchHomingProjectiles = true;

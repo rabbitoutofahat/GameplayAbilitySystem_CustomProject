@@ -29,6 +29,8 @@ public:
 	UPROPERTY()
 	TObjectPtr<USceneComponent> HomingTargetSceneComponent;
 
+	USoundBase* GetImpactSound() { return ImpactSound; }
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;

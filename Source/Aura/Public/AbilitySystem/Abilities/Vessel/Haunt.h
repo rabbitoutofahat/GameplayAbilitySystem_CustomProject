@@ -29,6 +29,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGameplayEffect> HauntPassiveEffectClass;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<USoundBase> ReturnSound;
+
 private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AHauntProjectile> HauntProjectileClass;

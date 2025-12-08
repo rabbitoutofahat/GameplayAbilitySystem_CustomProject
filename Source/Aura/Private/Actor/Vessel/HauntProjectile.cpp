@@ -19,13 +19,13 @@ void AHauntProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent,
 	{
 		TArray<AActor*> ActorsToIgnore;
 		ActorsToIgnore.Add(Cast<AVessel>(DamageEffectParams.WorldContextObject)); // TODO: If multiplayer, add all player characters
-		ActorsToIgnore.Add(Cast<AVessel>(DamageEffectParams.WorldContextObject)->DemonicSoul);
 		TArray<AActor*> ActorsToDamage;
 		DamageEffectParams.RadialDamageOrigin = GetActorLocation();
 		UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(DamageEffectParams.WorldContextObject, ActorsToDamage, ActorsToIgnore, DamageEffectParams.RadialDamageOuterRadius, DamageEffectParams.RadialDamageOrigin);
 
 		for (AActor* Actor : ActorsToDamage)
 		{
+			if (!Actor->ActorHasTag(FName("Enemy"))) continue; // With the addition of more tags beyond "Player" and "Enemy", we need to if statement to filter out all non-enemies
 			if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor))
 			{
 				DamageEffectParams.TargetAbilitySystemComponent = TargetASC;

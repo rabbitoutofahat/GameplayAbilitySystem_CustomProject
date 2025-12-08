@@ -115,6 +115,7 @@ public:
 	FGameplayTag Abilities_Utility_Haunt;
 	FGameplayTag Abilities_Passive_DemonicSoul;
 	FGameplayTag Abilties_Vessel_SoulSiphon;
+	FGameplayTag Abilities_Vessel_SummonDregling;
 
 private:
 	static FAuraGameplayTags GameplayTags;

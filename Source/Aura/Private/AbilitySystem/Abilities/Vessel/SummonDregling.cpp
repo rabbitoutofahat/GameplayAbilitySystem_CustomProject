@@ -9,7 +9,7 @@ void USummonDregling::SpawnDreglingProjectile(const FVector& TargetLocation, con
 	const FVector SpawnLocation = TargetLocation + FVector(XOffset, YOffset, SpawnHeight);
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(SpawnLocation);
-	SpawnTransform.SetRotation((SpawnLocation - TargetLocation).ToOrientationQuat());
+	SpawnTransform.SetRotation((TargetLocation - SpawnLocation).ToOrientationQuat());
 	AAuraProjectile* DreglingProjectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
 		DreglingProjectileClass,
 		SpawnTransform,

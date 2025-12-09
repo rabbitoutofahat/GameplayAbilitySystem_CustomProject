@@ -27,8 +27,5 @@ protected:
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<ASummonCharacter> DreglingClass;
-
-	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AAuraProjectile> DreglingProjectileClass;
 };

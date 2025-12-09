@@ -28,6 +28,8 @@ void AHauntProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent,
 			if (!Actor->ActorHasTag(FName("Enemy"))) continue; // With the addition of more tags beyond "Player" and "Enemy", we need to if statement to filter out all non-enemies
 			if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor))
 			{
+				const FVector DeathImpulse = GetActorForwardVector() * DamageEffectParams.DeathImpulseMagnitude;
+				DamageEffectParams.DeathImpulse = DeathImpulse;
 				DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
 				UAuraAbilitySystemLibrary::ApplyDamageEffectToTarget(DamageEffectParams);
 			}

@@ -7,7 +7,6 @@
 #include "SummonDregling.generated.h"
 
 class AAuraProjectile;
-class ASummonCharacter;
 
 /**
  * 

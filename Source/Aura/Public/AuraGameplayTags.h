@@ -110,6 +110,8 @@ public:
 
 	FGameplayTag GameplayCue_FireBlast;
 	FGameplayTag GameplayCue_ArcaneShards;
+	FGameplayTag GameplayCue_Rift_Dregling;
+	FGameplayTag GameplayCue_Rift_Haunt;
 
 	/* Vessel Character Class */
 	FGameplayTag Abilities_Utility_Haunt;

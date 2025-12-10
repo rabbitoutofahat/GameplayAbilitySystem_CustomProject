@@ -44,7 +44,7 @@ void ADreglingProjectile::PlayImpactEffects()
 
 	if (AVessel* Vessel = Cast<AVessel>(DamageEffectParams.WorldContextObject))
 	{
-		ASummonCharacter* Dregling = Vessel->SpawnSummonedMinion(DreglingClass, FTransform(GetActorRotation(), DamageEffectParams.RadialDamageOrigin), Vessel->GetPlayerLevel_Implementation());
+		ASummonCharacter* Dregling = Vessel->SpawnSummonedMinion(DreglingClass, FTransform(GetActorRotation(), GetActorLocation()), Vessel->GetPlayerLevel_Implementation());
 		Cast<AAuraAIController>(Dregling->GetController())->GetBrainComponent()->StopLogic("Start Spawning Actor");
 		Dregling->bIsBeingSpawned = true;
 	}

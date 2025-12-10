@@ -165,6 +165,8 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	*/
 	GameplayTags.GameplayCue_FireBlast = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.FireBlast"), FString("Gameplay Cue for Fire Blast Ability"));
 	GameplayTags.GameplayCue_ArcaneShards = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.ArcaneShards"), FString("Gameplay Cue to spawn an Arcane Shard"));
+	GameplayTags.GameplayCue_Rift_Dregling = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.Dregling"), FString("Gameplay Cue for Dregling Rift Effect"));
+	GameplayTags.GameplayCue_Rift_Haunt = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.Haunt"), FString("Gameplay Cue for Haunt Rift Effect"));
 
 	/*
 	* Vessel Character Class

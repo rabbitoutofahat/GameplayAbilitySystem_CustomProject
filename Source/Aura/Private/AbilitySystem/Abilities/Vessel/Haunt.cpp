@@ -6,6 +6,8 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Character/PlayableClasses/Vessel.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "GameplayCueManager.h"
+#include "AuraGameplayTags.h"
 
 void UHaunt::SpawnReturnProjectile()
 {
@@ -29,6 +31,10 @@ void UHaunt::SpawnReturnProjectile()
 	HauntProjectile->ProjectileMovement->MaxSpeed = 0.f;
 	HauntProjectile->ProjectileMovement->bAutoActivate = false;
 	HauntProjectile->SetActorEnableCollision(false); // Purely cosmetic projectile
+
+	FGameplayCueParameters CueParams;
+	CueParams.Location = DemonicSoul->GetActorLocation();
+	UGameplayCueManager::ExecuteGameplayCue_NonReplicated(HauntProjectile, FAuraGameplayTags::Get().GameplayCue_Rift_Haunt, CueParams);
 
 	HauntProjectile->ReturnToActor = DemonicSoul->OwnerActor;
 	UAuraAbilitySystemLibrary::HideSummon(DemonicSoul, true);

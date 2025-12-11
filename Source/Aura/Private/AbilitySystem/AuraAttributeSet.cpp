@@ -83,6 +83,10 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	// Vital Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Health, COND_None, REPNOTIFY_Always); 
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Mana, COND_None, REPNOTIFY_Always);
+
+	// Summon Attributes
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Energy, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, EnergyRegen, COND_None, REPNOTIFY_Always);
 }
 
 void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -104,6 +108,11 @@ void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxMana());
 	}
+
+	if (Attribute == GetEnergyAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, 100.f); // Max Energy is a constant of 100
+	}
 }
 
 void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
@@ -123,6 +132,10 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	if (Data.EvaluatedData.Attribute == GetManaAttribute())
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
+	}
+	if (Data.EvaluatedData.Attribute == GetEnergyAttribute())
+	{
+		SetEnergy(FMath::Clamp(GetEnergy(), 0.f, 100.f)); 
 	}
 	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
@@ -254,6 +267,16 @@ void UAuraAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) co
 void UAuraAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldMana) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Mana, OldMana);
+}
+
+void UAuraAttributeSet::OnRep_Energy(const FGameplayAttributeData& OldEnergy) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Energy, OldEnergy);
+}
+
+void UAuraAttributeSet::OnRep_EnergyRegen(const FGameplayAttributeData& OldEnergyRegen) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, EnergyRegen, OldEnergyRegen);
 }
 
 void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)

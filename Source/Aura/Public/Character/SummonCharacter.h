@@ -30,6 +30,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	// TODO: Implement Energy and override Tick function to regenerate Energy over time
 
 	// TODO: Move these to a DemonicSoul Subclass
 	UPROPERTY()

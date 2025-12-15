@@ -6,15 +6,12 @@
 #include "Components/WidgetComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 
-ASummonCharacter::ASummonCharacter()
-{
-}
-
 void ASummonCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	// OwnerActor should hopefully be set upon a SummonCharacter Blueprint being created in the world
 	AuraAIController->GetBlackboardComponent()->SetValueAsObject(FName("OwnerActor"), OwnerActor);
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("ShouldUseSpecial"), bShouldUseSpecial);
 }
 
 void ASummonCharacter::BeginPlay()
@@ -45,9 +42,11 @@ void ASummonCharacter::BindCallbacksToDependencies(const UAuraAttributeSet* Aura
 	Super::BindCallbacksToDependencies(AuraAS);
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAS->GetEnergyAttribute()).AddLambda(
-		[this](const FOnAttributeChangeData& Data)
+		[this, AuraAS](const FOnAttributeChangeData& Data)
 		{
 			OnEnergyChanged.Broadcast(Data.NewValue);
+			if (Data.NewValue >= AuraAS->GetMaxEnergy()) bShouldUseSpecial = true;
+			else bShouldUseSpecial = false;
 		}
 	);
 
@@ -64,11 +63,4 @@ void ASummonCharacter::BroadcastInitialValues(const UAuraAttributeSet* AuraAS) c
 	Super::BroadcastInitialValues(AuraAS);
 	OnEnergyChanged.Broadcast(AuraAS->GetEnergy());
 	OnMaxEnergyChanged.Broadcast(AuraAS->GetMaxEnergy());
-}
-
-void ASummonCharacter::InitialiseDefaultAttributes() const
-{
-	ApplyEffectToSelf(DefaultPrimaryAttributes, 1.f);
-	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
-	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
 }

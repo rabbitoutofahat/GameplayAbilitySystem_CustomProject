@@ -141,8 +141,3 @@ void AAICharacterBase::InitAbilityActorInfo()
 	OnASCRegistered.Broadcast(AbilitySystemComponent); // For Debuff Niagara Component 
 	AbilitySystemComponent->RegisterGameplayTagEvent(FAuraGameplayTags::Get().Debuff_Stun, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AAICharacterBase::StunTagChanged);
 }
-
-void AAICharacterBase::InitialiseDefaultAttributes() const
-{
-	UAuraAbilitySystemLibrary::InitialiseDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
-}

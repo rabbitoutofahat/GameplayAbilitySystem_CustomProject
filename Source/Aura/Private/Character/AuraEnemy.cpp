@@ -6,6 +6,7 @@
 #include "Components/WidgetComponent.h"
 #include "UI/Widget/AuraUserWidget.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
 
 AAuraEnemy::AAuraEnemy()
 {
@@ -35,6 +36,12 @@ void AAuraEnemy::SetMoveToLocation_Implementation(FVector& OutDestination)
 	// Do not change OutDestination
 }
 
+void AAuraEnemy::Die(const FVector& DeathImpulse)
+{
+	SpawnLoot();
+	Super::Die(DeathImpulse);
+}
+
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
@@ -53,8 +60,7 @@ void AAuraEnemy::BeginPlay()
 	}
 }
 
-void AAuraEnemy::Die(const FVector& DeathImpulse)
+void AAuraEnemy::InitialiseDefaultAttributes() const
 {
-	SpawnLoot();
-	Super::Die(DeathImpulse);
+	UAuraAbilitySystemLibrary::InitialiseDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
 }

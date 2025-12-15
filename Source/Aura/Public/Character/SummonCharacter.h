@@ -18,11 +18,13 @@ class AURA_API ASummonCharacter : public AAICharacterBase, public ISummonInterfa
 	GENERATED_BODY()
 
 public:
-	ASummonCharacter();
 	virtual void PossessedBy(AController* NewController) override;
 
 	UPROPERTY()
 	TObjectPtr<AActor> OwnerActor; // For some reason setting owner and setting the OwnerActor Blackboard Key to GetOwner() doesn't work, so we set our own owner variable
+
+	UPROPERTY()
+	bool bShouldUseSpecial = false;
 
 	// TODO: Move these to a DemonicSoul Subclass
 	UPROPERTY(BlueprintReadWrite)
@@ -39,10 +41,12 @@ protected:
 
 	virtual void BindCallbacksToDependencies(const UAuraAttributeSet* AuraAS) override;
 	virtual void BroadcastInitialValues(const UAuraAttributeSet* AuraAS) const override;
-	virtual void InitialiseDefaultAttributes() const override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float EnergyOnHit = 20.f;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAnimMontage> SpecialAttackMontage;
 
 	// TODO: Move these to a DemonicSoul Subclass
 	UPROPERTY()

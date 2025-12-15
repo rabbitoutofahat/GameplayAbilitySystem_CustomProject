@@ -68,7 +68,6 @@ protected:
 	 * 1. ASC lives on the pawn -> BeginPlay() on the pawn on the server and the client
 	 */
 	virtual void InitAbilityActorInfo() override;
-	virtual void InitialiseDefaultAttributes() const override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
 	int32 Level = 1;

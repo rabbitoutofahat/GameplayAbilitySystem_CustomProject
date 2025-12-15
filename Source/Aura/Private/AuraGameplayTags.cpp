@@ -179,6 +179,7 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	*/
 	GameplayTags.Abilities_Utility_Haunt = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Utility.Haunt"), FString("Vessel Utility Ability Tag"));
 	GameplayTags.Abilities_Passive_DemonicSoul = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Passive.DemonicSoul"), FString("Vessel Starting Passive Tag"));
+	GameplayTags.Abilities_SpecialAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.SpecialAttack"), FString("Special Attack Ability Tag for Summons"));
 	GameplayTags.Abilties_Vessel_SoulSiphon = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SoulSiphon"), FString("Vessel Starting Ability Tag"));
 	GameplayTags.Abilities_Vessel_SummonDregling = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonDregling"), FString("Summon Dregling Ability Tag"));
 }

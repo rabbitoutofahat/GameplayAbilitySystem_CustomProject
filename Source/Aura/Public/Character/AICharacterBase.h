@@ -59,8 +59,8 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount) override;
 
-	void BindCallbacksToDependencies(const UAuraAttributeSet* AuraAS);
-	void BroadcastInitialValues(const UAuraAttributeSet* AuraAS) const;
+	virtual void BindCallbacksToDependencies(const UAuraAttributeSet* AuraAS);
+	virtual void BroadcastInitialValues(const UAuraAttributeSet* AuraAS) const;
 	void BindHitReactTagChangeDelegate();
 
 	/*

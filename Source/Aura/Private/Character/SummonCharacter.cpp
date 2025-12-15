@@ -39,3 +39,29 @@ void ASummonCharacter::BeginPlay()
 		BindHitReactTagChangeDelegate();
 	}
 }
+
+void ASummonCharacter::BindCallbacksToDependencies(const UAuraAttributeSet* AuraAS)
+{
+	Super::BindCallbacksToDependencies(AuraAS);
+
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAS->GetEnergyAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnEnergyChanged.Broadcast(Data.NewValue);
+		}
+	);
+
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAS->GetMaxEnergyAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnMaxEnergyChanged.Broadcast(Data.NewValue);
+		}
+	);
+}
+
+void ASummonCharacter::BroadcastInitialValues(const UAuraAttributeSet* AuraAS) const
+{
+	Super::BroadcastInitialValues(AuraAS);
+	OnEnergyChanged.Broadcast(AuraAS->GetEnergy());
+	OnMaxEnergyChanged.Broadcast(AuraAS->GetMaxEnergy());
+}

@@ -103,6 +103,12 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 		{
 			OnEnergyChanged.Broadcast(Data.NewValue);
 		});
+
+	GetAuraASC()->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxEnergyAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnMaxEnergyChanged.Broadcast(Data.NewValue);
+		});
 }
 
 void UOverlayWidgetController::OnXPChanged(int32 NewXP)

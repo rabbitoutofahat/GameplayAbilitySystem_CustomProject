@@ -28,9 +28,17 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsBeingSpawned = false; // Controls when to switch to the Spawn Animation State in the AnimBP, used for "respawning" the Demonic Soul after Haunt ends
 
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignature OnEnergyChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignature OnMaxEnergyChanged;
+
 protected:
 	virtual void BeginPlay() override;
-	// TODO: Implement Energy and override Tick function to regenerate Energy over time
+
+	virtual void BindCallbacksToDependencies(const UAuraAttributeSet* AuraAS) override;
+	virtual void BroadcastInitialValues(const UAuraAttributeSet* AuraAS) const override;
 
 	// TODO: Move these to a DemonicSoul Subclass
 	UPROPERTY()

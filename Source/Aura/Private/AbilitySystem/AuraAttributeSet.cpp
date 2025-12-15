@@ -86,7 +86,7 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 
 	// Summon Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Energy, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, EnergyRegen, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxEnergy, COND_None, REPNOTIFY_Always);
 }
 
 void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -111,7 +111,7 @@ void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 
 	if (Attribute == GetEnergyAttribute())
 	{
-		NewValue = FMath::Clamp(NewValue, 0.f, 100.f); // Max Energy is a constant of 100
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxEnergy()); // Max Energy should always be 100
 	}
 }
 
@@ -135,7 +135,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	}
 	if (Data.EvaluatedData.Attribute == GetEnergyAttribute())
 	{
-		SetEnergy(FMath::Clamp(GetEnergy(), 0.f, 100.f)); 
+		SetEnergy(FMath::Clamp(GetEnergy(), 0.f, GetMaxEnergy())); 
 	}
 	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
@@ -274,9 +274,9 @@ void UAuraAttributeSet::OnRep_Energy(const FGameplayAttributeData& OldEnergy) co
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Energy, OldEnergy);
 }
 
-void UAuraAttributeSet::OnRep_EnergyRegen(const FGameplayAttributeData& OldEnergyRegen) const
+void UAuraAttributeSet::OnRep_MaxEnergy(const FGameplayAttributeData& OldMaxEnergy) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, EnergyRegen, OldEnergyRegen);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxEnergy, OldMaxEnergy);
 }
 
 void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)

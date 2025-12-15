@@ -33,6 +33,8 @@ public:
 	FGameplayTag Attributes_Secondary_MaxMana;
 	FGameplayTag Attributes_Secondary_MaxEnergy;
 
+	FGameplayTag Attributes_Vital_Energy;
+
 	FGameplayTag Attributes_Resistance_Fire;
 	FGameplayTag Attributes_Resistance_Lightning;
 	FGameplayTag Attributes_Resistance_Arcane;

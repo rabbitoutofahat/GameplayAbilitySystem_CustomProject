@@ -65,3 +65,10 @@ void ASummonCharacter::BroadcastInitialValues(const UAuraAttributeSet* AuraAS) c
 	OnEnergyChanged.Broadcast(AuraAS->GetEnergy());
 	OnMaxEnergyChanged.Broadcast(AuraAS->GetMaxEnergy());
 }
+
+void ASummonCharacter::InitialiseDefaultAttributes() const
+{
+	ApplyEffectToSelf(DefaultPrimaryAttributes, 1.f);
+	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
+	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
+}

@@ -39,6 +39,10 @@ protected:
 
 	virtual void BindCallbacksToDependencies(const UAuraAttributeSet* AuraAS) override;
 	virtual void BroadcastInitialValues(const UAuraAttributeSet* AuraAS) const override;
+	virtual void InitialiseDefaultAttributes() const override;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float EnergyOnHit = 20.f;
 
 	// TODO: Move these to a DemonicSoul Subclass
 	UPROPERTY()

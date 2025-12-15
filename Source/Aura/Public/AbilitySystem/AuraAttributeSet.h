@@ -61,7 +61,7 @@ struct FEffectProperties
 *   RandomFunctionPointer = RandomFunction();
 *   float F = RandomFunctionPointer(0, 0.f, 0);
 * 
-*  typedef is specific to the FGameplayAttribute() signature, but TStaticFuncPtr is generic to any signature chosen.
+* typedef is specific to the FGameplayAttribute() signature, but TStaticFuncPtr is generic to any signature chosen.
 */
 template<class T>
 using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;

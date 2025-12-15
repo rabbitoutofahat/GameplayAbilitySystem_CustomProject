@@ -39,6 +39,10 @@ UAuraAttributeSet::UAuraAttributeSet()
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_ManaRegeneration, GetManaRegenAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxMana, GetMaxManaAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxEnergy, GetMaxEnergyAttribute);
+
+	// Vital Attributes
+	TagsToAttributes.Add(GameplayTags.Attributes_Vital_Energy, GetEnergyAttribute);
 
 	// Damage Resistance Attributes
 	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Fire, GetFireResAttribute);

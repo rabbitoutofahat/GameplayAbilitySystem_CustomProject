@@ -34,6 +34,11 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	GameplayTags.Attributes_Secondary_MaxEnergy = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.MaxEnergy"), FString("Maximum amount of Energy obtainable"));
 
 	/*
+	* Vital Attributes
+	*/
+	GameplayTags.Attributes_Vital_Energy = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Vital.Energy"), FString("Energy resource for abilities"));
+
+	/*
     * Damage Resistance Attributes
     */
 	GameplayTags.Attributes_Resistance_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Fire"), FString("Reduces incoming Fire damage"));

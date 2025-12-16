@@ -89,6 +89,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UDebuffNiagaraComponent* GetStunDebuffComponent() const { return StunDebuffComponent; }
 
+	TArray<TSubclassOf<UGameplayAbility>>& GetStartupAbilities() { return StartupAbilities; }
+
 protected:
 	virtual void BeginPlay() override;
 

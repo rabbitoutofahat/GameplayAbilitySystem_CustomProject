@@ -8,6 +8,7 @@
 #include "SummonCharacter.generated.h"
 
 class UAuraUserWidget;
+class UAuraGameplayAbility;
 
 /**
  * 
@@ -20,11 +21,15 @@ class AURA_API ASummonCharacter : public AAICharacterBase, public ISummonInterfa
 public:
 	virtual void PossessedBy(AController* NewController) override;
 
+	/* Summon Interface */
+	//virtual TSubclassOf<UAuraGameplayAbility> GetSpecialAbility_Implementation() override;
+	/* end Summon Interface */
+
 	UPROPERTY()
 	TObjectPtr<AActor> OwnerActor; // For some reason setting owner and setting the OwnerActor Blackboard Key to GetOwner() doesn't work, so we set our own owner variable
 
-	UPROPERTY()
-	bool bShouldUseSpecial = false;
+	//UPROPERTY(BlueprintReadWrite)
+	//bool bShouldUseSpecial = false;
 
 	// TODO: Move these to a DemonicSoul Subclass
 	UPROPERTY(BlueprintReadWrite)
@@ -45,8 +50,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float EnergyOnHit = 20.f;
 
-	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UAnimMontage> SpecialAttackMontage;
+	//UPROPERTY(EditDefaultsOnly)
+	//TSubclassOf<UAuraGameplayAbility> SpecialAttack;
 
 	// TODO: Move these to a DemonicSoul Subclass
 	UPROPERTY()
@@ -54,4 +59,7 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UAuraUserWidget> HealthFrameClass;
+
+	UFUNCTION(BlueprintCallable)
+	void ShouldEnableSpecial(bool bEnable);
 };

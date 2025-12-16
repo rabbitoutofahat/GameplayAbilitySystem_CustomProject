@@ -11,8 +11,13 @@ void ASummonCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 	// OwnerActor should hopefully be set upon a SummonCharacter Blueprint being created in the world
 	AuraAIController->GetBlackboardComponent()->SetValueAsObject(FName("OwnerActor"), OwnerActor);
-	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("ShouldUseSpecial"), bShouldUseSpecial);
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("ShouldUseSpecial"), false);
 }
+
+//TSubclassOf<UAuraGameplayAbility> ASummonCharacter::GetSpecialAbility_Implementation()
+//{
+//	return SpecialAttack;
+//}
 
 void ASummonCharacter::BeginPlay()
 {
@@ -45,8 +50,8 @@ void ASummonCharacter::BindCallbacksToDependencies(const UAuraAttributeSet* Aura
 		[this, AuraAS](const FOnAttributeChangeData& Data)
 		{
 			OnEnergyChanged.Broadcast(Data.NewValue);
-			if (Data.NewValue >= AuraAS->GetMaxEnergy()) bShouldUseSpecial = true;
-			else bShouldUseSpecial = false;
+			if (Data.NewValue >= AuraAS->GetMaxEnergy()) ShouldEnableSpecial(true);
+			else ShouldEnableSpecial(false); // Should we disable here or handle in the Gameplay Ability?
 		}
 	);
 
@@ -63,4 +68,9 @@ void ASummonCharacter::BroadcastInitialValues(const UAuraAttributeSet* AuraAS) c
 	Super::BroadcastInitialValues(AuraAS);
 	OnEnergyChanged.Broadcast(AuraAS->GetEnergy());
 	OnMaxEnergyChanged.Broadcast(AuraAS->GetMaxEnergy());
+}
+
+void ASummonCharacter::ShouldEnableSpecial(bool bEnable)
+{
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("ShouldUseSpecial"), bEnable);
 }

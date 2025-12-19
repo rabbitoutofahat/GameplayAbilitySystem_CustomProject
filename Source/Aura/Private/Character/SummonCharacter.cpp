@@ -14,11 +14,6 @@ void ASummonCharacter::PossessedBy(AController* NewController)
 	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("ShouldUseSpecial"), false);
 }
 
-//TSubclassOf<UAuraGameplayAbility> ASummonCharacter::GetSpecialAbility_Implementation()
-//{
-//	return SpecialAttack;
-//}
-
 void ASummonCharacter::BeginPlay()
 {
 	Super::BeginPlay();

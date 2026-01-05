@@ -43,6 +43,11 @@ FDamageEffectParams UAuraDamageGameplayAbility::MakeDamageEffectParamsFromClassD
 		Params.RadialDamageOuterRadius = RadialDamageOuterRadius;
 		Params.RadialDamageOrigin = RadialDamageOrigin;
 	}
+	if (bLifeSteal)
+	{
+		Params.bLifeSteal = bLifeSteal;
+		Params.LifeStealMagnitude = LifeStealMagnitude;
+	}
 	return Params;
 }
 

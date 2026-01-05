@@ -104,9 +104,18 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 				RepBits |= 1 << 19;
 			}
 		}
+		if (bLifeSteal)
+		{
+			RepBits |= 1 << 20;
+
+			if (LifeStealMagnitude > 0.f)
+			{
+				RepBits |= 1 << 21;
+			}
+		}
 	}
 
-	Ar.SerializeBits(&RepBits, 20);
+	Ar.SerializeBits(&RepBits, 22);
 
 	if (RepBits & (1 << 0))
 	{
@@ -206,6 +215,15 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 		if (RepBits & (1 << 19))
 		{
 			RadialDamageOrigin.NetSerialize(Ar, Map, bOutSuccess);
+		}
+	}
+	if (RepBits & (1 << 20))
+	{
+		Ar << bLifeSteal;
+
+		if (RepBits & (1 << 21))
+		{
+			Ar << LifeStealMagnitude;
 		}
 	}
 

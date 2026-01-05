@@ -72,6 +72,12 @@ struct FDamageEffectParams
 
 	UPROPERTY(BlueprintReadWrite)
 	FVector RadialDamageOrigin = FVector::ZeroVector;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bLifeSteal = false;
+
+	UPROPERTY(BlueprintReadWrite)
+	float LifeStealMagnitude = 0.f;
 };
 
 USTRUCT(BlueprintType)
@@ -93,6 +99,8 @@ public:
 	float GetRadialDamageInnerRadius() const { return RadialDamageInnerRadius; }
 	float GetRadialDamageOuterRadius() const { return RadialDamageOuterRadius; }
 	FVector GetRadialDamageOrigin() const { return RadialDamageOrigin; }
+	bool IsLifeSteal() const { return bLifeSteal; }
+	float GetLifeStealMagnitude() const { return LifeStealMagnitude; }
 
 	void SetIsBlockedHit(const bool bInIsBlockedHit) { bIsBlockedHit = bInIsBlockedHit; }
 	void SetIsCriticalHit(const bool bInIsCriticalHit) { bIsCriticalHit = bInIsCriticalHit; }
@@ -107,6 +115,8 @@ public:
 	void SetRadialDamageInnerRadius(const float InInnerRadius) { RadialDamageInnerRadius = InInnerRadius; }
 	void SetRadialDamageOuterRadius(const float InOuterRadius) { RadialDamageOuterRadius = InOuterRadius; }
 	void SetRadialDamageOrigin(const FVector InOrigin) { RadialDamageOrigin = InOrigin; }
+	void SetIsLifeSteal(const bool bInLifeSteal) { bLifeSteal = bInLifeSteal; }
+	void SetLifeStealMagnitude(const float InLifeStealMagnitude) { LifeStealMagnitude = InLifeStealMagnitude; }
 
 	// Returns the actual struct used for serialization, subclasses must override this
 	virtual UScriptStruct* GetScriptStruct() const
@@ -174,6 +184,12 @@ protected:
 
 	UPROPERTY()
 	FVector RadialDamageOrigin = FVector::ZeroVector;
+
+	UPROPERTY()
+	bool bLifeSteal = false;
+
+	UPROPERTY()
+	float LifeStealMagnitude = 0.f;
 };
 
 /*

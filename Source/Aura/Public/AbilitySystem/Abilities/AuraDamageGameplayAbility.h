@@ -52,13 +52,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	bool bIsRadialDamage = false;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage", meta = (EditCondition = "bIsRadialDamage"))
 	float RadialDamageInnerRadius = 0.f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage", meta = (EditCondition = "bIsRadialDamage"))
 	float RadialDamageOuterRadius = 0.f;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	UPROPERTY(EditDefaultsOnly, Category = "Damage", meta = (EditCondition = "bIsRadialDamage"))
 	FVector RadialDamageOrigin = FVector::ZeroVector;
 
 	UFUNCTION(BlueprintPure)
@@ -79,4 +79,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	float DebuffDuration = 5.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	bool bLifeSteal = false;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage", meta = (EditCondition = "bLifeSteal"))
+	float LifeStealMagnitude = 0.f;
 };

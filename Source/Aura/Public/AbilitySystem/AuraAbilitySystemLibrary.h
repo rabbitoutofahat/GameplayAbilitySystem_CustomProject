@@ -116,6 +116,12 @@ public:
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static FVector GetRadialDamageOrigin(const FGameplayEffectContextHandle& EffectContextHandle);
 
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static bool IsLifeSteal(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static float GetLifeStealMagnitude(const FGameplayEffectContextHandle& EffectContextHandle);
+
 	/*
 	* Effect Context Setters
 	*/
@@ -159,6 +165,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
 	static void SetRadialDamageOrigin(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FVector& InOrigin);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static void SetIsLifeSteal(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInLifeSteal);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static void SetLifeStealMagnitude(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, float InLifeStealMagnitude);
 
 	/*
 	* Gameplay Mechanics

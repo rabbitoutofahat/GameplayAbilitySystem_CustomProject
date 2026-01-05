@@ -24,6 +24,9 @@ struct FEffectProperties
 	FGameplayEffectContextHandle EffectContextHandle;
 
 	UPROPERTY()
+	UAuraAttributeSet* SourceAS = nullptr;
+
+	UPROPERTY()
 	UAbilitySystemComponent* SourceASC = nullptr;
 
 	UPROPERTY()

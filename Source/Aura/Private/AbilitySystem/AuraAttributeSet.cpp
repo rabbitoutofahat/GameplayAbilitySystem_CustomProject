@@ -13,7 +13,6 @@
 #include "Interaction/PlayerInterface.h"
 #include "AuraAbilityTypes.h"
 #include "GameplayEffectComponents/TargetTagsGameplayEffectComponent.h"
-#include "Player/AuraPlayerState.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -335,11 +334,9 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		const bool bLifeSteal = UAuraAbilitySystemLibrary::IsLifeSteal(Props.EffectContextHandle);
 		if (bLifeSteal)
 		{
-	/*		float LifeSteal = LocalIncomingDamage * UAuraAbilitySystemLibrary::GetLifeStealMagnitude(Props.EffectContextHandle);
-			UAuraAttributeSet* SourceAttributeSet = Cast<UAuraAttributeSet>(Props.SourceController->GetPlayerState<AAuraPlayerState>()->GetAttributeSet());
-			const float SourceNewHealth = SourceAttributeSet->GetHealth() + LifeSteal;
-			SourceAttributeSet->SetHealth(FMath::Clamp(SourceNewHealth, 0.f, SourceAttributeSet->GetMaxHealth()));
-			LifeSteal = 0.f;*/
+			const float LifeSteal = LocalIncomingDamage * UAuraAbilitySystemLibrary::GetLifeStealMagnitude(Props.EffectContextHandle);
+			const float SourceNewHealth = Props.SourceAS->GetHealth() + LifeSteal;
+			Props.SourceAS->SetHealth(FMath::Clamp(SourceNewHealth, 0.f, Props.SourceAS->GetMaxHealth()));
 		}
 	}
 }
@@ -454,6 +451,9 @@ void UAuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 		{
 			Props.SourceCharacter = Cast<ACharacter>(Props.SourceController->GetPawn()); // Cast the pawn possessed by the controller to a character
 		}
+		// Storing Source Attribute Set for easier access later, e.g., for calculating Life Steal based on damage dealt
+		const UAuraAttributeSet* SourceAttributeSetBase = Props.SourceASC->GetSet<UAuraAttributeSet>();
+		if (SourceAttributeSetBase) Props.SourceAS = const_cast<UAuraAttributeSet*>(SourceAttributeSetBase);
 	}
 	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
 	{

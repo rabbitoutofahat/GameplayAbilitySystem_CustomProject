@@ -554,6 +554,9 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffectToTarge
 	SetRadialDamageOuterRadius(EffectContextHandle, Params.RadialDamageOuterRadius);
 	SetRadialDamageOrigin(EffectContextHandle, Params.RadialDamageOrigin);
 
+	SetIsLifeSteal(EffectContextHandle, Params.bLifeSteal);
+	SetLifeStealMagnitude(EffectContextHandle, Params.LifeStealMagnitude);
+
 	// By packaging Set By Caller Magnitudes into an outgoing Gameplay Effect Spec Handle on the Source ASC, the Target ASC will know what effect to apply on hit
 	const FGameplayEffectSpecHandle DamageEffectSpecHandle = SourceASC->MakeOutgoingSpec(Params.DamageGameplayEffectClass, Params.AbilityLevel, EffectContextHandle);
 

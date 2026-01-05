@@ -80,6 +80,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	float DebuffDuration = 5.f;
 
+	/*
+	* LifeSteal Parameters
+	*/
+
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	bool bLifeSteal = false;
 

@@ -13,6 +13,7 @@
 #include "Interaction/PlayerInterface.h"
 #include "AuraAbilityTypes.h"
 #include "GameplayEffectComponents/TargetTagsGameplayEffectComponent.h"
+#include "Player/AuraPlayerState.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -329,6 +330,17 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		const bool bCrit = UAuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
 		ShowFloatingText(Props, LocalIncomingDamage, bBlock, bCrit);
 		if (UAuraAbilitySystemLibrary::IsSuccessfulDebuff(Props.EffectContextHandle)) Debuff(Props);
+
+		// Determine if there is LifeSteal and calculate the amount of healing to be applied to the source
+		const bool bLifeSteal = UAuraAbilitySystemLibrary::IsLifeSteal(Props.EffectContextHandle);
+		if (bLifeSteal)
+		{
+	/*		float LifeSteal = LocalIncomingDamage * UAuraAbilitySystemLibrary::GetLifeStealMagnitude(Props.EffectContextHandle);
+			UAuraAttributeSet* SourceAttributeSet = Cast<UAuraAttributeSet>(Props.SourceController->GetPlayerState<AAuraPlayerState>()->GetAttributeSet());
+			const float SourceNewHealth = SourceAttributeSet->GetHealth() + LifeSteal;
+			SourceAttributeSet->SetHealth(FMath::Clamp(SourceNewHealth, 0.f, SourceAttributeSet->GetMaxHealth()));
+			LifeSteal = 0.f;*/
+		}
 	}
 }
 

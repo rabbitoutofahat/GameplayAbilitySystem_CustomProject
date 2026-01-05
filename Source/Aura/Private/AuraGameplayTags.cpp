@@ -182,4 +182,5 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	GameplayTags.Abilities_SpecialAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.SpecialAttack"), FString("Special Attack Ability Tag for Summons"));
 	GameplayTags.Abilties_Vessel_SoulSiphon = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SoulSiphon"), FString("Vessel Starting Ability Tag"));
 	GameplayTags.Abilities_Vessel_SummonDregling = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonDregling"), FString("Summon Dregling Ability Tag"));
+	GameplayTags.Abilities_Vessel_SummonInfernalGolem = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonInfernalGolem"), FString("Summon Infernal Golem Ability Tag"));
 }

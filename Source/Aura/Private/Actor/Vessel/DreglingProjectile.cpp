@@ -5,7 +5,6 @@
 #include "Character/PlayableClasses/Vessel.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystemBlueprintLibrary.h"
-//#include "AI/AuraAIController.h"
 #include "BrainComponent.h"
 
 void ADreglingProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

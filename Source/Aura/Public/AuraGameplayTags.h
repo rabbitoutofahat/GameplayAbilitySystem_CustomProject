@@ -122,6 +122,7 @@ public:
 	FGameplayTag Abilities_SpecialAttack; // Special Attack tag for Vessel's Summoned Minions
 	FGameplayTag Abilties_Vessel_SoulSiphon;
 	FGameplayTag Abilities_Vessel_SummonDregling;
+	FGameplayTag Abilities_Vessel_SummonInfernalGolem;
 
 private:
 	static FAuraGameplayTags GameplayTags;

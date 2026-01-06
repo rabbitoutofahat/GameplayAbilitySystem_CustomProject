@@ -113,8 +113,6 @@ public:
 
 	FGameplayTag GameplayCue_FireBlast;
 	FGameplayTag GameplayCue_ArcaneShards;
-	FGameplayTag GameplayCue_Rift_Dregling;
-	FGameplayTag GameplayCue_Rift_Haunt;
 
 	/* Vessel Character Class */
 	FGameplayTag Abilities_Utility_Haunt;
@@ -123,6 +121,14 @@ public:
 	FGameplayTag Abilties_Vessel_SoulSiphon;
 	FGameplayTag Abilities_Vessel_SummonDregling;
 	FGameplayTag Abilities_Vessel_SummonInfernalGolem;
+	FGameplayTag Abilities_Vessel_SummonChaosElemental;
+	FGameplayTag Abilities_Vessel_DemonfireRift;
+	FGameplayTag Abilities_Vessel_Pandemonium;
+	FGameplayTag Abilities_Vessel_Disintegrate;
+
+	FGameplayTag GameplayCue_Rift_Haunt;
+	FGameplayTag GameplayCue_Rift_Dregling;
+	FGameplayTag GameplayCue_Rift_InfernalGolem;
 
 private:
 	static FAuraGameplayTags GameplayTags;

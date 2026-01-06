@@ -171,9 +171,7 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	*/
 	GameplayTags.GameplayCue_FireBlast = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.FireBlast"), FString("Gameplay Cue for Fire Blast Ability"));
 	GameplayTags.GameplayCue_ArcaneShards = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.ArcaneShards"), FString("Gameplay Cue to spawn an Arcane Shard"));
-	GameplayTags.GameplayCue_Rift_Dregling = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.Dregling"), FString("Gameplay Cue for Dregling Rift Effect"));
-	GameplayTags.GameplayCue_Rift_Haunt = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.Haunt"), FString("Gameplay Cue for Haunt Rift Effect"));
-
+	
 	/*
 	* Vessel Character Class
 	*/
@@ -183,4 +181,12 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	GameplayTags.Abilties_Vessel_SoulSiphon = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SoulSiphon"), FString("Vessel Starting Ability Tag"));
 	GameplayTags.Abilities_Vessel_SummonDregling = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonDregling"), FString("Summon Dregling Ability Tag"));
 	GameplayTags.Abilities_Vessel_SummonInfernalGolem = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonInfernalGolem"), FString("Summon Infernal Golem Ability Tag"));
+	GameplayTags.Abilities_Vessel_SummonChaosElemental = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonChaosElemental"), FString("Summon Chaos Elemental Ability Tag"));
+	GameplayTags.Abilities_Vessel_DemonfireRift = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.DemonfireRift"), FString("Demonfire Rift Ability Tag"));
+	GameplayTags.Abilities_Vessel_Pandemonium = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.Pandemonium"), FString("Pandemonium Ultimate Ability Tag"));
+	GameplayTags.Abilities_Vessel_Disintegrate = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.Disintegrate"), FString("Disintegrate Ability Tag"));
+
+	GameplayTags.GameplayCue_Rift_Haunt = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.Haunt"), FString("Gameplay Cue for Haunt Rift Effect"));
+	GameplayTags.GameplayCue_Rift_Dregling = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.Dregling"), FString("Gameplay Cue for Dregling Rift Effect"));
+	GameplayTags.GameplayCue_Rift_InfernalGolem = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.InfernalGolem"), FString("Gameplay Cue for Infernal Golem Rift Effect"));
 }

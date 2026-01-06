@@ -81,10 +81,6 @@ void AAICharacterBase::BeginPlay()
 	Super::BeginPlay();
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 	InitAbilityActorInfo();
-	if (HasAuthority())
-	{
-		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent, CharacterClass);
-	}
 }
 
 void AAICharacterBase::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)

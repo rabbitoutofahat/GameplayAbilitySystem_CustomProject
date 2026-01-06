@@ -46,6 +46,12 @@ void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Gives enemies their abilities from Character Class Info based on their character class
+	if (HasAuthority())
+	{
+		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent, CharacterClass);
+	}
+
 	// Set the widget controller for the enemy health bar widget
 	if (UAuraUserWidget* AuraUserWidget = Cast<UAuraUserWidget>(HealthBar->GetUserWidgetObject()))
 	{

@@ -129,6 +129,7 @@ public:
 	FGameplayTag GameplayCue_Rift_Haunt;
 	FGameplayTag GameplayCue_Rift_Dregling;
 	FGameplayTag GameplayCue_Rift_InfernalGolem;
+	FGameplayTag GameplayCue_Rift_ChaosElemental;
 
 private:
 	static FAuraGameplayTags GameplayTags;

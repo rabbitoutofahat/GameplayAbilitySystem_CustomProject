@@ -22,11 +22,19 @@ protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
-	void SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag);
+	void SpawnProjectileAtSocket(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag);
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UFUNCTION(BlueprintCallable, Category = "Projectile")
+	void SpawnProjectilesAboveActor(const FVector& ProjectileTargetLocation, const int32 NumProjectiles, const float SpawnDistance);
+
+	void SpawnProjectile(FTransform& SpawnTransform);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	TSubclassOf<AAuraProjectile> ProjectileClass;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	int32 MaxProjectiles = 5;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
+	float ProjectileSpread = 90.f;
 };

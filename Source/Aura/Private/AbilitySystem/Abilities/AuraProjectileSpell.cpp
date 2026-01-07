@@ -7,6 +7,8 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "Aura/Public/AuraGameplayTags.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)
@@ -15,7 +17,7 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 
 }
 
-void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag)
+void UAuraProjectileSpell::SpawnProjectileAtSocket(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag)
 {
 	// Want to spawn the projectile on the server
 	bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
@@ -28,6 +30,28 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	SpawnTransform.SetLocation(SocketLocation);
 	SpawnTransform.SetRotation(Rotation.Quaternion()); // Convert FRotator to FQuat
 
+	SpawnProjectile(SpawnTransform);
+}
+
+void UAuraProjectileSpell::SpawnProjectilesAboveActor(const FVector& ProjectileTargetLocation, const int32 NumProjectiles, const float SpawnDistance)
+{
+	bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
+	if (!bIsServer) return;
+	
+	const FVector Forward = GetAvatarActorFromActorInfo()->GetActorForwardVector();
+	TArray<FVector> SpawnLocations = UAuraAbilitySystemLibrary::EvenlyRotatedVectors(FVector::UpVector * SpawnDistance, Forward, ProjectileSpread, NumProjectiles);
+
+	for (const FVector& Location : SpawnLocations)
+	{
+		FTransform SpawnTransform;
+		SpawnTransform.SetLocation(GetAvatarActorFromActorInfo()->GetActorLocation() + Location);
+		SpawnTransform.SetRotation((ProjectileTargetLocation - Location).ToOrientationQuat());
+		SpawnProjectile(SpawnTransform);
+	}
+}
+
+void UAuraProjectileSpell::SpawnProjectile(FTransform& SpawnTransform)
+{
 	AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
 		ProjectileClass,
 		SpawnTransform,

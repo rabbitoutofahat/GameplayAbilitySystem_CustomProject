@@ -33,24 +33,28 @@ void UAuraProjectileSpell::SpawnProjectileAtSocket(const FVector& ProjectileTarg
 	SpawnProjectile(SpawnTransform);
 }
 
-void UAuraProjectileSpell::SpawnProjectilesAboveActor(const FVector& ProjectileTargetLocation, const int32 NumProjectiles, const float SpawnDistance)
+TArray<AAuraProjectile*> UAuraProjectileSpell::SpawnProjectilesAboveActor(const FVector& ProjectileTargetLocation, const int32 NumProjectiles, const float SpawnDistance)
 {
 	bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
-	if (!bIsServer) return;
+	if (!bIsServer) return TArray<AAuraProjectile*>();
 	
+	TArray<AAuraProjectile*> Projectiles;
 	const FVector Forward = GetAvatarActorFromActorInfo()->GetActorForwardVector();
-	TArray<FVector> SpawnLocations = UAuraAbilitySystemLibrary::EvenlyRotatedVectors(FVector::UpVector * SpawnDistance, Forward, ProjectileSpread, NumProjectiles);
+	TArray<FVector> Locations = UAuraAbilitySystemLibrary::EvenlyRotatedVectors(FVector::UpVector * SpawnDistance, Forward, ProjectileSpread, NumProjectiles);
 
-	for (const FVector& Location : SpawnLocations)
+	for (const FVector& Location : Locations)
 	{
 		FTransform SpawnTransform;
-		SpawnTransform.SetLocation(GetAvatarActorFromActorInfo()->GetActorLocation() + Location);
-		SpawnTransform.SetRotation((ProjectileTargetLocation - Location).ToOrientationQuat());
-		SpawnProjectile(SpawnTransform);
+		const FVector SpawnLocation = GetAvatarActorFromActorInfo()->GetActorLocation() + Location;
+		SpawnTransform.SetLocation(SpawnLocation);
+		SpawnTransform.SetRotation((ProjectileTargetLocation - SpawnLocation).ToOrientationQuat());
+		AAuraProjectile* Projectile = SpawnProjectile(SpawnTransform);
+		Projectiles.Add(Projectile);
 	}
+	return Projectiles;
 }
 
-void UAuraProjectileSpell::SpawnProjectile(FTransform& SpawnTransform)
+AAuraProjectile* UAuraProjectileSpell::SpawnProjectile(FTransform& SpawnTransform)
 {
 	AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
 		ProjectileClass,
@@ -61,4 +65,5 @@ void UAuraProjectileSpell::SpawnProjectile(FTransform& SpawnTransform)
 
 	Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 	Projectile->FinishSpawning(SpawnTransform);
+	return Projectile;
 }

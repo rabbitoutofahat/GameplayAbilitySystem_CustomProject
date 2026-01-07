@@ -25,9 +25,9 @@ protected:
 	void SpawnProjectileAtSocket(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag);
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
-	void SpawnProjectilesAboveActor(const FVector& ProjectileTargetLocation, const int32 NumProjectiles, const float SpawnDistance);
+	TArray<AAuraProjectile*> SpawnProjectilesAboveActor(const FVector& ProjectileTargetLocation, const int32 NumProjectiles, const float SpawnDistance);
 
-	void SpawnProjectile(FTransform& SpawnTransform);
+	AAuraProjectile* SpawnProjectile(FTransform& SpawnTransform);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	TSubclassOf<AAuraProjectile> ProjectileClass;

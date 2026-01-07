@@ -603,7 +603,7 @@ TArray<FVector> UAuraAbilitySystemLibrary::EvenlyRotatedVectors(const FVector& F
 		const float DeltaSpread = Spread / (NumVectors - 1);
 		for (int32 i = 0; i < NumVectors; i++)
 		{
-			const FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i, FVector::UpVector);
+			const FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i, RotationAxis);
 			Vectors.Add(Direction);
 		}
 	}

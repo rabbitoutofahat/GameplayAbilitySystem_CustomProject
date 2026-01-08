@@ -8,7 +8,6 @@
 #include "AbilitySystemComponent.h"
 #include "Aura/Public/AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
-#include "GameFramework/ProjectileMovementComponent.h"
 
 void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)
@@ -29,24 +28,14 @@ void UAuraProjectileSpell::SpawnProjectileAtSocket(const FVector& ProjectileTarg
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(SocketLocation);
 	SpawnTransform.SetRotation(Rotation.Quaternion()); // Convert FRotator to FQuat
-
-	AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
-		ProjectileClass,
-		SpawnTransform,
-		GetOwningActorFromActorInfo(),
-		Cast<APawn>(GetOwningActorFromActorInfo()),
-		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-
-	Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
-	Projectile->FinishSpawning(SpawnTransform);
+	SpawnProjectile(SpawnTransform);
 }
 
-TArray<AAuraProjectile*> UAuraProjectileSpell::SpawnProjectilesAboveActor(const FVector& ProjectileTargetLocation, const int32 NumProjectiles, const float SpawnDistance)
+void UAuraProjectileSpell::SpawnProjectilesAboveActor(const FVector& ProjectileTargetLocation, const int32 NumProjectiles, const float SpawnDistance)
 {
 	bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
-	if (!bIsServer) return TArray<AAuraProjectile*>();
+	if (!bIsServer) return;
 	
-	TArray<AAuraProjectile*> Projectiles;
 	const FVector Forward = GetAvatarActorFromActorInfo()->GetActorForwardVector();
 	TArray<FVector> Locations = UAuraAbilitySystemLibrary::EvenlyRotatedVectors(FVector::UpVector * SpawnDistance, Forward, ProjectileSpread, NumProjectiles);
 
@@ -56,16 +45,19 @@ TArray<AAuraProjectile*> UAuraProjectileSpell::SpawnProjectilesAboveActor(const 
 		const FVector SpawnLocation = GetAvatarActorFromActorInfo()->GetActorLocation() + Location;
 		SpawnTransform.SetLocation(SpawnLocation);
 		SpawnTransform.SetRotation((ProjectileTargetLocation - SpawnLocation).ToOrientationQuat());
-		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
-			ProjectileClass,
-			SpawnTransform,
-			GetOwningActorFromActorInfo(),
-			Cast<APawn>(GetOwningActorFromActorInfo()),
-			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-
-		Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
-		Projectile->FinishSpawning(SpawnTransform);
-		Projectiles.Add(Projectile);
+		SpawnProjectile(SpawnTransform);
 	}
-	return Projectiles;
+}
+
+void UAuraProjectileSpell::SpawnProjectile(FTransform& SpawnTransform)
+{
+	AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
+		ProjectileClass,
+		SpawnTransform,
+		GetOwningActorFromActorInfo(),
+		Cast<APawn>(GetOwningActorFromActorInfo()),
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+	Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+	Projectile->FinishSpawning(SpawnTransform);
 }

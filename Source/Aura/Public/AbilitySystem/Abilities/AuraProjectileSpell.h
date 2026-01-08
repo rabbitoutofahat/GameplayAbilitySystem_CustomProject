@@ -27,8 +27,6 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Projectile")
 	TArray<AAuraProjectile*> SpawnProjectilesAboveActor(const FVector& ProjectileTargetLocation, const int32 NumProjectiles, const float SpawnDistance);
 
-	AAuraProjectile* SpawnProjectile(FTransform& SpawnTransform);
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	TSubclassOf<AAuraProjectile> ProjectileClass;
 

@@ -30,7 +30,15 @@ void UAuraProjectileSpell::SpawnProjectileAtSocket(const FVector& ProjectileTarg
 	SpawnTransform.SetLocation(SocketLocation);
 	SpawnTransform.SetRotation(Rotation.Quaternion()); // Convert FRotator to FQuat
 
-	SpawnProjectile(SpawnTransform);
+	AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
+		ProjectileClass,
+		SpawnTransform,
+		GetOwningActorFromActorInfo(),
+		Cast<APawn>(GetOwningActorFromActorInfo()),
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+	Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+	Projectile->FinishSpawning(SpawnTransform);
 }
 
 TArray<AAuraProjectile*> UAuraProjectileSpell::SpawnProjectilesAboveActor(const FVector& ProjectileTargetLocation, const int32 NumProjectiles, const float SpawnDistance)
@@ -48,22 +56,16 @@ TArray<AAuraProjectile*> UAuraProjectileSpell::SpawnProjectilesAboveActor(const 
 		const FVector SpawnLocation = GetAvatarActorFromActorInfo()->GetActorLocation() + Location;
 		SpawnTransform.SetLocation(SpawnLocation);
 		SpawnTransform.SetRotation((ProjectileTargetLocation - SpawnLocation).ToOrientationQuat());
-		AAuraProjectile* Projectile = SpawnProjectile(SpawnTransform);
+		AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
+			ProjectileClass,
+			SpawnTransform,
+			GetOwningActorFromActorInfo(),
+			Cast<APawn>(GetOwningActorFromActorInfo()),
+			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+		Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+		Projectile->FinishSpawning(SpawnTransform);
 		Projectiles.Add(Projectile);
 	}
 	return Projectiles;
-}
-
-AAuraProjectile* UAuraProjectileSpell::SpawnProjectile(FTransform& SpawnTransform)
-{
-	AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
-		ProjectileClass,
-		SpawnTransform,
-		GetOwningActorFromActorInfo(),
-		Cast<APawn>(GetOwningActorFromActorInfo()),
-		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-
-	Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
-	Projectile->FinishSpawning(SpawnTransform);
-	return Projectile;
 }

@@ -34,6 +34,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnMaxEnergyChanged;
 
+	UPROPERTY(BlueprintReadOnly)
+	bool bFullEnergy = false; // Used to cancel channeled abilities when Special Attack is ready
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -51,5 +54,5 @@ protected:
 	TSubclassOf<UAuraUserWidget> HealthFrameClass;
 
 	UFUNCTION(BlueprintCallable)
-	void ShouldEnableSpecial(bool bEnable);
+	void ShouldEnableSpecial(bool bEnable); // Used to change the ShouldUseSpecial Blackboard Key
 };

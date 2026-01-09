@@ -68,4 +68,5 @@ void ASummonCharacter::BroadcastInitialValues(const UAuraAttributeSet* AuraAS) c
 void ASummonCharacter::ShouldEnableSpecial(bool bEnable)
 {
 	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("ShouldUseSpecial"), bEnable);
+	bFullEnergy = bEnable;
 }

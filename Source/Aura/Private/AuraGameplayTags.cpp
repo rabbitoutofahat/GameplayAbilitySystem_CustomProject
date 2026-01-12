@@ -191,4 +191,6 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	GameplayTags.GameplayCue_Rift_InfernalGolem = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.InfernalGolem"), FString("Gameplay Cue for Infernal Golem Rift Effect"));
 	GameplayTags.GameplayCue_Rift_ChaosElemental = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.ChaosElemental"), FString("Gameplay Cue for Chaos Elemental Rift Effect"));
 	GameplayTags.GameplayCue_Explosion = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Explosion"), FString("Gameplay Cue for Explosion Effects"));
+
+	GameplayTags.Buff_DemonicStrength = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.DemonicStrength"), FString("Given to Vessel's demons, allows one free use of their respective special ability"));
 }

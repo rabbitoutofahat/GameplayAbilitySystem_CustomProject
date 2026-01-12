@@ -132,6 +132,8 @@ public:
 	FGameplayTag GameplayCue_Rift_ChaosElemental;
 	FGameplayTag GameplayCue_Explosion;
 
+	FGameplayTag Buff_DemonicStrength;
+
 private:
 	static FAuraGameplayTags GameplayTags;
 };

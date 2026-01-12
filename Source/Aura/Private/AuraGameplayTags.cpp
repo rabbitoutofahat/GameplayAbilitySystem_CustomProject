@@ -190,4 +190,5 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	GameplayTags.GameplayCue_Rift_Dregling = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.Dregling"), FString("Gameplay Cue for Dregling Rift Effect"));
 	GameplayTags.GameplayCue_Rift_InfernalGolem = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.InfernalGolem"), FString("Gameplay Cue for Infernal Golem Rift Effect"));
 	GameplayTags.GameplayCue_Rift_ChaosElemental = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.ChaosElemental"), FString("Gameplay Cue for Chaos Elemental Rift Effect"));
+	GameplayTags.GameplayCue_Explosion = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Explosion"), FString("Gameplay Cue for Explosion Effects"));
 }

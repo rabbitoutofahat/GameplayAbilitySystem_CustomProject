@@ -14,4 +14,13 @@ class AURA_API UDreglingExplosion : public UAuraDamageGameplayAbility
 {
 	GENERATED_BODY()
 	
+protected:
+	UFUNCTION(BlueprintCallable)
+	void StartDissolve();
+
+	UFUNCTION(BlueprintCallable)
+	void Explosion();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float ExplosionTimer;
 };

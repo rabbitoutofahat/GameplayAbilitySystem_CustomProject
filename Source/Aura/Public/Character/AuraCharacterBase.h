@@ -91,6 +91,8 @@ public:
 
 	TArray<TSubclassOf<UGameplayAbility>>& GetStartupAbilities() { return StartupAbilities; }
 
+	void Dissolve();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -156,8 +158,6 @@ protected:
 	ECharacterClass CharacterClass = ECharacterClass::Warrior;
 
 	/* Dissolve Effects */
-	void Dissolve();
-	
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
 

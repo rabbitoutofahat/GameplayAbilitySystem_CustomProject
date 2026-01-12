@@ -130,6 +130,7 @@ public:
 	FGameplayTag GameplayCue_Rift_Dregling;
 	FGameplayTag GameplayCue_Rift_InfernalGolem;
 	FGameplayTag GameplayCue_Rift_ChaosElemental;
+	FGameplayTag GameplayCue_Explosion;
 
 private:
 	static FAuraGameplayTags GameplayTags;

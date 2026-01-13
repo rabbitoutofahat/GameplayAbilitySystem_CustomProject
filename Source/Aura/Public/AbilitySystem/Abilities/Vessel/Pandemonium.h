@@ -15,10 +15,7 @@ class AURA_API UPandemonium : public UAuraGameplayAbility
 	GENERATED_BODY()
 
 protected:
-	UFUNCTION(BlueprintCallable)
-	void EnableSpecialForAllSummons();
-	
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float EffectRadius = 1000.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

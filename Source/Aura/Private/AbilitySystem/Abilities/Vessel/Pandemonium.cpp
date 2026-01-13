@@ -6,8 +6,9 @@
 #include "Character/SummonCharacter.h"
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "GameplayEffectComponents/TargetTagsGameplayEffectComponent.h"
 
-void UPandemonium::CastPandemonium()
+void UPandemonium::EnableSpecialForAllSummons()
 {
 	TArray<AActor*> OutOverlappingActors;
 	TArray<AActor*> ActorsToIgnore; // Will be filtering for Summon Characters within OutOverlappingActors anyway
@@ -15,12 +16,6 @@ void UPandemonium::CastPandemonium()
 
 	for (AActor* Actor : OutOverlappingActors)
 	{
-		if (ASummonCharacter* SummonedMinion = Cast<ASummonCharacter>(Actor))
-		{		
-			FGameplayTagContainer TagContainer = FGameplayTagContainer();
-			TagContainer.AddTag(FAuraGameplayTags::Get().Buff_DemonicStrength);
-			SummonedMinion->GetAbilitySystemComponent()->AddLooseGameplayTags(TagContainer);
-			SummonedMinion->ShouldEnableSpecial(true);
-		}
+		if (ASummonCharacter* SummonedMinion = Cast<ASummonCharacter>(Actor)) SummonedMinion->ShouldEnableSpecial(true);
 	}
 }

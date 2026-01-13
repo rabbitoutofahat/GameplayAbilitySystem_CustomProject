@@ -7,7 +7,7 @@
 #include "Pandemonium.generated.h"
 
 /**
- * 
+ * Ability allows all summoned minions to use their special ability once free-of-charge
  */
 UCLASS()
 class AURA_API UPandemonium : public UAuraGameplayAbility
@@ -16,8 +16,11 @@ class AURA_API UPandemonium : public UAuraGameplayAbility
 
 protected:
 	UFUNCTION(BlueprintCallable)
-	void CastPandemonium(); // Ability allows all summoned minions to use their special ability once free-of-charge
+	void EnableSpecialForAllSummons();
 	
 	UPROPERTY(EditDefaultsOnly)
 	float EffectRadius = 1000.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayEffect> NoCostGameplayEffect;
 };

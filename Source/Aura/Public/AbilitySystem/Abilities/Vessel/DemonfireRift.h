@@ -6,7 +6,7 @@
 #include "AbilitySystem/Abilities/AuraDamageGameplayAbility.h"
 #include "DemonfireRift.generated.h"
 
-class AAuraProjectile;
+class AProjectileSpawner;
 
 /**
  * 
@@ -18,16 +18,10 @@ class AURA_API UDemonfireRift : public UAuraDamageGameplayAbility
 	
 protected:
 	UFUNCTION(BlueprintCallable)
-	FVector GetRandomRiftSpawnLocation() const;
+	void SpawnRift();
 
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AAuraProjectile> RiftProjectileClass;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	int32 NumProjectiles = 12;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float RiftDuration = 8.f;
+	TSubclassOf<AProjectileSpawner> RiftClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	float RiftSpawnDistanceMin = 150.f;

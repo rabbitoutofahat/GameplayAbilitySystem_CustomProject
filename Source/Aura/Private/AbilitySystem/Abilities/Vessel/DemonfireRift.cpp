@@ -2,8 +2,9 @@
 
 
 #include "AbilitySystem/Abilities/Vessel/DemonfireRift.h"
+#include "Actor/ProjectileSpawner.h"
 
-FVector UDemonfireRift::GetRandomRiftSpawnLocation() const
+void UDemonfireRift::SpawnRift()
 {
 	const FVector Location = GetAvatarActorFromActorInfo()->GetActorLocation();
 	const FVector Forward = GetAvatarActorFromActorInfo()->GetActorForwardVector();
@@ -13,5 +14,16 @@ FVector UDemonfireRift::GetRandomRiftSpawnLocation() const
 	const FVector SpawnDirection = Left.RotateAngleAxis(RandomSpread, FVector::UpVector);
 	FVector SpawnLocation = Location + SpawnDirection * FMath::FRandRange(RiftSpawnDistanceMin, RiftSpawnDistanceMax);
 
-	return SpawnLocation;
+	FTransform SpawnTransform;
+	SpawnTransform.SetLocation(SpawnLocation);
+
+	AProjectileSpawner* Rift = GetWorld()->SpawnActorDeferred<AProjectileSpawner>(
+		RiftClass,
+		SpawnTransform,
+		GetAvatarActorFromActorInfo(),
+		CurrentActorInfo->PlayerController->GetPawn(),
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+	Rift->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+	Rift->FinishSpawning(SpawnTransform);
 }

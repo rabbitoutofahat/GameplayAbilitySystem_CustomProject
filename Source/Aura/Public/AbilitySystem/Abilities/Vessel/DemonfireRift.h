@@ -16,5 +16,8 @@ class AURA_API UDemonfireRift : public UAuraDamageGameplayAbility
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float NumProjectiles;
+	int32 NumProjectiles;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float RiftDuration;
 };

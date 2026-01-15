@@ -8,6 +8,7 @@
 #include "ProjectileSpawner.generated.h"
 
 class AAuraProjectile;
+class AAuraEnemy;
 
 UCLASS()
 class AURA_API AProjectileSpawner : public AActor
@@ -21,7 +22,11 @@ public:
 	FDamageEffectParams DamageEffectParams;
 
 protected:
-	virtual void BeginPlay() override;
+	UFUNCTION(BlueprintCallable)
+	TArray<AAuraEnemy*> GetNearbyEnemies();
+
+	UFUNCTION(BlueprintCallable)
+	void SpawnProjectileAtRandomTarget(const TArray<AAuraEnemy*>& ValidTargets);
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AAuraProjectile> ProjectileClass;
@@ -30,6 +35,14 @@ protected:
 	int32 NumProjectiles = 12;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float Lifespan = 8.f;
+	float SpawnDuration = 3.f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float ProjectileSpread = 120.f;
+
+	UPROPERTY(EditDefaultsOnly)
+	float EffectRadius = 800.f;
+
+	UPROPERTY(EditDefaultsOnly)
+	float ProjectilePitch = 45.f;
 };

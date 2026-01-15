@@ -24,6 +24,8 @@ void UDemonfireRift::SpawnRift()
 		CurrentActorInfo->PlayerController->GetPawn(),
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
+	Rift->Owner = GetAvatarActorFromActorInfo();
 	Rift->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+	Rift->SetActorEnableCollision(false);
 	Rift->FinishSpawning(SpawnTransform);
 }

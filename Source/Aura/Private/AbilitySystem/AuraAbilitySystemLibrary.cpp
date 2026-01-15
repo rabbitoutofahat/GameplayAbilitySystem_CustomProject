@@ -500,34 +500,34 @@ void UAuraAbilitySystemLibrary::GetClosestTargets(int32 MaxTargets, const TArray
 		OutClosestTargets.AddUnique(Pair.Key);
 	}
 
-    // COURSE SOLUTION
-	//if (Actors.Num() <= MaxTargets) 
-	//{
-	//	OutClosestTargets = Actors;
-	//	return;
-	//}
-	//
-	//TArray<AActor*> ActorsToCheck = Actors;
-	//int32 NumTargetsFound = 0;
-	//
-	//while (NumTargetsFound < MaxTargets)
-	//{
-	//	if (Actors.Num() == 0) break;
-	//	double ClosestDistance = TNumericLimits<double>::Max();
-	//	AActor* ClosestActor;
-	//	for (AActor* PotentialTarget : ActorsToCheck)
-	//	{
-	//		const double Distance = (PotentialTarget->GetActorLocation() - Origin).Length();
-	//		if (Distance < ClosestDistance)
-	//		{
-	//			ClosestDistance = Distance;
-	//			ClosestActor = PotentialTarget;
-	//		}
-	//	}
-	//	ActorsToCheck.Remove(ClosestActor);
-	//	OutClosestTargets.AddUnique(ClosestActor);
-	//	++NumTargetsFound;
-	//}
+    /* COURSE SOLUTION
+	if (Actors.Num() <= MaxTargets) 
+	{
+		OutClosestTargets = Actors;
+		return;
+	}
+	
+	TArray<AActor*> ActorsToCheck = Actors;
+	int32 NumTargetsFound = 0;
+	
+	while (NumTargetsFound < MaxTargets)
+	{
+		if (Actors.Num() == 0) break;
+		double ClosestDistance = TNumericLimits<double>::Max();
+		AActor* ClosestActor;
+		for (AActor* PotentialTarget : ActorsToCheck)
+		{
+			const double Distance = (PotentialTarget->GetActorLocation() - Origin).Length();
+			if (Distance < ClosestDistance)
+			{
+				ClosestDistance = Distance;
+				ClosestActor = PotentialTarget;
+			}
+		}
+		ActorsToCheck.Remove(ClosestActor);
+		OutClosestTargets.AddUnique(ClosestActor);
+		++NumTargetsFound;
+	} */
 }
 
 bool UAuraAbilitySystemLibrary::IsOnSameTeam(const AActor* FirstActor, const AActor* SecondActor)

@@ -18,7 +18,8 @@ class AURA_API ADisintegrateProjectile : public AAuraProjectile
 	
 protected:
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
+	void DealRadialDamageToEnemies();
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	TSubclassOf<UGameplayEffect> DisintegrateEffectClass;
+	UPROPERTY(EditDefaultsOnly)
+	float DetonationTimer = 2.f;
 };

@@ -13,9 +13,10 @@ void ADisintegrateProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedCom
 	if (!IsValidOverlap(OtherActor)) return;
 	
 	DamageEffectParams.RadialDamageOrigin = OtherActor->GetActorLocation();
-	//EAttachmentRule
-	//FAttachmentTransformRules AttachmentRules(OtherActor->GetActorLocation(), OtherActor->GetActorRotation(), );
-	//AttachToActor(OtherActor, )
+
+	FAttachmentTransformRules AttachmentRules(EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, EAttachmentRule::KeepWorld, true);
+	AttachToActor(OtherActor, AttachmentRules);
+	
 	ProjectileMovement->SetComponentTickEnabled(false);
 	ProjectileMovement->InitialSpeed = 0.f;
 	ProjectileMovement->MaxSpeed = 0.f;
@@ -32,13 +33,13 @@ void ADisintegrateProjectile::DealRadialDamageToEnemies()
 	if (HasAuthority())
 	{
 		TArray<AActor*> ActorsToIgnore;
-		ActorsToIgnore.Add(Cast<AVessel>(DamageEffectParams.WorldContextObject)); // TODO: If multiplayer, add all player characters
+		ActorsToIgnore.Add(Cast<AVessel>(DamageEffectParams.WorldContextObject));
 		TArray<AActor*> ActorsToDamage;
 		UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(DamageEffectParams.WorldContextObject, ActorsToDamage, ActorsToIgnore, DamageEffectParams.RadialDamageOuterRadius, DamageEffectParams.RadialDamageOrigin);
 
 		for (AActor* Actor : ActorsToDamage)
 		{
-			if (!Actor->ActorHasTag(FName("Enemy"))) continue; // With the addition of more tags beyond "Player" and "Enemy", we need to if statement to filter out all non-enemies
+			if (!Actor->ActorHasTag(FName("Enemy"))) continue;
 			if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor))
 			{
 				const FVector DeathImpulse = GetActorForwardVector() * DamageEffectParams.DeathImpulseMagnitude;

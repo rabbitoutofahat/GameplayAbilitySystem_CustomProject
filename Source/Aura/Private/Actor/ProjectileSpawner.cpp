@@ -47,6 +47,7 @@ void AProjectileSpawner::SpawnProjectileAtRandomTarget(const TArray<AAuraEnemy*>
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
 	Projectile->DamageEffectParams = DamageEffectParams;
+	// Homing parameters set on the Demonfire Projectile blueprint, would need to be set here if different projectiles are used
 	Projectile->ProjectileMovement->HomingTargetComponent = ProjectileTarget->GetRootComponent();
 	Projectile->FinishSpawning(SpawnTransform);
 }

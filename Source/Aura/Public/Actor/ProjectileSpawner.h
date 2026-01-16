@@ -10,6 +10,9 @@
 class AAuraProjectile;
 class AAuraEnemy;
 
+/*
+* Primarily used by the Demonfire Rift ability, could be repurposed for other similar abilities
+*/
 UCLASS()
 class AURA_API AProjectileSpawner : public AActor
 {

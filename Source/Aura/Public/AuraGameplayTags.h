@@ -117,7 +117,7 @@ public:
 	/* Vessel Character Class */
 	FGameplayTag Abilities_Utility_Haunt;
 	FGameplayTag Abilities_Passive_DemonicSoul;
-	FGameplayTag Abilities_SpecialAttack; // Special Attack tag for Vessel's Summoned Minions
+	FGameplayTag Abilities_SpecialAttack; // Special Attack tag for Vessel's Summoned Minions test
 	FGameplayTag Abilties_Vessel_SoulSiphon;
 	FGameplayTag Abilities_Vessel_SummonDregling;
 	FGameplayTag Abilities_Vessel_SummonInfernalGolem;

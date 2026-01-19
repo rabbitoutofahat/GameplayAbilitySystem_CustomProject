@@ -16,29 +16,38 @@ public:
 	static const FAuraGameplayTags& Get() { return GameplayTags; }
 	static void InitialiseNativeGameplayTags();
 
-	FGameplayTag Attributes_Primary_Strength;
-	FGameplayTag Attributes_Primary_Intelligence;
-	FGameplayTag Attributes_Primary_Resilience;
-	FGameplayTag Attributes_Primary_Vigor;
+	//FGameplayTag Attributes_Primary_Strength;
+	//FGameplayTag Attributes_Primary_Intelligence;
+	//FGameplayTag Attributes_Primary_Resilience;
+	//FGameplayTag Attributes_Primary_Vigor;
 
-	FGameplayTag Attributes_Secondary_Armour;
-	FGameplayTag Attributes_Secondary_ArmourPenetration;
-	FGameplayTag Attributes_Secondary_BlockChance;
-	FGameplayTag Attributes_Secondary_CriticalHitChance;
-	FGameplayTag Attributes_Secondary_CriticalHitDamage;
-	FGameplayTag Attributes_Secondary_CriticalHitResistance;
-	FGameplayTag Attributes_Secondary_HealthRegeneration;
-	FGameplayTag Attributes_Secondary_ManaRegeneration;
-	FGameplayTag Attributes_Secondary_MaxHealth;
-	FGameplayTag Attributes_Secondary_MaxMana;
-	FGameplayTag Attributes_Secondary_MaxEnergy;
+	FGameplayTag Attributes_Armour;
+	FGameplayTag Attributes_ArmourShred;
+	//FGameplayTag Attributes_Secondary_BlockChance;
+	FGameplayTag Attributes_CriticalHitChance;
+	FGameplayTag Attributes_CriticalHitDamage;
+	//FGameplayTag Attributes_Secondary_CriticalHitResistance;
+	FGameplayTag Attributes_HealthRegeneration;
+	//FGameplayTag Attributes_Secondary_ManaRegeneration;
+	FGameplayTag Attributes_MaxHealth;
+	FGameplayTag Attributes_MaxMana;
+	FGameplayTag Attributes_MaxEnergy;
+
+	FGameplayTag Attributes_Damage_Physical;
+	FGameplayTag Attributes_Damage_Fire;
+	FGameplayTag Attributes_Damage_Lightning;
+	FGameplayTag Attributes_Damage_Shadow;
+	FGameplayTag Attributes_CooldownReduction;
+	FGameplayTag Attributes_AttackSpeed;
+	FGameplayTag Attributes_MovementSpeed;
+	FGameplayTag Attributes_StunBuildup;
 
 	FGameplayTag Attributes_Vital_Energy;
 
-	FGameplayTag Attributes_Resistance_Fire;
-	FGameplayTag Attributes_Resistance_Lightning;
-	FGameplayTag Attributes_Resistance_Arcane;
-	FGameplayTag Attributes_Resistance_Physical;
+	//FGameplayTag Attributes_Resistance_Fire;
+	//FGameplayTag Attributes_Resistance_Lightning;
+	//FGameplayTag Attributes_Resistance_Arcane;
+	//FGameplayTag Attributes_Resistance_Physical;
 
 	FGameplayTag Attributes_Meta_IncomingXP;
 
@@ -52,16 +61,15 @@ public:
 	FGameplayTag InputTag_Passive_2;
 
 	FGameplayTag Damage;
+	FGameplayTag Damage_Physical;
 	FGameplayTag Damage_Fire;
 	FGameplayTag Damage_Lightning;
-	FGameplayTag Damage_Arcane;
-	FGameplayTag Damage_Physical;
-	//FGameplayTag Damage_Shadow;
+	FGameplayTag Damage_Shadow;
 
 	FGameplayTag Debuff_Burn;
 	FGameplayTag Debuff_Stun;
-	FGameplayTag Debuff_Arcane;
-	FGameplayTag Debuff_Physical;
+	//FGameplayTag Debuff_Arcane;
+	//FGameplayTag Debuff_Physical;
 
 	FGameplayTag Debuff_Params_Chance;
 	FGameplayTag Debuff_Params_Damage;
@@ -87,9 +95,9 @@ public:
 	FGameplayTag Abilities_Lightning_Electrocute;
 	FGameplayTag Abilities_Arcane_ArcaneShards;
 
-	FGameplayTag Abilities_Passive_HaloOfProtection;
-	FGameplayTag Abilities_Passive_LifeSiphon;
-	FGameplayTag Abilities_Passive_ManaSiphon;
+	//FGameplayTag Abilities_Passive_HaloOfProtection;
+	//FGameplayTag Abilities_Passive_LifeSiphon;
+	//FGameplayTag Abilities_Passive_ManaSiphon;
 
 	FGameplayTag CombatSocket_Weapon;
 	FGameplayTag CombatSocket_RightHand;
@@ -101,8 +109,9 @@ public:
 	FGameplayTag Montage_Attack_3;
 	FGameplayTag Montage_Attack_4;
 
-	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
-	TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffs;
+	//TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
+	//TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffs;
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToAttributes;
 
 	FGameplayTag Effects_HitReact;
 
@@ -117,7 +126,7 @@ public:
 	/* Vessel Character Class */
 	FGameplayTag Abilities_Utility_Haunt;
 	FGameplayTag Abilities_Passive_DemonicSoul;
-	FGameplayTag Abilities_SpecialAttack; // Special Attack tag for Vessel's Summoned Minions test
+	FGameplayTag Abilities_SpecialAttack; // Special Attack tag for Vessel's Summoned Minions
 	FGameplayTag Abilties_Vessel_SoulSiphon;
 	FGameplayTag Abilities_Vessel_SummonDregling;
 	FGameplayTag Abilities_Vessel_SummonInfernalGolem;

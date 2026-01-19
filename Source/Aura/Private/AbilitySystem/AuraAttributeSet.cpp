@@ -23,32 +23,35 @@ UAuraAttributeSet::UAuraAttributeSet()
 	*/
 
 	// Primary Attributes
-	TagsToAttributes.Add(GameplayTags.Attributes_Primary_Strength, GetStrengthAttribute); 
-	TagsToAttributes.Add(GameplayTags.Attributes_Primary_Intelligence, GetIntelligenceAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Primary_Resilience, GetResilienceAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Primary_Vigor, GetVigorAttribute);
+	//TagsToAttributes.Add(GameplayTags.Attributes_Primary_Strength, GetStrengthAttribute); 
+	//TagsToAttributes.Add(GameplayTags.Attributes_Primary_Intelligence, GetIntelligenceAttribute);
+	//TagsToAttributes.Add(GameplayTags.Attributes_Primary_Resilience, GetResilienceAttribute);
+	//TagsToAttributes.Add(GameplayTags.Attributes_Primary_Vigor, GetVigorAttribute);
 
 	// Secondary Attributes
-	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_Armour, GetArmourAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_ArmourPenetration, GetArmourPierceAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_BlockChance, GetBlockChanceAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_CriticalHitChance, GetCritChanceAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_CriticalHitDamage, GetCritDamageAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_CriticalHitResistance, GetCritResAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_HealthRegeneration, GetHealthRegenAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_ManaRegeneration, GetManaRegenAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxHealth, GetMaxHealthAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxMana, GetMaxManaAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Secondary_MaxEnergy, GetMaxEnergyAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Armour, GetArmourAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_ArmourShred, GetArmourShredAttribute);
+	//TagsToAttributes.Add(GameplayTags.Attributes_Secondary_BlockChance, GetBlockChanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_CriticalHitChance, GetCritChanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_CriticalHitDamage, GetCritDamageAttribute);
+	//TagsToAttributes.Add(GameplayTags.Attributes_Secondary_CriticalHitResistance, GetCritResAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_HealthRegeneration, GetHealthRegenAttribute);
+	//TagsToAttributes.Add(GameplayTags.Attributes_Secondary_ManaRegeneration, GetManaRegenAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_MaxHealth, GetMaxHealthAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_MaxMana, GetMaxManaAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_MaxEnergy, GetMaxEnergyAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_CooldownReduction, GetCooldownReductionAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_AttackSpeed, GetAttackSpeedAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_MovementSpeed, GetMovementSpeedAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_StunBuildup, GetStunBuildupAttribute);
+
+	TagsToAttributes.Add(GameplayTags.Attributes_Damage_Physical, GetPhysicalDamageAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Damage_Fire, GetFireDamageAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Damage_Lightning, GetLightningDamageAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Damage_Shadow, GetShadowDamageAttribute);
 
 	// Vital Attributes
 	TagsToAttributes.Add(GameplayTags.Attributes_Vital_Energy, GetEnergyAttribute);
-
-	// Damage Resistance Attributes
-	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Fire, GetFireResAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Lightning, GetLightningResAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Arcane, GetArcaneResAttribute);
-	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Physical, GetPhysicalResAttribute);
 }
 
 void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -61,28 +64,32 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	*/
 
 	// Primary Attributes
-	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Strength, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Resilience, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Vigor, COND_None, REPNOTIFY_Always);
+	//DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Strength, COND_None, REPNOTIFY_Always);
+	//DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
+	//DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Resilience, COND_None, REPNOTIFY_Always);
+	//DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Vigor, COND_None, REPNOTIFY_Always);
 
 	// Secondary Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Armour, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ArmourPierce, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, BlockChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ArmourShred, COND_None, REPNOTIFY_Always);
+	//DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, BlockChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CritChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CritDamage, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CritRes, COND_None, REPNOTIFY_Always);
+	//DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CritRes, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, HealthRegen, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ManaRegen, COND_None, REPNOTIFY_Always);
+	//DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ManaRegen, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);	
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CooldownReduction, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, AttackSpeed, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MovementSpeed, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, StunBuildup, COND_None, REPNOTIFY_Always);
 
-	// Damage Resistances
-	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, FireRes, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, LightningRes, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ArcaneRes, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, PhysicalRes, COND_None, REPNOTIFY_Always);
+	// Damage Attributes
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, PhysicalDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, FireDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, LightningDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ShadowDamage, COND_None, REPNOTIFY_Always);
 	
 	// Vital Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Health, COND_None, REPNOTIFY_Always); 
@@ -173,40 +180,40 @@ void UAuraAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute,
 * In the case of prediction, the system keeps track of changes made to attributes and their old values in case a rollback is required.
 */
 
-void UAuraAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength) const
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Strength, OldStrength);
-}
-
-void UAuraAttributeSet::OnRep_Intelligence(const FGameplayAttributeData& OldIntelligence) const
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Intelligence, OldIntelligence);
-}
-
-void UAuraAttributeSet::OnRep_Resilience(const FGameplayAttributeData& OldResilience) const
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Resilience, OldResilience);
-}
-
-void UAuraAttributeSet::OnRep_Vigor(const FGameplayAttributeData& OldVigor) const
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Vigor, OldVigor);
-}
+//void UAuraAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength) const
+//{
+//	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Strength, OldStrength);
+//}
+//
+//void UAuraAttributeSet::OnRep_Intelligence(const FGameplayAttributeData& OldIntelligence) const
+//{
+//	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Intelligence, OldIntelligence);
+//}
+//
+//void UAuraAttributeSet::OnRep_Resilience(const FGameplayAttributeData& OldResilience) const
+//{
+//	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Resilience, OldResilience);
+//}
+//
+//void UAuraAttributeSet::OnRep_Vigor(const FGameplayAttributeData& OldVigor) const
+//{
+//	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Vigor, OldVigor);
+//}
 
 void UAuraAttributeSet::OnRep_Armour(const FGameplayAttributeData& OldArmour) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Armour, OldArmour);
 }
 
-void UAuraAttributeSet::OnRep_ArmourPierce(const FGameplayAttributeData& OldArmourPierce) const
+void UAuraAttributeSet::OnRep_ArmourShred(const FGameplayAttributeData& OldArmourShred) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ArmourPierce, OldArmourPierce);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ArmourShred, OldArmourShred);
 }
-
-void UAuraAttributeSet::OnRep_BlockChance(const FGameplayAttributeData& OldBlockChance) const
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, BlockChance, OldBlockChance);
-}
+//
+//void UAuraAttributeSet::OnRep_BlockChance(const FGameplayAttributeData& OldBlockChance) const
+//{
+//	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, BlockChance, OldBlockChance);
+//}
 
 void UAuraAttributeSet::OnRep_CritChance(const FGameplayAttributeData& OldCritChance) const
 {
@@ -218,20 +225,20 @@ void UAuraAttributeSet::OnRep_CritDamage(const FGameplayAttributeData& OldCritDa
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, CritDamage, OldCritDamage);
 }
 
-void UAuraAttributeSet::OnRep_CritRes(const FGameplayAttributeData& OldCritRes) const
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, CritRes, OldCritRes);
-}
+//void UAuraAttributeSet::OnRep_CritRes(const FGameplayAttributeData& OldCritRes) const
+//{
+//	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, CritRes, OldCritRes);
+//}
 
 void UAuraAttributeSet::OnRep_HealthRegen(const FGameplayAttributeData& OldHealthRegen) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, HealthRegen, OldHealthRegen);
 }
 
-void UAuraAttributeSet::OnRep_ManaRegen(const FGameplayAttributeData& OldManaRegen) const
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ManaRegen, OldManaRegen);
-}
+//void UAuraAttributeSet::OnRep_ManaRegen(const FGameplayAttributeData& OldManaRegen) const
+//{
+//	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ManaRegen, OldManaRegen);
+//}
 
 void UAuraAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth) const
 {
@@ -243,24 +250,44 @@ void UAuraAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) 
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxMana, OldMaxMana);
 }
 
-void UAuraAttributeSet::OnRep_FireRes(const FGameplayAttributeData& OldFireRes) const
+void UAuraAttributeSet::OnRep_CooldownReduction(const FGameplayAttributeData& OldCooldownReduction) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, FireRes, OldFireRes);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, CooldownReduction, OldCooldownReduction);
 }
 
-void UAuraAttributeSet::OnRep_LightningRes(const FGameplayAttributeData& OldLightningRes) const
+void UAuraAttributeSet::OnRep_AttackSpeed(const FGameplayAttributeData& OldAttackSpeed) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, LightningRes, OldLightningRes);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, AttackSpeed, OldAttackSpeed);
 }
 
-void UAuraAttributeSet::OnRep_ArcaneRes(const FGameplayAttributeData& OldArcaneRes) const
+void UAuraAttributeSet::OnRep_MovementSpeed(const FGameplayAttributeData& OldMovementSpeed) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ArcaneRes, OldArcaneRes);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MovementSpeed, OldMovementSpeed);
 }
 
-void UAuraAttributeSet::OnRep_PhysicalRes(const FGameplayAttributeData& OldPhysicalRes) const
+void UAuraAttributeSet::OnRep_StunBuildup(const FGameplayAttributeData& OldStunBuildup) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, PhysicalRes, OldPhysicalRes);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, StunBuildup, OldStunBuildup);
+}
+
+void UAuraAttributeSet::OnRep_PhysicalDamage(const FGameplayAttributeData& OldPhysicalDamage) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, PhysicalDamage, OldPhysicalDamage);
+}
+
+void UAuraAttributeSet::OnRep_FireDamage(const FGameplayAttributeData& OldFireDamage) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, FireDamage, OldFireDamage);
+}
+
+void UAuraAttributeSet::OnRep_LightningDamage(const FGameplayAttributeData& OldLightningDamage) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, LightningDamage, OldLightningDamage);
+}
+
+void UAuraAttributeSet::OnRep_ShadowDamage(const FGameplayAttributeData& OldShadowDamage) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ShadowDamage, OldShadowDamage);
 }
 
 void UAuraAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
@@ -395,19 +422,19 @@ void UAuraAttributeSet::Debuff(const FEffectProperties& Props)
 	/*
 	* "Inheritable Owned Tags Container is deprecated. To configure, add a UTargetTagsGameplayEffectComponent. To access, use GetGrantedTags."
 	*/
-	FInheritedTagContainer TagContainer = FInheritedTagContainer();
-	UTargetTagsGameplayEffectComponent& Component = Effect->FindOrAddComponent<UTargetTagsGameplayEffectComponent>();
-	const FGameplayTag DebuffTag = GameplayTags.DamageTypesToDebuffs[DamageType];
+	//FInheritedTagContainer TagContainer = FInheritedTagContainer();
+	//UTargetTagsGameplayEffectComponent& Component = Effect->FindOrAddComponent<UTargetTagsGameplayEffectComponent>();
+	//const FGameplayTag DebuffTag = GameplayTags.DamageTypesToDebuffs[DamageType];
 
-	TagContainer.Added.AddTag(DebuffTag);
-	if (DebuffTag.MatchesTagExact(GameplayTags.Debuff_Stun))
-	{
-		TagContainer.Added.AddTag(GameplayTags.Player_Block_CursorTrace);
-		TagContainer.Added.AddTag(GameplayTags.Player_Block_InputPressed);
-		TagContainer.Added.AddTag(GameplayTags.Player_Block_InputHeld);
-		TagContainer.Added.AddTag(GameplayTags.Player_Block_InputReleased);
-	}
-	Component.SetAndApplyTargetTagChanges(TagContainer);
+	//TagContainer.Added.AddTag(DebuffTag);
+	//if (DebuffTag.MatchesTagExact(GameplayTags.Debuff_Stun))
+	//{
+	//	TagContainer.Added.AddTag(GameplayTags.Player_Block_CursorTrace);
+	//	TagContainer.Added.AddTag(GameplayTags.Player_Block_InputPressed);
+	//	TagContainer.Added.AddTag(GameplayTags.Player_Block_InputHeld);
+	//	TagContainer.Added.AddTag(GameplayTags.Player_Block_InputReleased);
+	//}
+	//Component.SetAndApplyTargetTagChanges(TagContainer);
 
 	Effect->StackingType = EGameplayEffectStackingType::AggregateBySource;
 	Effect->StackLimitCount = 1;

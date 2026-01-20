@@ -162,6 +162,9 @@ public:
 	UPROPERTY()
 	float StunBuildup = 0;
 
+	UPROPERTY()
+	float BlockChance = 0;
+
 	/* Abilities */
 
 	UPROPERTY()

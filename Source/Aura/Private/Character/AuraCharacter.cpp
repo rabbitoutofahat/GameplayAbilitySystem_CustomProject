@@ -229,6 +229,7 @@ void AAuraCharacter::SaveProgress_Implementation(const FName& CheckpointTag)
 			SaveData->AttackSpeed = AuraAttributeSet->GetAttackSpeed();
 			SaveData->MovementSpeed = AuraAttributeSet->GetMovementSpeed();
 			SaveData->StunBuildup = AuraAttributeSet->GetStunBuildup();
+			SaveData->BlockChance = AuraAttributeSet->GetBlockChance();
 		}
 
 		SaveData->bFirstTimeLoadIn = false; // Set boolean to false so we don't initialise the character with default Primary Attributes on next load-in

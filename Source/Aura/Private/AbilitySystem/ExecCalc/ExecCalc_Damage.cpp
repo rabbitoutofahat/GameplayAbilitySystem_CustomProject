@@ -13,7 +13,7 @@ struct AuraDamageStatics // Raw struct whose scope is entirely contained within 
 {
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Armour);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(ArmourShred);
-	//DECLARE_ATTRIBUTE_CAPTUREDEF(BlockChance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(BlockChance);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CritChance);
 	//DECLARE_ATTRIBUTE_CAPTUREDEF(CritRes);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CritDamage);
@@ -40,7 +40,7 @@ struct AuraDamageStatics // Raw struct whose scope is entirely contained within 
 		*/
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, Armour, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, ArmourShred, Source, false);
-		//DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, BlockChance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, BlockChance, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CritChance, Source, false);
 		//DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CritRes, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CritDamage, Source, false);
@@ -62,7 +62,7 @@ UExecCalc_Damage::UExecCalc_Damage()
 {
 	RelevantAttributesToCapture.Add(DamageStatics().ArmourDef);
 	RelevantAttributesToCapture.Add(DamageStatics().ArmourShredDef);
-	//RelevantAttributesToCapture.Add(DamageStatics().BlockChanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().BlockChanceDef);
 	RelevantAttributesToCapture.Add(DamageStatics().CritChanceDef);
 	//RelevantAttributesToCapture.Add(DamageStatics().CritResDef);
 	RelevantAttributesToCapture.Add(DamageStatics().CritDamageDef);
@@ -168,28 +168,28 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	}
 
 	// Capture BlockChance on Target, and determine if there was a successful Block
-	//float TargetBlockChance = 0.f;
-	//ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvaluationParameters, TargetBlockChance); // Pass captured BlockChance attribute value into our local TargetBlockChance variable
-	//TargetBlockChance = FMath::Max<float>(TargetBlockChance, 0.f);
+	float TargetBlockChance = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvaluationParameters, TargetBlockChance); // Pass captured BlockChance attribute value into our local TargetBlockChance variable
+	TargetBlockChance = FMath::Max<float>(TargetBlockChance, 0.f);
 
 	// Halve the damage if there is a successful block
-	//const bool bBlocked = FMath::RandRange(0.f, 100.f) < TargetBlockChance;
-	//UAuraAbilitySystemLibrary::SetIsBlockedHit(EffectContextHandle, bBlocked);
-	//if (bBlocked) Damage *= 0.5f;
+	const bool bBlocked = FMath::RandRange(0.f, 100.f) < TargetBlockChance;
+	UAuraAbilitySystemLibrary::SetIsBlockedHit(EffectContextHandle, bBlocked);
+	if (bBlocked) Damage *= 0.5f;
 
 	// Capture Armour on Target and ArmourPierce on Source
 	float TargetArmour = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmourDef, EvaluationParameters, TargetArmour); 
 	TargetArmour = FMath::Max<float>(TargetArmour, 0.f);
 
-	float SourceArmourPierce = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmourShredDef, EvaluationParameters, SourceArmourPierce);
-	SourceArmourPierce = FMath::Max<float>(SourceArmourPierce, 0.f);
+	float SourceArmourShred = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmourShredDef, EvaluationParameters, SourceArmourShred);
+	SourceArmourShred = FMath::Max<float>(SourceArmourShred, 0.f);
 
-	FRealCurve* ArmourPierceCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(FName("ArmourShred"), FString());
-	const float ArmourPierceCoeff = ArmourPierceCurve->Eval(SourceLevel);
-    // ArmourPierce ignores a percentage of the Target's Armour
-	const float EffectiveArmour = TargetArmour *= (100 - SourceArmourPierce * ArmourPierceCoeff) / 100.f;
+	FRealCurve* ArmourShredCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(FName("ArmourShred"), FString());
+	const float ArmourShredCoeff = ArmourShredCurve->Eval(SourceLevel);
+    // ArmourShred ignores a percentage of the Target's Armour
+	const float EffectiveArmour = TargetArmour *= (100 - SourceArmourShred * ArmourShredCoeff) / 100.f;
 
 	FRealCurve* EffectiveArmourCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(FName("EffectiveArmour"), FString());
 	const float EffectiveArmourCoeff = EffectiveArmourCurve->Eval(TargetLevel);

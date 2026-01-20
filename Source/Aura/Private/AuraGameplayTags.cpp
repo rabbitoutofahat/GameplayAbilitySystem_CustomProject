@@ -23,14 +23,13 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	*/
 	GameplayTags.Attributes_Armour = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Armour"), FString("Reduces incoming damage"));
 	GameplayTags.Attributes_ArmourShred = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.ArmourShred"), FString("Reduces enemy Armour"));
-	//GameplayTags.Attributes_Secondary_BlockChance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.BlockChance"), FString("Chance to cut incoming damage in half"));
 	GameplayTags.Attributes_CriticalHitChance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.CriticalHitChance"), FString("Chance to deal critical hits"));
 	GameplayTags.Attributes_CriticalHitDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.CriticalHitDamage"), FString("Bonus damage dealt on critical hits"));
 	//GameplayTags.Attributes_Secondary_CriticalHitResistance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.CriticalHitResistance"), FString("Reduces Critical Hit Chance of attacking enemies"));
-	GameplayTags.Attributes_HealthRegeneration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.HealthRegeneration"), FString("Amount of Health regenerated per second"));
+	GameplayTags.Attributes_HealthRegeneration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.HealthRegeneration"), FString("Amount of Health regenerated per second"));
 	//GameplayTags.Attributes_Secondary_ManaRegeneration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.ManaRegeneration"), FString("Amount of Mana regenerated per second"));
-	GameplayTags.Attributes_MaxHealth = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.MaxHealth"), FString("Maximum amount of Health obtainable"));
-	GameplayTags.Attributes_MaxMana = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.MaxMana"), FString("Maximum amount of Mana obtainable"));
+	GameplayTags.Attributes_MaxHealth = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.MaxHealth"), FString("Maximum amount of Health obtainable"));
+	GameplayTags.Attributes_MaxMana = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.MaxMana"), FString("Maximum amount of Mana obtainable"));
 	
 	GameplayTags.Attributes_Damage_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Damage.Physical"), FString("Physical damage modifier"));
 	GameplayTags.Attributes_Damage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Damage.Fire"), FString("Fire damage modifier"));
@@ -40,6 +39,8 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	GameplayTags.Attributes_AttackSpeed = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.AttackSpeed"), FString("Increases attack speed"));
 	GameplayTags.Attributes_MovementSpeed = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.MovementSpeed"), FString("Increases movement speed"));
 	GameplayTags.Attributes_StunBuildup = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.StunBuildup"), FString("Increases stun buildup on enemies"));
+	GameplayTags.Attributes_BlockChance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.BlockChance"), FString("Chance to cut incoming damage in half"));
+
 	/*
 	* Vital Attributes
 	*/

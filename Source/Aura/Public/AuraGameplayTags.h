@@ -23,7 +23,6 @@ public:
 
 	FGameplayTag Attributes_Armour;
 	FGameplayTag Attributes_ArmourShred;
-	//FGameplayTag Attributes_Secondary_BlockChance;
 	FGameplayTag Attributes_CriticalHitChance;
 	FGameplayTag Attributes_CriticalHitDamage;
 	//FGameplayTag Attributes_Secondary_CriticalHitResistance;
@@ -40,6 +39,7 @@ public:
 	FGameplayTag Attributes_AttackSpeed;
 	FGameplayTag Attributes_MovementSpeed;
 	FGameplayTag Attributes_StunBuildup;
+	FGameplayTag Attributes_BlockChance;
 
 	FGameplayTag Attributes_Vital_Energy;
 

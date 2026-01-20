@@ -141,9 +141,9 @@ public:
 	FGameplayAttributeData ArmourShred;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, ArmourShred);
 
-	//UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_BlockChance, Category = "Secondary Attributes")
-	//FGameplayAttributeData BlockChance;
-	//ATTRIBUTE_ACCESSORS(UAuraAttributeSet, BlockChance);
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_BlockChance, Category = "Secondary Attributes")
+	FGameplayAttributeData BlockChance;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, BlockChance);
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CritChance, Category = "Attributes")
 	FGameplayAttributeData CritChance;
@@ -198,8 +198,8 @@ public:
 	UFUNCTION()
 	void OnRep_ArmourShred(const FGameplayAttributeData& OldArmourShred) const;
 
-	//UFUNCTION()
-	//void OnRep_BlockChance(const FGameplayAttributeData& OldBlockChance) const;
+	UFUNCTION()
+	void OnRep_BlockChance(const FGameplayAttributeData& OldBlockChance) const;
 
 	UFUNCTION()
 	void OnRep_CritChance(const FGameplayAttributeData& OldCritChance) const;

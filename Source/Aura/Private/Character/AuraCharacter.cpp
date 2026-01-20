@@ -218,10 +218,17 @@ void AAuraCharacter::SaveProgress_Implementation(const FName& CheckpointTag)
 
 		if (UAuraAttributeSet* AuraAttributeSet = Cast<UAuraAttributeSet>(AttributeSet))
 		{
-			SaveData->Strength = AuraAttributeSet->GetStrength();
-			SaveData->Intelligence = AuraAttributeSet->GetIntelligence();
-			SaveData->Resilience = AuraAttributeSet->GetResilience();
-			SaveData->Vigor = AuraAttributeSet->GetVigor();
+			SaveData->Armour = AuraAttributeSet->GetArmour();
+			SaveData->ArmourShred = AuraAttributeSet->GetArmourShred();
+			SaveData->CritChance = AuraAttributeSet->GetCritChance();
+			SaveData->CritDamage = AuraAttributeSet->GetCritDamage();
+			SaveData->HealthRegen = AuraAttributeSet->GetHealthRegen();
+			SaveData->MaxHealth = AuraAttributeSet->GetMaxHealth();
+			SaveData->MaxMana = AuraAttributeSet->GetMaxMana();
+			SaveData->CooldownReduction = AuraAttributeSet->GetCooldownReduction();
+			SaveData->AttackSpeed = AuraAttributeSet->GetAttackSpeed();
+			SaveData->MovementSpeed = AuraAttributeSet->GetMovementSpeed();
+			SaveData->StunBuildup = AuraAttributeSet->GetStunBuildup();
 		}
 
 		SaveData->bFirstTimeLoadIn = false; // Set boolean to false so we don't initialise the character with default Primary Attributes on next load-in

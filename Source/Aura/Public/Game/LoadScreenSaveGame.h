@@ -130,16 +130,37 @@ public:
 	/* Attributes */
 
 	UPROPERTY()
-	float Strength = 0;
+	float Armour = 0;
 
 	UPROPERTY()
-	float Intelligence = 0;
+	float ArmourShred = 0;
 
 	UPROPERTY()
-	float Resilience = 0;
+	float CritChance = 0;
 
 	UPROPERTY()
-	float Vigor = 0;
+	float CritDamage = 0;
+
+	UPROPERTY()
+	float HealthRegen = 0;
+
+	UPROPERTY()
+	float MaxHealth = 0;
+
+	UPROPERTY()
+	float MaxMana = 0;
+
+	UPROPERTY()
+	float CooldownReduction = 0;
+
+	UPROPERTY()
+	float AttackSpeed = 0;
+
+	UPROPERTY()
+	float MovementSpeed = 0;
+
+	UPROPERTY()
+	float StunBuildup = 0;
 
 	/* Abilities */
 

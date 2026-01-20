@@ -28,5 +28,5 @@ private:
 	* 
 	* Therefore, Vigor is the backing attribute that we wish to capture for our attribute-based calculation of MaxHealth.
 	*/
-	FGameplayEffectAttributeCaptureDefinition VigorDef; 
+	FGameplayEffectAttributeCaptureDefinition MaxHealthDef; 
 };

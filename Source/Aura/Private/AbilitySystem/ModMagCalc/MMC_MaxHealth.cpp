@@ -7,15 +7,15 @@
 
 UMMC_MaxHealth::UMMC_MaxHealth()
 {
-	VigorDef.AttributeToCapture = UAuraAttributeSet::GetVigorAttribute(); // Static function means we don't need a pointer to the AuraAttributeSet object
-	VigorDef.AttributeSource = EGameplayEffectAttributeCaptureSource::Target; // In the case of the player character, they are both the source and the target so you could pick either one here
+	MaxHealthDef.AttributeToCapture = UAuraAttributeSet::GetMaxHealthAttribute(); // Static function means we don't need a pointer to the AuraAttributeSet object
+	MaxHealthDef.AttributeSource = EGameplayEffectAttributeCaptureSource::Target; // In the case of the player character, they are both the source and the target so you could pick either one here
 	/*
 	* "Should we capture the backing attribute when the gameplay effect spec is created (true) or when the gameplay effect spec is applied (false)?" 
 	* Here it doesn't matter as the effect spec is applied immediately after it is created.
 	*/
-	VigorDef.bSnapshot = false; 
+	MaxHealthDef.bSnapshot = false; 
 
-	RelevantAttributesToCapture.Add(VigorDef);
+	RelevantAttributesToCapture.Add(MaxHealthDef);
 }
 
 float UMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
@@ -29,10 +29,10 @@ float UMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGameplayEffec
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
 
-	// Pass in the evaluation parameters to capture the value of the attribute we're interested in, in this case Vigor, then store that value on our Vigor local variable.
-	float Vigor = 0.f;
-	GetCapturedAttributeMagnitude(VigorDef, Spec, EvaluationParameters, Vigor);
-	Vigor = FMath::Max<float>(Vigor, 0.f);
+	// Pass in the evaluation parameters to capture the value of the attribute we're interested in, in this case MaxHealth, then store that value on our MaxHealth local variable.
+	float MaxHealth = 0.f;
+	GetCapturedAttributeMagnitude(MaxHealthDef, Spec, EvaluationParameters, MaxHealth);
+	MaxHealth = FMath::Max<float>(MaxHealth, 0.f);
 
 	int32 PlayerLevel = 1;
 	if (Spec.GetContext().GetSourceObject()->Implements<UCombatInterface>())
@@ -40,5 +40,5 @@ float UMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGameplayEffec
 		PlayerLevel = ICombatInterface::Execute_GetPlayerLevel(Spec.GetContext().GetSourceObject());
 	}
 
-	return 80.f + 2.5f * Vigor + 10.f * PlayerLevel; // Base vigor value of 80, with each point invested in vigor contributing 2.5, and every level contributing 10.
+	return 80.f + 2.5f * MaxHealth + 10.f * PlayerLevel; 
 }

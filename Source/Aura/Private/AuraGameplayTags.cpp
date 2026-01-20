@@ -31,7 +31,6 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	//GameplayTags.Attributes_Secondary_ManaRegeneration = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.ManaRegeneration"), FString("Amount of Mana regenerated per second"));
 	GameplayTags.Attributes_MaxHealth = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.MaxHealth"), FString("Maximum amount of Health obtainable"));
 	GameplayTags.Attributes_MaxMana = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.MaxMana"), FString("Maximum amount of Mana obtainable"));
-	GameplayTags.Attributes_MaxEnergy = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.MaxEnergy"), FString("Maximum amount of Energy obtainable"));
 	
 	GameplayTags.Attributes_Damage_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Damage.Physical"), FString("Physical damage modifier"));
 	GameplayTags.Attributes_Damage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Damage.Fire"), FString("Fire damage modifier"));
@@ -193,7 +192,7 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	GameplayTags.Abilities_Utility_Haunt = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Utility.Haunt"), FString("Vessel Utility Ability Tag"));
 	GameplayTags.Abilities_Passive_DemonicSoul = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Passive.DemonicSoul"), FString("Vessel Starting Passive Tag"));
 	GameplayTags.Abilities_SpecialAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.SpecialAttack"), FString("Special Attack Ability Tag for Summons"));
-	GameplayTags.Abilties_Vessel_SoulSiphon = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SoulSiphon"), FString("Vessel Starting Ability Tag"));
+	GameplayTags.Abilities_Vessel_SoulSiphon = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SoulSiphon"), FString("Vessel Starting Ability Tag"));
 	GameplayTags.Abilities_Vessel_SummonDregling = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonDregling"), FString("Summon Dregling Ability Tag"));
 	GameplayTags.Abilities_Vessel_SummonInfernalGolem = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonInfernalGolem"), FString("Summon Infernal Golem Ability Tag"));
 	GameplayTags.Abilities_Vessel_SummonChaosElemental = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonChaosElemental"), FString("Summon Chaos Elemental Ability Tag"));
@@ -207,5 +206,6 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	GameplayTags.GameplayCue_Rift_ChaosElemental = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.ChaosElemental"), FString("Gameplay Cue for Chaos Elemental Rift Effect"));
 	GameplayTags.GameplayCue_Explosion = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Explosion"), FString("Gameplay Cue for Explosion Effects"));
 
+	GameplayTags.Attributes_MaxEnergy = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.MaxEnergy"), FString("Maximum amount of Energy obtainable"));
 	GameplayTags.Buff_DemonicStrength = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.DemonicStrength"), FString("Given to Vessel's demons, allows one free use of their respective special ability"));
 }

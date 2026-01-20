@@ -31,7 +31,6 @@ public:
 	//FGameplayTag Attributes_Secondary_ManaRegeneration;
 	FGameplayTag Attributes_MaxHealth;
 	FGameplayTag Attributes_MaxMana;
-	FGameplayTag Attributes_MaxEnergy;
 
 	FGameplayTag Attributes_Damage_Physical;
 	FGameplayTag Attributes_Damage_Fire;
@@ -127,7 +126,7 @@ public:
 	FGameplayTag Abilities_Utility_Haunt;
 	FGameplayTag Abilities_Passive_DemonicSoul;
 	FGameplayTag Abilities_SpecialAttack; // Special Attack tag for Vessel's Summoned Minions
-	FGameplayTag Abilties_Vessel_SoulSiphon;
+	FGameplayTag Abilities_Vessel_SoulSiphon;
 	FGameplayTag Abilities_Vessel_SummonDregling;
 	FGameplayTag Abilities_Vessel_SummonInfernalGolem;
 	FGameplayTag Abilities_Vessel_SummonChaosElemental;
@@ -141,6 +140,7 @@ public:
 	FGameplayTag GameplayCue_Rift_ChaosElemental;
 	FGameplayTag GameplayCue_Explosion;
 
+	FGameplayTag Attributes_MaxEnergy;
 	FGameplayTag Buff_DemonicStrength;
 
 private:

@@ -150,7 +150,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		// Get the Gameplay Ability's Set By Caller Magnitudes for each Damage Type Tag. For example, the only non-zero Magnitude for FireBolt should be for the Damage_Fire tag
 		float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag, false); // bool WarnIfNotFound set to false to turn off log warnings
 		if (DamageTypeValue <= 0.f) continue;
-		DamageTypeValue *= (DamageAmp / 100.f);
+		DamageTypeValue *= (100.f + DamageAmp) / 100.f; // If we have a 20% Fire Damage increase, multiply the base Fire Damage by 1.2
 
 		if (UAuraAbilitySystemLibrary::IsRadialDamage(EffectContextHandle))
 		{

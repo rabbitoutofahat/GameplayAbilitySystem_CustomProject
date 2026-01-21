@@ -49,11 +49,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
 	TSubclassOf<UGameplayEffect> PrimaryAttributes_SetByCaller;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
-	TSubclassOf<UGameplayEffect> SecondaryAttributes; // For Enemies
+	//UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
+	//TSubclassOf<UGameplayEffect> SecondaryAttributes; // For Enemies
 
-	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
-	TSubclassOf<UGameplayEffect> SecondaryAttributes_Infinite; // For Aura
+	//UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
+	//TSubclassOf<UGameplayEffect> SecondaryAttributes_Infinite; // For Aura
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
 	TSubclassOf<UGameplayEffect> VitalAttributes;

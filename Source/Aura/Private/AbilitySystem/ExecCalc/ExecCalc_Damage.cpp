@@ -133,7 +133,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 
 	//DetermineDebuff(Spec, ExecutionParams, EvaluationParameters, TagsToCaptureDefs, EffectContextHandle);
 
-	// Get Damage Set by Caller Magnitude for each Damage Type found in our DamageTypesToResistances container
+	// Get Damage Set by Caller Magnitude for each Damage Type found in our DamageTypesToAttributes container
 	float Damage = 0.f;
 	for (const auto& Pair : FAuraGameplayTags::Get().DamageTypesToAttributes)
 	{
@@ -141,7 +141,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		const FGameplayTag AttributeTag = Pair.Value;
 
 		checkf(TagsToCaptureDefs.Contains(AttributeTag), TEXT("TagsToCaptureDefs doesn't contain Tag: [%s] in ExecCalc_Damage"), *AttributeTag.ToString());
-		const FGameplayEffectAttributeCaptureDefinition CaptureDef = TagsToCaptureDefs[AttributeTag]; // We've mapped damage types to resistances, then use the map of tags to capture defintions on the resistance tags
+		const FGameplayEffectAttributeCaptureDefinition CaptureDef = TagsToCaptureDefs[AttributeTag]; // We've mapped damage types to damage increase attributes, then use the map of tags to capture defintions on the resistance tags
         
 		float DamageAmp = 0.f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(CaptureDef, EvaluationParameters, DamageAmp);

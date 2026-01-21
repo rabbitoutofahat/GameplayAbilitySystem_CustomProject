@@ -13,6 +13,7 @@
 #include "Interaction/PlayerInterface.h"
 #include "AuraAbilityTypes.h"
 #include "GameplayEffectComponents/TargetTagsGameplayEffectComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -172,6 +173,13 @@ void UAuraAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute,
 	{
 		SetMana(GetMaxMana());
 		bTopOffMana = false;
+	}
+	if (Attribute == GetMovementSpeedAttribute())
+	{
+		if (UCharacterMovementComponent* CharacterMovementComponent = Cast<UCharacterMovementComponent>(GetActorInfo()->MovementComponent))
+		{
+			CharacterMovementComponent->MaxWalkSpeed = NewValue;
+		}
 	}
 }
 

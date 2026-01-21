@@ -25,7 +25,7 @@ struct FCharacterClassDefaultInfo
 	GENERATED_BODY()
 
 	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
-	TSubclassOf<UGameplayEffect> PrimaryAttributes;
+	TSubclassOf<UGameplayEffect> EnemyClassAttributes;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
@@ -47,7 +47,7 @@ public:
 	TMap<ECharacterClass, FCharacterClassDefaultInfo> CharacterClassInformation;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
-	TSubclassOf<UGameplayEffect> PrimaryAttributes_SetByCaller;
+	TSubclassOf<UGameplayEffect> Attributes_SetByCaller;
 
 	//UPROPERTY(EditDefaultsOnly, Category = "Common Class Defaults")
 	//TSubclassOf<UGameplayEffect> SecondaryAttributes; // For Enemies

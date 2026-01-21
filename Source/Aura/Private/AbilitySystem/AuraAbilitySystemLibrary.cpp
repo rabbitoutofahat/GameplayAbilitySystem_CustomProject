@@ -82,7 +82,7 @@ void UAuraAbilitySystemLibrary::InitialiseDefaultAttributes(const UObject* World
 	// Each attribute spec handle requires their own separate context handle
 	FGameplayEffectContextHandle PrimaryAttributesContextHandle = ASC->MakeEffectContext();
 	PrimaryAttributesContextHandle.AddSourceObject(AvatarActor);
-	const FGameplayEffectSpecHandle PrimaryAttributesSpecHandle = ASC->MakeOutgoingSpec(ClassDefaultInfo.PrimaryAttributes, Level, PrimaryAttributesContextHandle);
+	const FGameplayEffectSpecHandle PrimaryAttributesSpecHandle = ASC->MakeOutgoingSpec(ClassDefaultInfo.EnemyClassAttributes, Level, PrimaryAttributesContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*PrimaryAttributesSpecHandle.Data.Get());
 
 	//FGameplayEffectContextHandle SecondaryAttributesContextHandle = ASC->MakeEffectContext();
@@ -106,7 +106,7 @@ void UAuraAbilitySystemLibrary::InitialiseAttributesFromSaveData(const UObject* 
 	const AActor* SourceAvatarActor = ASC->GetAvatarActor();
 	EffectContextHandle.AddSourceObject(SourceAvatarActor);
 
-	const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(CharacterClassInfo->PrimaryAttributes_SetByCaller, 1.f, EffectContextHandle);
+	const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(CharacterClassInfo->Attributes_SetByCaller, 1.f, EffectContextHandle);
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_Armour, SaveGame->Armour);
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_ArmourShred, SaveGame->ArmourShred);
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Attributes_CriticalHitChance, SaveGame->CritChance);

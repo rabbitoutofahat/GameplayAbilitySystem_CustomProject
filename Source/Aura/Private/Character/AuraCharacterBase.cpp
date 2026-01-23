@@ -97,6 +97,11 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& Deat
 	OnDeath.Broadcast(this);
 }
 
+TArray<UAnimMontage*> AAuraCharacterBase::GetAbilityAnimMontages()
+{
+	return AbilityAnimMontages;
+}
+
 void AAuraCharacterBase::OnRep_Stunned()
 {
 }

@@ -66,6 +66,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FTaggedMontage> AttackMontages;
 
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TArray<UAnimMontage*> AbilityAnimMontages;
+
+	TArray<UAnimMontage*> GetAbilityAnimMontages();
+
 	UPROPERTY(ReplicatedUsing=OnRep_Stunned, BlueprintReadOnly)
 	bool bIsStunned = false;
 

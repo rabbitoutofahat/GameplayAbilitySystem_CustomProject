@@ -14,6 +14,7 @@
 #include "AuraAbilityTypes.h"
 #include "GameplayEffectComponents/TargetTagsGameplayEffectComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Character/AuraCharacterBase.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -179,6 +180,14 @@ void UAuraAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute,
 		if (UCharacterMovementComponent* CharacterMovementComponent = Cast<UCharacterMovementComponent>(GetActorInfo()->MovementComponent))
 		{
 			CharacterMovementComponent->MaxWalkSpeed = NewValue;
+		}
+	}
+	if (Attribute == GetAttackSpeedAttribute())
+	{
+		TArray<UAnimMontage*> AbilityMontages = Cast<AAuraCharacterBase>(GetActorInfo()->AvatarActor)->GetAbilityAnimMontages();
+		for (UAnimMontage* Montage : AbilityMontages)
+		{
+			Montage->RateScale = 1.f + NewValue / 100.f; // When adjusting Attack Speed, need to make sure montage play rate scales accordingly with ability cooldown
 		}
 	}
 }

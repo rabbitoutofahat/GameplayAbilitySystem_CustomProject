@@ -24,6 +24,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true))
 	FDamageEffectParams DamageEffectParams;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int32 NumProjectiles = 12;
+
 protected:
 	UFUNCTION(BlueprintCallable)
 	TArray<AAuraEnemy*> GetNearbyEnemies();
@@ -33,9 +36,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AAuraProjectile> ProjectileClass;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	int32 NumProjectiles = 12;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float SpawnDuration = 3.f;

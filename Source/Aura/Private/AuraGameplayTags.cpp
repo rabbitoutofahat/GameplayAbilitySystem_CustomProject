@@ -197,7 +197,11 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	GameplayTags.Abilities_Vessel_SummonDregling = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonDregling"), FString("Summon Dregling Ability Tag"));
 	GameplayTags.Abilities_Vessel_SummonInfernalGolem = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonInfernalGolem"), FString("Summon Infernal Golem Ability Tag"));
 	GameplayTags.Abilities_Vessel_SummonChaosElemental = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonChaosElemental"), FString("Summon Chaos Elemental Ability Tag"));
+
 	GameplayTags.Abilities_Vessel_DemonfireRift = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.DemonfireRift"), FString("Demonfire Rift Ability Tag"));
+	GameplayTags.Abilities_Vessel_DemonfireRift_RiftMastery = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.DemonfireRift.RiftMastery"), FString("Demonfire Rift - Rift Mastery Upgrade Tag"));
+	GameplayTags.Abilities_Vessel_DemonfireRift_BalefulRifts = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.DemonfireRift.BalefulRifts"), FString("Demonfire Rift - Baleful Rifts Upgrade Tag"));
+
 	GameplayTags.Abilities_Vessel_Pandemonium = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.Pandemonium"), FString("Pandemonium Ultimate Ability Tag"));
 	GameplayTags.Abilities_Vessel_Disintegrate = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.Disintegrate"), FString("Disintegrate Ability Tag"));
 

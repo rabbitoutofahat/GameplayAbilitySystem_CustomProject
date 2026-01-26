@@ -3,6 +3,9 @@
 
 #include "AbilitySystem/Abilities/Vessel/DemonfireRift.h"
 #include "Actor/ProjectileSpawner.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
+#include "AuraGameplayTags.h"
 
 void UDemonfireRift::SpawnRift()
 {
@@ -26,6 +29,10 @@ void UDemonfireRift::SpawnRift()
 
 	Rift->Owner = GetAvatarActorFromActorInfo();
 	Rift->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+
+	UAbilitySystemComponent* AvatarASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
+	if (AvatarASC && AvatarASC->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_DemonfireRift_RiftMastery)) Rift->NumProjectiles += 4;
+
 	Rift->SetActorEnableCollision(false);
 	Rift->FinishSpawning(SpawnTransform);
 }

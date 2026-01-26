@@ -130,7 +130,11 @@ public:
 	FGameplayTag Abilities_Vessel_SummonDregling;
 	FGameplayTag Abilities_Vessel_SummonInfernalGolem;
 	FGameplayTag Abilities_Vessel_SummonChaosElemental;
+
 	FGameplayTag Abilities_Vessel_DemonfireRift;
+	FGameplayTag Abilities_Vessel_DemonfireRift_BalefulRifts;
+	FGameplayTag Abilities_Vessel_DemonfireRift_RiftMastery;
+
 	FGameplayTag Abilities_Vessel_Pandemonium;
 	FGameplayTag Abilities_Vessel_Disintegrate;
 

@@ -14,6 +14,7 @@ class AAuraPlayerState;
 class UAuraAbilitySystemComponent;
 class UAuraAttributeSet;
 class UAbilityInfo;
+class UEffectInfo;
 
 USTRUCT(BlueprintType)
 struct FWidgetControllerParams
@@ -64,6 +65,9 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
 	TObjectPtr<UAbilityInfo> AbilityInfo;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
+	TObjectPtr<UEffectInfo> EffectInfo;
 
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
 	TObjectPtr<APlayerController> PlayerController;

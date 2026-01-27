@@ -15,6 +15,7 @@ struct FSelectedAbility
 {
 	FGameplayTag Ability = FGameplayTag();
 	FGameplayTag Status = FGameplayTag();
+	FGameplayTag Type = FGameplayTag();
 };
 
 /**

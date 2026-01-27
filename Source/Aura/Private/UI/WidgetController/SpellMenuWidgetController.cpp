@@ -5,6 +5,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
 #include "Player/AuraPlayerState.h"
+#include "AbilitySystem/Data/EffectInfo.h"
 
 void USpellMenuWidgetController::BroadcastInitialValues()
 {
@@ -60,9 +61,10 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 
 void USpellMenuWidgetController::SpellGlobeSelected(const FGameplayTag& AbilityTag)
 {
+	const FGameplayTag SelectedAbilityType = AbilityInfo->FindAbilityInfoForTag(AbilityTag).AbilityType;
+
 	if (bWaitingForEquipSelection)
 	{
-		const FGameplayTag SelectedAbilityType = AbilityInfo->FindAbilityInfoForTag(AbilityTag).AbilityType;
 		StopWaitingForEquipDelegate.Broadcast(SelectedAbilityType);
 		bWaitingForEquipSelection = false;
 	}
@@ -70,23 +72,19 @@ void USpellMenuWidgetController::SpellGlobeSelected(const FGameplayTag& AbilityT
 	const FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
 	const int32 SpellPoints = GetAuraPS()->GetSpellPoints();
 	FGameplayTag StatusTag;
-
+	
 	const bool bTagValid = AbilityTag.IsValid();
 	const bool bTagNone = AbilityTag.MatchesTag(FGameplayTag().EmptyTag);
 	const FGameplayAbilitySpec* AbilitySpec = GetAuraASC()->GetAbilitySpecFromTag(AbilityTag);
 	const bool bSpecValid = AbilitySpec != nullptr;
-	if (!bTagValid || bTagNone || !bSpecValid)
-	{
-		StatusTag = GameplayTags.Abilities_Status_Locked;
-	}
-	else
-	{
-		StatusTag = GetAuraASC()->GetStatusTagFromSpec(*AbilitySpec);
-	}
+	
+	if (!bTagValid || bTagNone || !bSpecValid) StatusTag = GameplayTags.Abilities_Status_Locked;
+	else StatusTag = GetAuraASC()->GetStatusTagFromSpec(*AbilitySpec);
 
 	// Cache the selected ability's tags for updating spell menu button states on level up and spell equip
 	SelectedAbility.Ability = AbilityTag;
 	SelectedAbility.Status = StatusTag;
+	SelectedAbility.Type = SelectedAbilityType;
 
 	bool bEquipButtonEnabled = false;
 	bool bSpendPointButtonEnabled = false;
@@ -108,6 +106,7 @@ void USpellMenuWidgetController::SpellGlobeDeselected()
 
 	SelectedAbility.Ability = FGameplayTag().EmptyTag;
 	SelectedAbility.Status = FAuraGameplayTags::Get().Abilities_Status_Locked;
+	SelectedAbility.Type = FGameplayTag().EmptyTag;
 
 	OnUpdateSpellMenuDelegate.Broadcast(false, false, FString(), FString());
 }
@@ -115,6 +114,13 @@ void USpellMenuWidgetController::SpellGlobeDeselected()
 void USpellMenuWidgetController::SpendPointButtonPressed()
 {
 	if (GetAuraASC() == nullptr) return;
+	if (SelectedAbility.Type == FAuraGameplayTags::Get().Abilities_Type_Passive) // If we spend a point on a passive ability upgrade, we equip and apply its effect right away
+	{
+		const TSubclassOf<UGameplayEffect>& AbilityEffectClass = EffectInfo->FindEffectInfoForTag(SelectedAbility.Ability).GameplayEffect;
+		const FGameplayEffectContextHandle EffectContext = GetAuraASC()->MakeEffectContext();
+		const UGameplayEffect* AbilityEffect = AbilityEffectClass.GetDefaultObject();
+		GetAuraASC()->ApplyGameplayEffectToSelf(AbilityEffect, 1.0, EffectContext);
+	}
 	GetAuraASC()->ServerSpendSpellPoint(SelectedAbility.Ability);
 }
 

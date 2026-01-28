@@ -65,7 +65,7 @@ public:
 	 
 	FGameplayAbilitySpec* GetAbilitySpecFromTag(const FGameplayTag& AbilityTag);
 	FGameplayAbilitySpec* GetAbilitySpecFromSlot(const FGameplayTag& Slot);
-	
+	FGameplayEffectSpec* GetEffectSpecFromTag(const FGameplayTag& EffectTag);
 
 	void UpgradeAttribute(const FGameplayTag& AttributeTag);
 

@@ -186,7 +186,7 @@ FGameplayTag UAuraAbilitySystemComponent::GetStatusTagFromAbilitySpec(const FGam
 
 FGameplayTag UAuraAbilitySystemComponent::GetStatusTagFromEffectSpec(const FGameplayEffectSpec& EffectSpec)
 {
-	for (FGameplayTag Tag : EffectSpec.DynamicAssetTags)
+	for (FGameplayTag Tag : EffectSpec.GetDynamicAssetTags())
 	{
 		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Abilities.Status"))))
 		{
@@ -286,6 +286,15 @@ FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetAbilitySpecFromSlot(const 
 	return nullptr;
 }
 
+FGameplayEffectSpec* UAuraAbilitySystemComponent::GetEffectSpecFromTag(const FGameplayTag& EffectTag)
+{
+	FGameplayEffectContextHandle UpgradeContextHandle = MakeEffectContext();
+	UpgradeContextHandle.AddSourceObject(GetAvatarActor());
+	const FAuraEffectInfo& AuraEffectInfo = UAuraAbilitySystemLibrary::GetEffectInfo(GetAvatarActor())->FindEffectInfoForTag(EffectTag);
+	FGameplayEffectSpecHandle UpgradeSpecHandle = MakeOutgoingSpec(AuraEffectInfo.GameplayEffect, 1, UpgradeContextHandle);
+	return UpgradeSpecHandle.Data.Get();
+}
+
 void UAuraAbilitySystemComponent::UpgradeAttribute(const FGameplayTag& AttributeTag)
 {
 	if (GetAvatarActor()->Implements<UPlayerInterface>())
@@ -318,7 +327,7 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatuses(int32 Level)
 	{
 		if (!Info.AbilityTag.IsValid()) continue; // If the ability tag is valid
 		if (Level < Info.LevelRequirement) continue; // If we meet the level requirement for this ability
-		if (Info.AbilityType == FAuraGameplayTags::Get().Abilities_Type_Passive) continue; // Passive upgrades become eligible only when their corresponding active ability is unlocked
+		//if (Info.AbilityType == FAuraGameplayTags::Get().Abilities_Type_Passive) continue; // Passive upgrades become eligible only when their corresponding active ability is unlocked
 		if (GetAbilitySpecFromTag(Info.AbilityTag) == nullptr) // If we don't already have this ability
 		{
 			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Info.Ability, 1);
@@ -345,13 +354,14 @@ void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGa
 			AbilitySpec->DynamicAbilityTags.RemoveTag(GameplayTags.Abilities_Status_Eligible);
 			AbilitySpec->DynamicAbilityTags.AddTag(GameplayTags.Abilities_Status_Unlocked);
 			Status = GameplayTags.Abilities_Status_Unlocked;
+			// TODO: Only execute this function when buying active abilities
+			MakeAbilityUpgradesEligible(AbilityTag); // If an active ability, make its passive upgrades eligible
 		}
 		else if (Status.MatchesTagExact(GameplayTags.Abilities_Status_Equipped) || Status.MatchesTagExact(GameplayTags.Abilities_Status_Unlocked))
 		{
 			AbilitySpec->Level += 1;
 		}
 		
-		MakeAbilityUpgradesEligible(AbilityTag);
 		MarkAbilitySpecDirty(*AbilitySpec);
 		ClientUpdateAbilityStatus(AbilityTag, Status, AbilitySpec->Level);
 	}
@@ -366,14 +376,13 @@ void UAuraAbilitySystemComponent::MakeAbilityUpgradesEligible(const FGameplayTag
 		FGameplayTag AbilityUpgradeTag = AuraEffectInfo.EffectTag;
 		if (!AbilityUpgradeTag.MatchesTag(AbilityTag)) continue; // All passive upgrades corresponding to a given ability should have the same parent tag
 		
-		FGameplayEffectContextHandle UpgradeContextHandle = MakeEffectContext();
-		FGameplayEffectSpecHandle UpgradeSpecHandle = MakeOutgoingSpec(AuraEffectInfo.GameplayEffect, 1, UpgradeContextHandle);
-		FGameplayEffectSpec* UpgradeSpec = UpgradeSpecHandle.Data.Get();
+		FGameplayEffectSpec* UpgradeSpec = GetEffectSpecFromTag(AbilityUpgradeTag);
 		FGameplayTag UpgradeStatus = GetStatusTagFromEffectSpec(*UpgradeSpec);
 
+		// Dynamic Asset Tags will be made private, when that happens switch to using AddDyanmicAssetTag(), also dynamic asset tag removal won't be supported
 		UpgradeSpec->DynamicAssetTags.RemoveTag(GameplayTags.Abilities_Status_Locked);
 		UpgradeSpec->DynamicAssetTags.AddTag(GameplayTags.Abilities_Status_Eligible);
-		UpgradeStatus = GameplayTags.Abilities_Status_Eligible;
+		UpgradeStatus = GameplayTags.Abilities_Status_Eligible; 
 
 		ClientUpdateEffectStatus(AbilityUpgradeTag, UpgradeStatus);
 	}

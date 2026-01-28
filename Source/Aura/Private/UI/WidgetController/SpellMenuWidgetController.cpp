@@ -44,6 +44,19 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 	GetAuraASC()->EffectStatusChangedDelegate.AddLambda(
 		[this](const FGameplayTag& EffectTag, const FGameplayTag& StatusTag)
 		{
+	/*		if (SelectedAbility.Ability.MatchesTagExact(EffectTag))
+			{
+				SelectedAbility.Status = StatusTag;
+
+				bool bEquipButtonEnabled = false;
+				bool bSpendPointButtonEnabled = false;
+				ShouldEnableButtons(StatusTag, CurrentSpellPoints, bSpendPointButtonEnabled, bEquipButtonEnabled);
+				FString Description;
+				FString NextLevelDescription;
+				GetAuraASC()->GetDescriptionsByAbilityTag(EffectTag, Description, NextLevelDescription);
+				OnUpdateSpellMenuDelegate.Broadcast(bSpendPointButtonEnabled, bEquipButtonEnabled, Description, NextLevelDescription);
+			}*/
+
 			if (EffectInfo)
 			{
 				FAuraEffectInfo Info = EffectInfo->FindEffectInfoForTag(EffectTag);
@@ -72,7 +85,13 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 
 void USpellMenuWidgetController::SpellGlobeSelected(const FGameplayTag& AbilityTag)
 {
-	const FGameplayTag SelectedAbilityType = AbilityInfo->FindAbilityInfoForTag(AbilityTag).AbilityType;
+	FGameplayTag SelectedAbilityType = AbilityInfo->FindAbilityInfoForTag(AbilityTag).AbilityType;
+	bool bIsPassive = false;
+	if (SelectedAbilityType == FGameplayTag()) // If not in Ability Info, check Effect Info
+	{
+		SelectedAbilityType = EffectInfo->FindEffectInfoForTag(AbilityTag).AbilityType; 
+		bIsPassive = true;
+	}
 
 	if (bWaitingForEquipSelection)
 	{
@@ -86,11 +105,21 @@ void USpellMenuWidgetController::SpellGlobeSelected(const FGameplayTag& AbilityT
 	
 	const bool bTagValid = AbilityTag.IsValid();
 	const bool bTagNone = AbilityTag.MatchesTag(FGameplayTag().EmptyTag);
-	const FGameplayAbilitySpec* AbilitySpec = GetAuraASC()->GetAbilitySpecFromTag(AbilityTag);
-	const bool bSpecValid = AbilitySpec != nullptr;
-	
-	if (!bTagValid || bTagNone || !bSpecValid) StatusTag = GameplayTags.Abilities_Status_Locked;
-	else StatusTag = GetAuraASC()->GetStatusTagFromAbilitySpec(*AbilitySpec);
+
+	if (!bIsPassive)
+	{
+		const FGameplayAbilitySpec* AbilitySpec = GetAuraASC()->GetAbilitySpecFromTag(AbilityTag);
+		const bool bSpecValid = AbilitySpec != nullptr;
+		if (!bTagValid || bTagNone || !bSpecValid) StatusTag = GameplayTags.Abilities_Status_Locked;
+		else StatusTag = GetAuraASC()->GetStatusTagFromAbilitySpec(*AbilitySpec);
+	}
+	else
+	{
+		const FGameplayEffectSpec* EffectSpec = GetAuraASC()->GetEffectSpecFromTag(AbilityTag);
+		const bool bSpecValid = EffectSpec != nullptr;
+		if (!bTagValid || bTagNone || !bSpecValid) StatusTag = GameplayTags.Abilities_Status_Locked;
+		else StatusTag = GetAuraASC()->GetStatusTagFromEffectSpec(*EffectSpec);
+	}
 
 	// Cache the selected ability's tags for updating spell menu button states on level up and spell equip
 	SelectedAbility.Ability = AbilityTag;

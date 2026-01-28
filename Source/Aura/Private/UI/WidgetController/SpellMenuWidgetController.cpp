@@ -41,6 +41,17 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 			}
 		});
 
+	GetAuraASC()->EffectStatusChangedDelegate.AddLambda(
+		[this](const FGameplayTag& EffectTag, const FGameplayTag& StatusTag)
+		{
+			if (EffectInfo)
+			{
+				FAuraEffectInfo Info = EffectInfo->FindEffectInfoForTag(EffectTag);
+				Info.StatusTag = StatusTag;
+				EffectInfoDelegate.Broadcast(Info);
+			}
+		});
+
 	GetAuraPS()->OnSpellPointChanged.AddLambda(
 		[this](int32 NewPoints)
 		{
@@ -79,7 +90,7 @@ void USpellMenuWidgetController::SpellGlobeSelected(const FGameplayTag& AbilityT
 	const bool bSpecValid = AbilitySpec != nullptr;
 	
 	if (!bTagValid || bTagNone || !bSpecValid) StatusTag = GameplayTags.Abilities_Status_Locked;
-	else StatusTag = GetAuraASC()->GetStatusTagFromSpec(*AbilitySpec);
+	else StatusTag = GetAuraASC()->GetStatusTagFromAbilitySpec(*AbilitySpec);
 
 	// Cache the selected ability's tags for updating spell menu button states on level up and spell equip
 	SelectedAbility.Ability = AbilityTag;

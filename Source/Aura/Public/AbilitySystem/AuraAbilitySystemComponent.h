@@ -15,6 +15,7 @@ DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityStatusChangedSignature, const FGa
 DECLARE_MULTICAST_DELEGATE_FiveParams(FAbilityEquippedSignature, const FGameplayTag& /*AbilityTag*/, const FGameplayTag& /*StatusTag*/, const int32 /*Level*/, const FGameplayTag& /*NewInputSlot*/, const FGameplayTag& /*OldInputSlot*/);
 DECLARE_MULTICAST_DELEGATE_OneParam(FDeactivatePassiveSignature, const FGameplayTag& /*AbilityTag*/);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FActivatePassiveSignature, const FGameplayTag& /*AbilityTag*/, bool /*bActivate*/);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FEffectStatusChangedSignature, const FGameplayTag& /*EffectTag*/, const FGameplayTag& /*StatusTag*/);
 
 /**
  * 
@@ -33,6 +34,7 @@ public:
 	FAbilityEquippedSignature AbilityEquippedDelegate;
 	FDeactivatePassiveSignature DeactivatePassiveDelegate;
 	FActivatePassiveSignature ActivatePassiveDelegate;
+	FEffectStatusChangedSignature EffectStatusChangedDelegate;
 
 	void AddCharacterAbilitiesFromSaveData(ULoadScreenSaveGame* SaveData);
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
@@ -46,8 +48,9 @@ public:
 
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
-	static FGameplayTag GetStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
-	
+	static FGameplayTag GetStatusTagFromAbilitySpec(const FGameplayAbilitySpec& AbilitySpec);
+	static FGameplayTag GetStatusTagFromEffectSpec(const FGameplayEffectSpec& EffectSpec);
+
 	FGameplayTag GetStatusFromAbilityTag(const FGameplayTag& AbilityTag); // Can't be static because it relies on GetStatusTagFromSpec()
 	FGameplayTag GetInputFromAbilityTag(const FGameplayTag& AbilityTag); 
 
@@ -62,6 +65,7 @@ public:
 	 
 	FGameplayAbilitySpec* GetAbilitySpecFromTag(const FGameplayTag& AbilityTag);
 	FGameplayAbilitySpec* GetAbilitySpecFromSlot(const FGameplayTag& Slot);
+	
 
 	void UpgradeAttribute(const FGameplayTag& AttributeTag);
 
@@ -72,6 +76,8 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerSpendSpellPoint(const FGameplayTag& AbilityTag);
+
+	void MakeAbilityUpgradesEligible(const FGameplayTag& AbilityTag);
 
 	UFUNCTION(Server, Reliable)
 	void ServerEquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& InputSlot);
@@ -93,4 +99,7 @@ protected:
 
 	UFUNCTION(Client, Reliable)
 	void ClientUpdateAbilityStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 NewLevel);
+
+	UFUNCTION(Client, Reliable)
+	void ClientUpdateEffectStatus(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag);
 };

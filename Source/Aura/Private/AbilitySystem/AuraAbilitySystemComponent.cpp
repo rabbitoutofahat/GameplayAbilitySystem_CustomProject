@@ -172,7 +172,7 @@ FGameplayTag UAuraAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbi
 	return FGameplayTag();
 }
 
-FGameplayTag UAuraAbilitySystemComponent::GetStatusTagFromAbilitySpec(const FGameplayAbilitySpec& AbilitySpec)
+FGameplayTag UAuraAbilitySystemComponent::GetStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
 {
 	for (FGameplayTag Tag : AbilitySpec.DynamicAbilityTags)
 	{
@@ -184,11 +184,11 @@ FGameplayTag UAuraAbilitySystemComponent::GetStatusTagFromAbilitySpec(const FGam
 	return FGameplayTag();
 }
 
-FGameplayTag UAuraAbilitySystemComponent::GetStatusTagFromEffectSpec(const FGameplayEffectSpec& EffectSpec)
+FGameplayTag UAuraAbilitySystemComponent::GetTypeTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
 {
-	for (FGameplayTag Tag : EffectSpec.GetDynamicAssetTags())
+	for (FGameplayTag Tag : AbilitySpec.DynamicAbilityTags)
 	{
-		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Abilities.Status"))))
+		if (Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Abilities.Type")))) 
 		{
 			return Tag;
 		}
@@ -200,7 +200,7 @@ FGameplayTag UAuraAbilitySystemComponent::GetStatusFromAbilityTag(const FGamepla
 {
 	if (const FGameplayAbilitySpec* Spec = GetAbilitySpecFromTag(AbilityTag))
 	{
-		return GetStatusTagFromAbilitySpec(*Spec);
+		return GetStatusTagFromSpec(*Spec);
 	}
 	return FGameplayTag();
 }
@@ -286,15 +286,6 @@ FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetAbilitySpecFromSlot(const 
 	return nullptr;
 }
 
-FGameplayEffectSpec* UAuraAbilitySystemComponent::GetEffectSpecFromTag(const FGameplayTag& EffectTag)
-{
-	FGameplayEffectContextHandle UpgradeContextHandle = MakeEffectContext();
-	UpgradeContextHandle.AddSourceObject(GetAvatarActor());
-	const FAuraEffectInfo& AuraEffectInfo = UAuraAbilitySystemLibrary::GetEffectInfo(GetAvatarActor())->FindEffectInfoForTag(EffectTag);
-	FGameplayEffectSpecHandle UpgradeSpecHandle = MakeOutgoingSpec(AuraEffectInfo.GameplayEffect, 1, UpgradeContextHandle);
-	return UpgradeSpecHandle.Data.Get();
-}
-
 void UAuraAbilitySystemComponent::UpgradeAttribute(const FGameplayTag& AttributeTag)
 {
 	if (GetAvatarActor()->Implements<UPlayerInterface>())
@@ -327,7 +318,7 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatuses(int32 Level)
 	{
 		if (!Info.AbilityTag.IsValid()) continue; // If the ability tag is valid
 		if (Level < Info.LevelRequirement) continue; // If we meet the level requirement for this ability
-		//if (Info.AbilityType == FAuraGameplayTags::Get().Abilities_Type_Passive) continue; // Passive upgrades become eligible only when their corresponding active ability is unlocked
+		if (Info.AbilityType.MatchesTagExact(FAuraGameplayTags::Get().Abilities_Type_Passive)) continue; // Passive abilities are handled elsewhere
 		if (GetAbilitySpecFromTag(Info.AbilityTag) == nullptr) // If we don't already have this ability
 		{
 			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Info.Ability, 1);
@@ -348,14 +339,21 @@ void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGa
 			IPlayerInterface::Execute_AddToSpellPoints(GetAvatarActor(), -1);
 		}
 		const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
-		FGameplayTag Status = GetStatusTagFromAbilitySpec(*AbilitySpec);
+		FGameplayTag Status = GetStatusTagFromSpec(*AbilitySpec);
 		if (Status.MatchesTagExact(GameplayTags.Abilities_Status_Eligible))
 		{
 			AbilitySpec->DynamicAbilityTags.RemoveTag(GameplayTags.Abilities_Status_Eligible);
 			AbilitySpec->DynamicAbilityTags.AddTag(GameplayTags.Abilities_Status_Unlocked);
 			Status = GameplayTags.Abilities_Status_Unlocked;
-			// TODO: Only execute this function when buying active abilities
-			MakeAbilityUpgradesEligible(AbilityTag); // If an active ability, make its passive upgrades eligible
+			// If an active ability, make its passive upgrades eligible. If a passive ability, equip right away
+			if (!IsPassiveAbility(*AbilitySpec)) MakeAbilityUpgradesEligible(AbilityTag);
+			else
+			{
+				TryActivateAbility(AbilitySpec->Handle);
+				MulticastActivatePassiveAbility(AbilityTag, true);
+				AbilitySpec->DynamicAbilityTags.RemoveTag(GameplayTags.Abilities_Status_Eligible);
+				AbilitySpec->DynamicAbilityTags.AddTag(GameplayTags.Abilities_Status_Equipped);
+			}
 		}
 		else if (Status.MatchesTagExact(GameplayTags.Abilities_Status_Equipped) || Status.MatchesTagExact(GameplayTags.Abilities_Status_Unlocked))
 		{
@@ -370,21 +368,18 @@ void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGa
 void UAuraAbilitySystemComponent::MakeAbilityUpgradesEligible(const FGameplayTag& AbilityTag)
 {
 	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
-	const UEffectInfo* EffectInfo = UAuraAbilitySystemLibrary::GetEffectInfo(GetAvatarActor());
-	for (const FAuraEffectInfo& AuraEffectInfo : EffectInfo->EffectInformation)
+	const UAbilityInfo* AbilityInfo = UAuraAbilitySystemLibrary::GetAbilityInfo(GetAvatarActor());
+	for (const FAuraAbilityInfo& Info : AbilityInfo->AbilityInformation)
 	{
-		FGameplayTag AbilityUpgradeTag = AuraEffectInfo.EffectTag;
-		if (!AbilityUpgradeTag.MatchesTag(AbilityTag)) continue; // All passive upgrades corresponding to a given ability should have the same parent tag
+		if (Info.AbilityTag.MatchesTagExact(AbilityTag)) continue; // Skip the base ability itself)
+		if (!Info.AbilityTag.MatchesTag(AbilityTag)) continue; // All passive upgrades corresponding to a given ability should have the same parent tag
+		if (GetAbilitySpecFromTag(Info.AbilityTag) != nullptr)  continue; // If we don't already have this ability
 		
-		FGameplayEffectSpec* UpgradeSpec = GetEffectSpecFromTag(AbilityUpgradeTag);
-		FGameplayTag UpgradeStatus = GetStatusTagFromEffectSpec(*UpgradeSpec);
-
-		// Dynamic Asset Tags will be made private, when that happens switch to using AddDyanmicAssetTag(), also dynamic asset tag removal won't be supported
-		UpgradeSpec->DynamicAssetTags.RemoveTag(GameplayTags.Abilities_Status_Locked);
-		UpgradeSpec->DynamicAssetTags.AddTag(GameplayTags.Abilities_Status_Eligible);
-		UpgradeStatus = GameplayTags.Abilities_Status_Eligible; 
-
-		ClientUpdateEffectStatus(AbilityUpgradeTag, UpgradeStatus);
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Info.Ability, 1);
+		AbilitySpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Eligible);
+		GiveAbility(AbilitySpec);
+		MarkAbilitySpecDirty(AbilitySpec); 
+		ClientUpdateAbilityStatus(Info.AbilityTag, GameplayTags.Abilities_Status_Eligible, 1);
 	}
 }
 
@@ -394,7 +389,7 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 	{
 		const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
 		const FGameplayTag& PrevSlot = GetInputTagFromSpec(*AbilitySpec);
-		const FGameplayTag& Status = GetStatusTagFromAbilitySpec(*AbilitySpec);
+		const FGameplayTag& Status = GetStatusTagFromSpec(*AbilitySpec);
 
 		const bool bStatusValid = Status == GameplayTags.Abilities_Status_Equipped || Status == GameplayTags.Abilities_Status_Unlocked;
 		if (bStatusValid)
@@ -429,7 +424,7 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 					TryActivateAbility(AbilitySpec->Handle); 
 					MulticastActivatePassiveAbility(AbilityTag, true);
 				}
-				AbilitySpec->DynamicAbilityTags.RemoveTag(GetStatusTagFromAbilitySpec(*AbilitySpec));
+				AbilitySpec->DynamicAbilityTags.RemoveTag(GetStatusTagFromSpec(*AbilitySpec));
 				AbilitySpec->DynamicAbilityTags.AddTag(GameplayTags.Abilities_Status_Equipped);
 			}
 

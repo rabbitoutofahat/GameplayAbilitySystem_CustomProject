@@ -48,8 +48,8 @@ public:
 
 	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
-	static FGameplayTag GetStatusTagFromAbilitySpec(const FGameplayAbilitySpec& AbilitySpec);
-	static FGameplayTag GetStatusTagFromEffectSpec(const FGameplayEffectSpec& EffectSpec);
+	static FGameplayTag GetStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+	static FGameplayTag GetTypeTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 
 	FGameplayTag GetStatusFromAbilityTag(const FGameplayTag& AbilityTag); // Can't be static because it relies on GetStatusTagFromSpec()
 	FGameplayTag GetInputFromAbilityTag(const FGameplayTag& AbilityTag); 
@@ -65,7 +65,6 @@ public:
 	 
 	FGameplayAbilitySpec* GetAbilitySpecFromTag(const FGameplayTag& AbilityTag);
 	FGameplayAbilitySpec* GetAbilitySpecFromSlot(const FGameplayTag& Slot);
-	FGameplayEffectSpec* GetEffectSpecFromTag(const FGameplayTag& EffectTag);
 
 	void UpgradeAttribute(const FGameplayTag& AttributeTag);
 

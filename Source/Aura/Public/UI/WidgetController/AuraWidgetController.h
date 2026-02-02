@@ -14,7 +14,6 @@ class AAuraPlayerState;
 class UAuraAbilitySystemComponent;
 class UAuraAttributeSet;
 class UAbilityInfo;
-class UEffectInfo;
 
 USTRUCT(BlueprintType)
 struct FWidgetControllerParams
@@ -40,7 +39,6 @@ struct FWidgetControllerParams
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStatChangedSignature, int32, NewValue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FAuraAbilityInfo&, Info);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEffectInfoSignature, const FAuraEffectInfo&, Info);
 
 /**
  * A widget controller interacts with and sets 4 variables/classes - Player Controller, Player State, Ability System Component, and Attribute Set
@@ -61,17 +59,11 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
 	FAbilityInfoSignature AbilityInfoDelegate;
 
-	UPROPERTY(BlueprintAssignable, Category = "GAS|Messages")
-	FEffectInfoSignature EffectInfoDelegate;
-
 	void BroadcastAbilityInfo();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
 	TObjectPtr<UAbilityInfo> AbilityInfo;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
-	TObjectPtr<UEffectInfo> EffectInfo;
 
 	UPROPERTY(BlueprintReadOnly, Category = "WidgetController")
 	TObjectPtr<APlayerController> PlayerController;

@@ -28,4 +28,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	float RiftSpawnDistanceMax = 400.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrade Properties")
+	int32 AdditionalBolts = 4;
 };

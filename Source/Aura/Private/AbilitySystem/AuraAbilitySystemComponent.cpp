@@ -56,6 +56,7 @@ void UAuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf
 			AbilitySpec.DynamicAbilityTags.AddTag(AuraAbility->StartupInputTag);
 			AbilitySpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Equipped);
 			GiveAbility(AbilitySpec);
+			MakeAbilityUpgradesEligible(GetAbilityTagFromSpec(AbilitySpec));
 		}
 	}
 	bStartupAbilitiesGiven = true; 
@@ -69,6 +70,7 @@ void UAuraAbilitySystemComponent::AddCharacterPassiveAbilities(const TArray<TSub
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
 		AbilitySpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Equipped); // Set the status so the game knows whether to activate the passive when loading data from disk
 		GiveAbilityAndActivateOnce(AbilitySpec); // These 'startup passives' are designed to be applied once on startup and remain active indefinitely
+		MakeAbilityUpgradesEligible(GetAbilityTagFromSpec(AbilitySpec));
 	}
 }
 
@@ -370,7 +372,7 @@ void UAuraAbilitySystemComponent::MakeAbilityUpgradesEligible(const FGameplayTag
 	const UAbilityInfo* AbilityInfo = UAuraAbilitySystemLibrary::GetAbilityInfo(GetAvatarActor());
 	for (const FAuraAbilityInfo& Info : AbilityInfo->AbilityInformation)
 	{
-		if (Info.AbilityTag.MatchesTagExact(AbilityTag)) continue; // Skip the base ability itself)
+		if (Info.AbilityTag.MatchesTagExact(AbilityTag)) continue; // Skip the base ability itself
 		if (!Info.AbilityTag.MatchesTag(AbilityTag)) continue; // All passive upgrades corresponding to a given ability should have the same parent tag
 		if (GetAbilitySpecFromTag(Info.AbilityTag) != nullptr)  continue; // If we don't already have this ability
 		

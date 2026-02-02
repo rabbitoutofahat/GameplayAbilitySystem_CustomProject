@@ -31,7 +31,7 @@ void UDemonfireRift::SpawnRift()
 	Rift->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 
 	UAbilitySystemComponent* AvatarASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
-	if (AvatarASC && AvatarASC->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_DemonfireRift_RiftMastery)) Rift->NumProjectiles += 4;
+	if (AvatarASC && AvatarASC->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_DemonfireRift_RiftMastery)) Rift->NumProjectiles += AdditionalBolts;
 
 	Rift->SetActorEnableCollision(false);
 	Rift->FinishSpawning(SpawnTransform);

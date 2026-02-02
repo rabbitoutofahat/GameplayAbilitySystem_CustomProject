@@ -123,20 +123,52 @@ public:
 	FGameplayTag GameplayCue_ArcaneShards;
 
 	/* Vessel Character Class */
-	FGameplayTag Abilities_Utility_Haunt;
 	FGameplayTag Abilities_Passive_DemonicSoul;
+	FGameplayTag Abilities_Passive_DemonicSoul_HellforgedReconstitution;
+	FGameplayTag Abilities_Passive_DemonicSoul_FriendsInLowPlaces;
+	FGameplayTag Abilities_Passive_DemonicSoul_DevouringVoid;
+	FGameplayTag Abilities_Passive_DemonicSoul_AbyssalDominion;
+	FGameplayTag Abilities_Passive_DemonicSoul_SpatialRend;
+	FGameplayTag Abilities_Passive_DemonicSoul_DeathRattle;
+
 	FGameplayTag Abilities_SpecialAttack; // Special Attack tag for Vessel's Summoned Minions
+
 	FGameplayTag Abilities_Vessel_SoulSiphon;
+	FGameplayTag Abilities_Vessel_SoulSiphon_SoulCrush;
+	FGameplayTag Abilities_Vessel_SoulSiphon_Reclamation;
+	FGameplayTag Abilities_Vessel_SoulSiphon_VengefulManifestation;
+
+	FGameplayTag Abilities_Utility_Haunt;
+	FGameplayTag Abilities_Utility_Haunt_BindingContract;
+	FGameplayTag Abilities_Utility_Haunt_PerfectedForm;
+	FGameplayTag Abilities_Utility_Haunt_SoulInstability;
+
 	FGameplayTag Abilities_Vessel_SummonDregling;
+	FGameplayTag Abilities_Vessel_SummonDregling_KineticBombardment;
+	FGameplayTag Abilities_Vessel_SummonDregling_FlamePatch;
+	FGameplayTag Abilities_Vessel_SummonDregling_MoltenTouch;
+	FGameplayTag Abilities_Vessel_SummonDregling_PortentOfDestruction;
+
 	FGameplayTag Abilities_Vessel_SummonInfernalGolem;
+	FGameplayTag Abilities_Vessel_SummonInfernalGolem_InfernalBulwark;
+	FGameplayTag Abilities_Vessel_SummonInfernalGolem_BurningRush;
+
 	FGameplayTag Abilities_Vessel_SummonChaosElemental;
+	FGameplayTag Abilities_Vessel_SummonChaosElemental_PiercingHellfire;
+	FGameplayTag Abilities_Vessel_SummonChaosElemental_Annihilation;
+
+	FGameplayTag Abilities_Vessel_Pandemonium;
+	FGameplayTag Abilities_Vessel_Pandemonium_Uproar;
+	FGameplayTag Abilities_Vessel_Pandemonium_DreadedEncore;
 
 	FGameplayTag Abilities_Vessel_DemonfireRift;
 	FGameplayTag Abilities_Vessel_DemonfireRift_BalefulRifts;
 	FGameplayTag Abilities_Vessel_DemonfireRift_RiftMastery;
 
-	FGameplayTag Abilities_Vessel_Pandemonium;
 	FGameplayTag Abilities_Vessel_Disintegrate;
+	FGameplayTag Abilities_Vessel_Disintegrate_SeethingSouls;
+	FGameplayTag Abilities_Vessel_Disintegrate_BoundlessWrath;
+	FGameplayTag Abilities_Vessel_Disintegrate_Animosity;
 
 	FGameplayTag GameplayCue_Rift_Haunt;
 	FGameplayTag GameplayCue_Rift_Dregling;

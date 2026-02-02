@@ -5,7 +5,6 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
 #include "Player/AuraPlayerState.h"
-#include "AbilitySystem/Data/EffectInfo.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 
 void USpellMenuWidgetController::BroadcastInitialValues()
@@ -39,30 +38,6 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 				FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
 				Info.StatusTag = StatusTag;
 				AbilityInfoDelegate.Broadcast(Info);
-			}
-		});
-
-	GetAuraASC()->EffectStatusChangedDelegate.AddLambda(
-		[this](const FGameplayTag& EffectTag, const FGameplayTag& StatusTag)
-		{
-	/*		if (SelectedAbility.Ability.MatchesTagExact(EffectTag))
-			{
-				SelectedAbility.Status = StatusTag;
-
-				bool bEquipButtonEnabled = false;
-				bool bSpendPointButtonEnabled = false;
-				ShouldEnableButtons(StatusTag, CurrentSpellPoints, bSpendPointButtonEnabled, bEquipButtonEnabled);
-				FString Description;
-				FString NextLevelDescription;
-				GetAuraASC()->GetDescriptionsByAbilityTag(EffectTag, Description, NextLevelDescription);
-				OnUpdateSpellMenuDelegate.Broadcast(bSpendPointButtonEnabled, bEquipButtonEnabled, Description, NextLevelDescription);
-			}*/
-
-			if (EffectInfo)
-			{
-				FAuraEffectInfo Info = EffectInfo->FindEffectInfoForTag(EffectTag);
-				Info.StatusTag = StatusTag;
-				EffectInfoDelegate.Broadcast(Info);
 			}
 		});
 

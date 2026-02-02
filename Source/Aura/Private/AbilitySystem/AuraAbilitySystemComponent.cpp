@@ -9,7 +9,6 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
-#include "AbilitySystem/Data/EffectInfo.h"
 #include "Game/LoadScreenSaveGame.h"
 
 void UAuraAbilitySystemComponent::AbilityActorInfoSet()
@@ -508,9 +507,4 @@ void UAuraAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySys
 void UAuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, int32 NewLevel)
 {
 	AbilityStatusChangedDelegate.Broadcast(AbilityTag, StatusTag, NewLevel);
-}
-
-void UAuraAbilitySystemComponent::ClientUpdateEffectStatus_Implementation(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag)
-{
-	EffectStatusChangedDelegate.Broadcast(AbilityTag, StatusTag);
 }

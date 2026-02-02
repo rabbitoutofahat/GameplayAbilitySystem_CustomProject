@@ -190,20 +190,52 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	/*
 	* Vessel Character Class
 	*/
-	GameplayTags.Abilities_Utility_Haunt = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Utility.Haunt"), FString("Vessel Utility Ability Tag"));
 	GameplayTags.Abilities_Passive_DemonicSoul = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Passive.DemonicSoul"), FString("Vessel Starting Passive Tag"));
-	GameplayTags.Abilities_SpecialAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.SpecialAttack"), FString("Special Attack Ability Tag for Summons"));
+	GameplayTags.Abilities_Passive_DemonicSoul_HellforgedReconstitution = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Passive.DemonicSoul.HellforgedReconstitution"), FString("Vessel Passive - Hellforged Reconstitution Upgrade Tag"));
+	GameplayTags.Abilities_Passive_DemonicSoul_FriendsInLowPlaces = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Passive.DemonicSoul.FriendsInLowPlaces"), FString("Vessel Passive - Friends In Low Places Upgrade Tag"));
+	GameplayTags.Abilities_Passive_DemonicSoul_DevouringVoid = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Passive.DemonicSoul.DevouringVoid"), FString("Vessel Passive - Devouring Void Upgrade Tag"));
+	GameplayTags.Abilities_Passive_DemonicSoul_AbyssalDominion = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Passive.DemonicSoul.AbyssalDominion"), FString("Vessel Passive - Abyssal Dominion Upgrade Tag"));
+	GameplayTags.Abilities_Passive_DemonicSoul_SpatialRend = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Passive.DemonicSoul.SpatialRend"), FString("Vessel Passive - Spatial Rend Upgrade Tag"));
+	GameplayTags.Abilities_Passive_DemonicSoul_DeathRattle = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Passive.DemonicSoul.DeathRattle"), FString("Vessel Passive - Death Rattle Upgrade Tag"));
+	
 	GameplayTags.Abilities_Vessel_SoulSiphon = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SoulSiphon"), FString("Vessel Starting Ability Tag"));
+	GameplayTags.Abilities_Vessel_SoulSiphon_SoulCrush = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SoulSiphon.SoulCrush"), FString("Soul Siphon - Soul Crush Upgrade Tag"));
+	GameplayTags.Abilities_Vessel_SoulSiphon_Reclamation = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SoulSiphon.Reclamation"), FString("Soul Siphon - Reclamation Upgrade Tag"));
+	GameplayTags.Abilities_Vessel_SoulSiphon_VengefulManifestation = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SoulSiphon.VengefulManifestation"), FString("Soul Siphon - Vengeful Manifestation Upgrade Tag"));
+
+	GameplayTags.Abilities_Utility_Haunt = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Utility.Haunt"), FString("Vessel Utility Ability Tag"));
+	GameplayTags.Abilities_Utility_Haunt_BindingContract = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Utility.Haunt.BindingContract"), FString("Haunt - Binding Contract Upgrade Tag"));
+	GameplayTags.Abilities_Utility_Haunt_PerfectedForm = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Utility.Haunt.PerfectedForm"), FString("Haunt - Perfected Form Upgrade Tag"));
+	GameplayTags.Abilities_Utility_Haunt_SoulInstability = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Utility.Haunt.SoulInstability"), FString("Haunt - Soul Instability Upgrade Tag"));
+	
+	GameplayTags.Abilities_SpecialAttack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.SpecialAttack"), FString("Special Attack Ability Tag for Summons"));
+	
 	GameplayTags.Abilities_Vessel_SummonDregling = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonDregling"), FString("Summon Dregling Ability Tag"));
+	GameplayTags.Abilities_Vessel_SummonDregling_KineticBombardment = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonDregling.KineticBombardment"), FString("Summon Dregling - Kinetic Bombardment Upgrade Tag"));
+	GameplayTags.Abilities_Vessel_SummonDregling_FlamePatch = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonDregling.FlamePatch"), FString("Summon Dregling - Flame Patch Upgrade Tag"));
+	GameplayTags.Abilities_Vessel_SummonDregling_MoltenTouch = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonDregling.MoltenTouch"), FString("Summon Dregling - Molten Touch Upgrade Tag"));
+	GameplayTags.Abilities_Vessel_SummonDregling_PortentOfDestruction = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonDregling.PortentOfDestruction"), FString("Summon Dregling - Portent Of Destruction Upgrade Tag"));
+
 	GameplayTags.Abilities_Vessel_SummonInfernalGolem = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonInfernalGolem"), FString("Summon Infernal Golem Ability Tag"));
+	GameplayTags.Abilities_Vessel_SummonInfernalGolem_InfernalBulwark = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonInfernalGolem.InfernalBulwark"), FString("Summon Infernal Golem - Infernal Bulwark Upgrade Tag"));
+	GameplayTags.Abilities_Vessel_SummonInfernalGolem_BurningRush = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonInfernalGolem.BurningRush"), FString("Summon Infernal Golem - Burning Rush Upgrade Tag"));
+
 	GameplayTags.Abilities_Vessel_SummonChaosElemental = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonChaosElemental"), FString("Summon Chaos Elemental Ability Tag"));
+	GameplayTags.Abilities_Vessel_SummonChaosElemental_PiercingHellfire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonChaosElemental.PiercingHellfire"), FString("Summon Chaos Elemental - Piercing Hellfire Upgrade Tag"));
+	GameplayTags.Abilities_Vessel_SummonChaosElemental_Annihilation = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.SummonChaosElemental.Annihilation"), FString("Summon Chaos Elemental - Annihilation Upgrade Tag"));
+
+	GameplayTags.Abilities_Vessel_Pandemonium = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.Pandemonium"), FString("Pandemonium Ultimate Ability Tag"));
+	GameplayTags.Abilities_Vessel_Pandemonium_Uproar = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.Pandemonium.Uproar"), FString("Pandemonium - Uproar Upgrade Tag"));
+	GameplayTags.Abilities_Vessel_Pandemonium_DreadedEncore = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.Pandemonium.DreadedEncore"), FString("Pandemonium - Dreaded Encore Upgrade Tag"));
 
 	GameplayTags.Abilities_Vessel_DemonfireRift = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.DemonfireRift"), FString("Demonfire Rift Ability Tag"));
 	GameplayTags.Abilities_Vessel_DemonfireRift_RiftMastery = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.DemonfireRift.RiftMastery"), FString("Demonfire Rift - Rift Mastery Upgrade Tag"));
 	GameplayTags.Abilities_Vessel_DemonfireRift_BalefulRifts = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.DemonfireRift.BalefulRifts"), FString("Demonfire Rift - Baleful Rifts Upgrade Tag"));
 
-	GameplayTags.Abilities_Vessel_Pandemonium = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.Pandemonium"), FString("Pandemonium Ultimate Ability Tag"));
 	GameplayTags.Abilities_Vessel_Disintegrate = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.Disintegrate"), FString("Disintegrate Ability Tag"));
+	GameplayTags.Abilities_Vessel_Disintegrate_SeethingSouls = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.Disintegrate.SeethingSouls"), FString("Disintegrate - Seething Souls Upgrade Tag"));
+	GameplayTags.Abilities_Vessel_Disintegrate_BoundlessWrath = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.Disintegrate.BoundlessWrath"), FString("Disintegrate - Boundless Wrath Upgrade Tag"));
+	GameplayTags.Abilities_Vessel_Disintegrate_Animosity = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Vessel.Disintegrate.Animosity"), FString("Disintegrate - Animosity Upgrade Tag"));
 
 	GameplayTags.GameplayCue_Rift_Haunt = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.Haunt"), FString("Gameplay Cue for Haunt Rift Effect"));
 	GameplayTags.GameplayCue_Rift_Dregling = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.Dregling"), FString("Gameplay Cue for Dregling Rift Effect"));

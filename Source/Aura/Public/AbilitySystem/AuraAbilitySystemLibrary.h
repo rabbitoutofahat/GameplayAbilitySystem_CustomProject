@@ -200,4 +200,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
 	static void HideSummon(ASummonCharacter* SummonClass, const bool Enable);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
+	static void RedistributeHealthEvenly(TArray<AActor*> TargetActors);
 };

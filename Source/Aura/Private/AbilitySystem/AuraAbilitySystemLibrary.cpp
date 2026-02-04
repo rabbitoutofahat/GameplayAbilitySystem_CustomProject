@@ -633,3 +633,30 @@ void UAuraAbilitySystemLibrary::HideSummon(ASummonCharacter* SummonClass, const 
 	if (Enable) Cast<AAuraAIController>(SummonClass->GetController())->GetBrainComponent()->StopLogic("Hide Summon Actor");
 	else SummonClass->bIsBeingSpawned = true;
 }
+
+void UAuraAbilitySystemLibrary::RedistributeHealthEvenly(TArray<AActor*> TargetActors)
+{
+	TArray<float> HealthPercentages;
+	for (AActor* Actor : TargetActors)
+	{
+		UAttributeSet* AS = Cast<AAuraCharacterBase>(Actor)->GetAttributeSet();
+		UAuraAttributeSet* AuraAS = Cast<UAuraAttributeSet>(AS);
+		const float HealthPercentage = AuraAS->GetHealth() / AuraAS->GetMaxHealth();
+		HealthPercentages.Add(HealthPercentage);
+	}
+
+	float SumOfHealthPercentages = 0.f;
+	for (float HealthPercentage : HealthPercentages)
+	{
+		SumOfHealthPercentages += HealthPercentage;
+	}
+	const float AverageHealthPercentage = SumOfHealthPercentages / TargetActors.Num();
+
+	for (AActor* Actor : TargetActors)
+	{
+		UAttributeSet* AS = Cast<AAuraCharacterBase>(Actor)->GetAttributeSet();
+		UAuraAttributeSet* AuraAS = Cast<UAuraAttributeSet>(AS);
+		const float NewHealth = AuraAS->GetMaxHealth() * AverageHealthPercentage;
+		AuraAS->SetHealth(NewHealth);
+	}
+}

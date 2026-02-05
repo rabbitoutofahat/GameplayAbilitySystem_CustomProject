@@ -30,7 +30,13 @@ protected:
 	TSubclassOf<UGameplayEffect> HauntPassiveEffectClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayEffect> UpgradedHauntPassiveEffectClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<USoundBase> ReturnSound;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float HauntDuration;
 
 private:
 	UPROPERTY(EditDefaultsOnly)

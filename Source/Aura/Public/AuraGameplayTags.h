@@ -177,7 +177,9 @@ public:
 	FGameplayTag GameplayCue_Explosion;
 
 	FGameplayTag Attributes_MaxEnergy;
+
 	FGameplayTag Buff_DemonicStrength;
+	FGameplayTag Buff_SoulInstability;
 
 private:
 	static FAuraGameplayTags GameplayTags;

@@ -8,6 +8,8 @@
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "GameplayCueManager.h"
 #include "AuraGameplayTags.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 
 void UHaunt::SpawnReturnProjectile()
 {
@@ -62,5 +64,12 @@ void UHaunt::FireDemonicSoul(const FVector& ProjectileTargetLocation, const FGam
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
 	HauntProjectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+	
+	UAbilitySystemComponent* AvatarASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
+	if (AvatarASC && AvatarASC->HasMatchingGameplayTag(FAuraGameplayTags::Get().Buff_SoulInstability))
+	{
+		HauntProjectile->DamageEffectParams.BaseDamage *= 1.f + (InstabilityDamageIncrease / 100.f);
+	}
+
 	HauntProjectile->FinishSpawning(SpawnTransform);
 }

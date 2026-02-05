@@ -244,5 +244,7 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	GameplayTags.GameplayCue_Explosion = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Explosion"), FString("Gameplay Cue for Explosion Effects"));
 
 	GameplayTags.Attributes_MaxEnergy = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.MaxEnergy"), FString("Maximum amount of Energy obtainable"));
+	
 	GameplayTags.Buff_DemonicStrength = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.DemonicStrength"), FString("Given to Vessel's demons, allows one free use of their respective special ability"));
+	GameplayTags.Buff_SoulInstability = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.SoulInstability"), FString("Given to the player when they use Haunt, creating a brief window where recasting Haunt deals additional damage"));
 }

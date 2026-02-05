@@ -33,7 +33,7 @@ protected:
 	TSubclassOf<UGameplayEffect> UpgradedHauntPassiveEffectClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Upgrades")
-	float InstabilityTimer;
+	float InstabilityDamageIncrease = 100.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<USoundBase> ReturnSound;

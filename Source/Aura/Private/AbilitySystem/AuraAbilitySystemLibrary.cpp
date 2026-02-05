@@ -636,18 +636,12 @@ void UAuraAbilitySystemLibrary::HideSummon(ASummonCharacter* SummonClass, const 
 
 void UAuraAbilitySystemLibrary::RedistributeHealthEvenly(TArray<AActor*> TargetActors)
 {
-	TArray<float> HealthPercentages;
+	float SumOfHealthPercentages = 0.f;
 	for (AActor* Actor : TargetActors)
 	{
 		UAttributeSet* AS = Cast<AAuraCharacterBase>(Actor)->GetAttributeSet();
 		UAuraAttributeSet* AuraAS = Cast<UAuraAttributeSet>(AS);
 		const float HealthPercentage = AuraAS->GetHealth() / AuraAS->GetMaxHealth();
-		HealthPercentages.Add(HealthPercentage);
-	}
-
-	float SumOfHealthPercentages = 0.f;
-	for (float HealthPercentage : HealthPercentages)
-	{
 		SumOfHealthPercentages += HealthPercentage;
 	}
 	const float AverageHealthPercentage = SumOfHealthPercentages / TargetActors.Num();

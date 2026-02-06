@@ -5,6 +5,10 @@
 #include "UI/Widget/AuraUserWidget.h"
 #include "Components/WidgetComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "Character/PlayableClasses/Vessel.h"
+#include "AuraGameplayTags.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/Abilities/Vessel/SoulSiphon.h"
 
 void ASummonCharacter::PossessedBy(AController* NewController)
 {
@@ -12,6 +16,21 @@ void ASummonCharacter::PossessedBy(AController* NewController)
 	// OwnerActor should hopefully be set upon a SummonCharacter Blueprint being created in the world
 	AuraAIController->GetBlackboardComponent()->SetValueAsObject(FName("OwnerActor"), OwnerActor);
 	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("ShouldUseSpecial"), false);
+}
+
+void ASummonCharacter::Die(const FVector& DeathImpulse)
+{
+	Super::Die(DeathImpulse);
+	
+	// If the owner is playing as Vessel and has the Soul Siphon Reclamation ability, refund mana on death based on the SummonCost
+	if (Cast<AVessel>(OwnerActor) && GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SoulSiphon_Reclamation))
+	{
+		UAuraAttributeSet* OwnerAS = Cast<UAuraAttributeSet>(Cast<AAuraCharacterBase>(OwnerActor)->GetAttributeSet());
+		UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(Cast<AAuraCharacterBase>(OwnerActor)->GetAbilitySystemComponent());
+		USoulSiphon* SoulSiphonAbility = Cast<USoulSiphon>(AuraASC->GetAbilitySpecFromTag(FAuraGameplayTags::Get().Abilities_Vessel_SoulSiphon)->Ability);
+		OwnerAS->SetMana(OwnerAS->GetMana() + (SummonCost * SoulSiphonAbility->ReclamationPercentage));
+		// TODO: Check if dead summon is Demonic Soul, if so restore some health
+	}
 }
 
 void ASummonCharacter::BeginPlay()

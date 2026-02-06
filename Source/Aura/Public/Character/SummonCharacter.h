@@ -21,6 +21,10 @@ class AURA_API ASummonCharacter : public AAICharacterBase, public ISummonInterfa
 public:
 	virtual void PossessedBy(AController* NewController) override;
 
+	/* Combat Interface */
+	virtual void Die(const FVector& DeathImpulse) override;
+	/* end Combat Interface */
+
 	UPROPERTY()
 	TObjectPtr<AActor> OwnerActor; // For some reason setting owner and setting the OwnerActor Blackboard Key to GetOwner() doesn't work, so we set our own owner variable
 
@@ -55,4 +59,7 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UAuraUserWidget> HealthFrameClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	float SummonCost; // TODO: Change to attribute so both Summon Ability Cost and Cost Refund on Death can reference the same value
 };

@@ -175,6 +175,7 @@ public:
 	FGameplayTag GameplayCue_Rift_InfernalGolem;
 	FGameplayTag GameplayCue_Rift_ChaosElemental;
 	FGameplayTag GameplayCue_Explosion;
+	FGameplayTag GameplayCue_SoulCrush;
 
 	FGameplayTag Attributes_MaxEnergy;
 

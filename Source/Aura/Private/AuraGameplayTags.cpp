@@ -242,6 +242,7 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	GameplayTags.GameplayCue_Rift_InfernalGolem = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.InfernalGolem"), FString("Gameplay Cue for Infernal Golem Rift Effect"));
 	GameplayTags.GameplayCue_Rift_ChaosElemental = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Rift.ChaosElemental"), FString("Gameplay Cue for Chaos Elemental Rift Effect"));
 	GameplayTags.GameplayCue_Explosion = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.Explosion"), FString("Gameplay Cue for Explosion Effects"));
+	GameplayTags.GameplayCue_SoulCrush = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("GameplayCue.SoulCrush"), FString("Gameplay Cue for Soul Crush Effects"));
 
 	GameplayTags.Attributes_MaxEnergy = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Secondary.MaxEnergy"), FString("Maximum amount of Energy obtainable"));
 	

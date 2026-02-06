@@ -17,11 +17,23 @@ class AURA_API USoulSiphon : public UAuraDamageGameplayAbility
 	GENERATED_BODY()
 
 public:
+	/*
+	*  Apply damage to the target actor and spawn soul orbs 
+	*  If the Soul Crush upgrade is equipped, deal radial damage to enemies around the target as well and spawn an additional soul orb per enemy hit
+	*/
 	UFUNCTION(BlueprintCallable)
-	void ApplyDamageToTarget(AActor* ActorToDamage);
+	void SoulSiphon(AActor* TargetActor);
 
+	/*
+	* Soul Siphon upgrade that refunds a proportion of the cost of summoning a given SummonCharacter back to the player as souls/mana upon that SummonCharacter's death
+	*/
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades")
+	float ReclamationPercentage = 0.4f;
 
 private:
+	/*
+	*  Spawn soul orbs with different initial trajectories that will travel from the target to the ability owner (travel path handled in blueprint)
+	*/
 	void SpawnSoulOrbsAtTarget(AActor* DamagedActor, int32 NumOrbs);
 
 	UPROPERTY(EditDefaultsOnly, Category = "SoulOrb")

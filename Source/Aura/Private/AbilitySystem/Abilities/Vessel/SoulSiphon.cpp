@@ -10,19 +10,20 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "AuraGameplayTags.h"
 #include "Character/PlayableClasses/Vessel.h"
+#include "GameplayCueManager.h"
 
-void USoulSiphon::ApplyDamageToTarget(AActor* ActorToDamage)
+void USoulSiphon::SoulSiphon(AActor* TargetActor)
 {
-	if (!IsValid(ActorToDamage) || !ActorToDamage->Implements<UEnemyInterface>()) return;
+	if (!IsValid(TargetActor) || !TargetActor->Implements<UEnemyInterface>()) return;
 	
 	UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
-	if (ASC && ASC->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SoulSiphon_SoulCrush)) // Changes from single target to radial damage
+	if (ASC && ASC->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SoulSiphon_SoulCrush)) // Upgrade changes Soul Siphon from single target to radial damage
 	{
 		FDamageEffectParams SoulCrushParams = MakeDamageEffectParamsFromClassDefaults();
 		SoulCrushParams.bIsRadialDamage = true;
 		SoulCrushParams.RadialDamageInnerRadius = SoulCrushInnerRadius;
 		SoulCrushParams.RadialDamageOuterRadius = SoulCrushOuterRadius;
-		SoulCrushParams.RadialDamageOrigin = ActorToDamage->GetActorLocation();
+		SoulCrushParams.RadialDamageOrigin = TargetActor->GetActorLocation();
 
 		TArray<AActor*> ActorsToIgnore;
 		ActorsToIgnore.Add(Cast<AVessel>(SoulCrushParams.WorldContextObject)); 
@@ -31,25 +32,29 @@ void USoulSiphon::ApplyDamageToTarget(AActor* ActorToDamage)
 
 		for (AActor* Actor : ActorsToDamage)
 		{
-			if (!Actor->ActorHasTag(FName("Enemy"))) continue; // With the addition of more tags beyond "Player" and "Enemy", we need to if statement to filter out all non-enemies
+			if (!Actor->ActorHasTag(FName("Enemy"))) continue;
 			if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor))
 			{
 				const FVector DeathImpulse = (Actor->GetActorLocation() - SoulCrushParams.RadialDamageOrigin) * SoulCrushParams.DeathImpulseMagnitude;
 				SoulCrushParams.DeathImpulse = DeathImpulse;
 				SoulCrushParams.TargetAbilitySystemComponent = TargetASC;
 				UAuraAbilitySystemLibrary::ApplyDamageEffectToTarget(SoulCrushParams);
-				SpawnSoulOrbsAtTarget(Actor, 1); // Spawn 1 orb on each target hit by the radial damage
+				if (Actor == TargetActor) SpawnSoulOrbsAtTarget(Actor, 3); // Spawn 3 orbs on primary target
+				else SpawnSoulOrbsAtTarget(Actor, 1); // Spawn 1 orb on each target hit by the radial damage
 			}
 		}
+
+		FGameplayCueParameters CueParams;
+		CueParams.Location = TargetActor->GetActorLocation();
+		UGameplayCueManager::ExecuteGameplayCue_NonReplicated(GetAvatarActorFromActorInfo(), FAuraGameplayTags::Get().GameplayCue_SoulCrush, CueParams);
 	}
 	else 
 	{
-		CauseDamage(ActorToDamage);
-		SpawnSoulOrbsAtTarget(ActorToDamage, 3); // Spawn 3 orbs on primary target
+		CauseDamage(TargetActor);
+		SpawnSoulOrbsAtTarget(TargetActor, 3); 
 	}
 }
 
-// Spawn soul orbs with different initial trajectories that will travel from the target to the ability owner (travel path handled in blueprint)
 void USoulSiphon::SpawnSoulOrbsAtTarget(AActor* DamagedActor, int32 NumOrbs)
 {
 	bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();

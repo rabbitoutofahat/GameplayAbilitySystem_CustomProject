@@ -20,10 +20,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ApplyDamageToTarget(AActor* ActorToDamage);
 
-	UFUNCTION(BlueprintCallable)
-	void SpawnSoulOrbsAtTarget(AActor* DamagedActor, int32 NumOrbs);
 
 private:
+	void SpawnSoulOrbsAtTarget(AActor* DamagedActor, int32 NumOrbs);
+
 	UPROPERTY(EditDefaultsOnly, Category = "SoulOrb")
 	TSubclassOf<AAuraProjectile> SoulOrbClass;
 
@@ -41,5 +41,14 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "SoulOrb")
 	bool bLaunchHomingProjectiles = true;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades")
+	float SoulCrushInnerRadius = 40.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades")
+	float SoulCrushOuterRadius = 200.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades")
+	TSubclassOf<UNiagaraSystem> SoulCrushEffect;
 };
 

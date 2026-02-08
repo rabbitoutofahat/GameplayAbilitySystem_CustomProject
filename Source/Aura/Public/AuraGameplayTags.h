@@ -40,7 +40,7 @@ public:
 	FGameplayTag Attributes_MovementSpeed;
 	FGameplayTag Attributes_StunBuildup;
 	FGameplayTag Attributes_BlockChance;
-
+	
 	FGameplayTag Attributes_Vital_Energy;
 
 	//FGameplayTag Attributes_Resistance_Fire;

@@ -61,5 +61,5 @@ protected:
 	TSubclassOf<UAuraUserWidget> HealthFrameClass;
 
 	UPROPERTY(EditDefaultsOnly)
-	float SummonCost; // TODO: Change to attribute so both Summon Ability Cost and Cost Refund on Death can reference the same value
+	float SummonCost;
 };

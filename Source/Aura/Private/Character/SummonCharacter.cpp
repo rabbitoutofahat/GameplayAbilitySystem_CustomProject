@@ -23,12 +23,13 @@ void ASummonCharacter::Die(const FVector& DeathImpulse)
 	Super::Die(DeathImpulse);
 	
 	// If the owner is playing as Vessel and has the Soul Siphon Reclamation ability, refund mana on death based on the SummonCost
-	if (Cast<AVessel>(OwnerActor) && GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SoulSiphon_Reclamation))
+	AVessel* Vessel = Cast<AVessel>(OwnerActor);
+	if (Vessel && Vessel->GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SoulSiphon_Reclamation))
 	{
-		UAuraAttributeSet* OwnerAS = Cast<UAuraAttributeSet>(Cast<AAuraCharacterBase>(OwnerActor)->GetAttributeSet());
-		UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(Cast<AAuraCharacterBase>(OwnerActor)->GetAbilitySystemComponent());
-		USoulSiphon* SoulSiphonAbility = Cast<USoulSiphon>(AuraASC->GetAbilitySpecFromTag(FAuraGameplayTags::Get().Abilities_Vessel_SoulSiphon)->Ability);
-		OwnerAS->SetMana(OwnerAS->GetMana() + (SummonCost * SoulSiphonAbility->ReclamationPercentage));
+		UAuraAttributeSet* VesselAS = Cast<UAuraAttributeSet>(Vessel->GetAttributeSet());
+		UAuraAbilitySystemComponent* VesselASC = Cast<UAuraAbilitySystemComponent>(Vessel->GetAbilitySystemComponent());
+		USoulSiphon* SoulSiphonAbility = Cast<USoulSiphon>(VesselASC->GetAbilitySpecFromTag(FAuraGameplayTags::Get().Abilities_Vessel_SoulSiphon)->Ability);
+		VesselAS->SetMana(VesselAS->GetMana() + (SummonCost * SoulSiphonAbility->ReclamationPercentage));
 		// TODO: Check if dead summon is Demonic Soul, if so restore some health
 	}
 }

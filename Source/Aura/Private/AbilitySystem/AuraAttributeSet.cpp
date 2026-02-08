@@ -15,6 +15,7 @@
 #include "GameplayEffectComponents/TargetTagsGameplayEffectComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Character/AuraCharacterBase.h"
+#include "Character/SummonCharacter.h"
 
 UAuraAttributeSet::UAuraAttributeSet()
 {
@@ -536,6 +537,10 @@ void UAuraAttributeSet::SendXPEvent(const FEffectProperties& Props)
 		FGameplayEventData Payload; // Event Data payload is needed to send through the magnitude our ability is going to use in its Set By Caller Magnitude on our Event-based Gameplay Effect
 		Payload.EventTag = GameplayTags.Attributes_Meta_IncomingXP;
 		Payload.EventMagnitude = XPReward;
-		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Props.SourceCharacter, GameplayTags.Attributes_Meta_IncomingXP, Payload);
+
+		AActor* XPReceiver = Props.SourceAvatarActor; // By default the XP receiver is the source avatar actor, but if the source is a summon then we want the owner of that summon to receive the XP instead
+		if (ASummonCharacter* Summon = Cast<ASummonCharacter>(Props.SourceCharacter)) XPReceiver = Summon->OwnerActor;
+
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(XPReceiver, GameplayTags.Attributes_Meta_IncomingXP, Payload);
 	}
 }

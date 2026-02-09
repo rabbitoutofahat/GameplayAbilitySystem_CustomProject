@@ -12,7 +12,7 @@ void UDemonfireRift::SpawnRift()
 	const FVector Location = GetAvatarActorFromActorInfo()->GetActorLocation();
 	const FVector Forward = GetAvatarActorFromActorInfo()->GetActorForwardVector();
 	const FVector Left = Forward.RotateAngleAxis(-90.f, FVector::UpVector);
-	const float RandomSpread = FMath::RandRange(0.f, 180.f);
+	const float RandomSpread = FMath::RandRange(0.f, RiftSpawnSpread);
 
 	const FVector SpawnDirection = Left.RotateAngleAxis(RandomSpread, FVector::UpVector);
 	FVector SpawnLocation = Location + SpawnDirection * FMath::FRandRange(RiftSpawnDistanceMin, RiftSpawnDistanceMax);

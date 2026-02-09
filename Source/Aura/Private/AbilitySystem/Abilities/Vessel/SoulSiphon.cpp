@@ -6,7 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Interaction/EnemyInterface.h"
-#include "Actor/AuraProjectile.h"
+#include "Actor/Vessel/SoulOrb.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "AuraGameplayTags.h"
 #include "Character/PlayableClasses/Vessel.h"
@@ -69,7 +69,7 @@ void USoulSiphon::SpawnSoulOrbsAtTarget(AActor* DamagedActor, int32 NumOrbs)
 		SpawnTransform.SetLocation(DamagedActor->GetActorLocation() + (Rotation.Vector() * OrbSpawnDistance));
 		SpawnTransform.SetRotation(SpawnRotation.Quaternion());
 
-		AAuraProjectile* SoulOrb = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
+		ASoulOrb* SoulOrb = GetWorld()->SpawnActorDeferred<ASoulOrb>(
 			SoulOrbClass,
 			SpawnTransform,
 			GetOwningActorFromActorInfo(),
@@ -80,6 +80,7 @@ void USoulSiphon::SpawnSoulOrbsAtTarget(AActor* DamagedActor, int32 NumOrbs)
 		SoulOrb->ProjectileMovement->HomingTargetComponent = HomingTarget->GetRootComponent();
 		SoulOrb->ProjectileMovement->HomingAccelerationMagnitude = FMath::FRandRange(HomingAccelerationMin, HomingAccelerationMax);
 		SoulOrb->ProjectileMovement->bIsHomingProjectile = bLaunchHomingProjectiles;
+		SoulOrb->VengefulSpiritSpawnPercent = VengefulSpiritSpawnPercent; 
 		SoulOrb->FinishSpawning(SpawnTransform);
 	}
 }

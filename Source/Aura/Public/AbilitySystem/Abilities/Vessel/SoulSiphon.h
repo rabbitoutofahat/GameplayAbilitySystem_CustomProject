@@ -54,13 +54,15 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "SoulOrb")
 	bool bLaunchHomingProjectiles = true;
 
+	// Soul Crush Upgrade - Changes Soul Siphon from single target to radial damage around the target
 	UPROPERTY(EditDefaultsOnly, Category = "Upgrades")
 	float SoulCrushInnerRadius = 40.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Upgrades")
 	float SoulCrushOuterRadius = 200.f;
 
+	// Vengeful Manifestation Upgrade - Chance upon collecting a soul orb to spawn a Vengeful Spirit to fight you
 	UPROPERTY(EditDefaultsOnly, Category = "Upgrades")
-	TSubclassOf<UNiagaraSystem> SoulCrushEffect;
+	float VengefulSpiritSpawnPercent = 30.f;
 };
 

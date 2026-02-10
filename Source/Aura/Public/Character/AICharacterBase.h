@@ -48,7 +48,7 @@ public:
 	bool bHitReacting = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
-	float LifeSpan = 5.f;
+	float CorpseLifeSpan = 5.f; // How long a corpse should remain in the world after death before being destroyed
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	float AttackRadius = 45.f;

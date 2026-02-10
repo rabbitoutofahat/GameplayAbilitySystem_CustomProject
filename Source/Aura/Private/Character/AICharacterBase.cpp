@@ -56,7 +56,7 @@ int32 AAICharacterBase::GetPlayerLevel_Implementation()
 
 void AAICharacterBase::Die(const FVector& DeathImpulse)
 {
-	SetLifeSpan(LifeSpan);
+	SetLifeSpan(CorpseLifeSpan);
 	if (AuraAIController) AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("Dead"), true);
 	Super::Die(DeathImpulse);
 }

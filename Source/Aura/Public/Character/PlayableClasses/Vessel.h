@@ -25,4 +25,11 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<ASummonCharacter> DemonicSoulClass;
+
+	/*
+    * Lesser Demons can be spawned in multiple ways via upgrades on different abilities, so we set a reference here as we need to access the Vessel 
+	* class to check for the appropriate upgrade tags anyway
+	*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<ASummonCharacter> LesserDemonClass;
 };

@@ -25,8 +25,8 @@ public:
 	virtual void Die(const FVector& DeathImpulse) override;
 	/* end Combat Interface */
 
-	UPROPERTY()
-	TObjectPtr<AActor> OwnerActor; // For some reason setting owner and setting the OwnerActor Blackboard Key to GetOwner() doesn't work, so we set our own owner variable
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<AActor> OwnerActor; // For some reason setting both the Owner and the OwnerActor Blackboard Key to GetOwner() doesn't work, so we set our own OwnerActor variable
 
 	// TODO: Move these to a DemonicSoul Subclass
 	UPROPERTY(BlueprintReadWrite)

@@ -101,6 +101,7 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	// Summon Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Energy, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxEnergy, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Lifespan, COND_None, REPNOTIFY_Always);
 }
 
 void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -189,6 +190,13 @@ void UAuraAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute,
 		for (UAnimMontage* Montage : AbilityMontages)
 		{
 			Montage->RateScale = 1.f + NewValue / 100.f; // When adjusting Attack Speed, need to make sure montage play rate scales accordingly with ability cooldown
+		}
+	}
+	if (Attribute == GetLifespanAttribute())
+	{
+		if (ASummonCharacter* Summon = Cast<ASummonCharacter>(GetActorInfo()->AvatarActor))
+		{
+			Summon->Lifespan = NewValue;
 		}
 	}
 }
@@ -326,6 +334,11 @@ void UAuraAttributeSet::OnRep_Energy(const FGameplayAttributeData& OldEnergy) co
 void UAuraAttributeSet::OnRep_MaxEnergy(const FGameplayAttributeData& OldMaxEnergy) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxEnergy, OldMaxEnergy);
+}
+
+void UAuraAttributeSet::OnRep_Lifespan(const FGameplayAttributeData& OldLifespan) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Lifespan, OldLifespan);
 }
 
 void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)

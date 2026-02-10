@@ -21,7 +21,7 @@ void ASummonCharacter::PossessedBy(AController* NewController)
 void ASummonCharacter::Die(const FVector& DeathImpulse)
 {
 	Super::Die(DeathImpulse);
-	
+
 	// If the owner is playing as Vessel and has the Soul Siphon Reclamation ability, refund mana on death based on the SummonCost
 	AVessel* Vessel = Cast<AVessel>(OwnerActor);
 	if (Vessel && Vessel->GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SoulSiphon_Reclamation))
@@ -54,6 +54,13 @@ void ASummonCharacter::BeginPlay()
 		BindCallbacksToDependencies(AuraAS);
 		BroadcastInitialValues(AuraAS);
 		BindHitReactTagChangeDelegate();
+		
+		Lifespan = AuraAS->GetLifespan();
+		FTimerDelegate LifespanDelegate;
+		// Callback function has an input parameter so we need to bind a lambda. If a summon reaches its full lifespan, no death impulse is needed
+		LifespanDelegate.BindLambda([this]() {Die(FVector::ZeroVector); }); 
+		FTimerHandle LifespanTimerHandle;
+		GetWorldTimerManager().SetTimer(LifespanTimerHandle, LifespanDelegate, Lifespan, false);
 	}
 }
 

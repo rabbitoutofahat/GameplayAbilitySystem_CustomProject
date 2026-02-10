@@ -289,15 +289,22 @@ public:
 	FGameplayAttributeData Energy;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Energy);
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxEnergy, Category = "Secondary Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxEnergy, Category = "Summon Attributes")
 	FGameplayAttributeData MaxEnergy;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxEnergy);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Lifespan, Category = "Summon Attributes")
+	FGameplayAttributeData Lifespan;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Lifespan);
 
 	UFUNCTION()
 	void OnRep_Energy(const FGameplayAttributeData& OldEnergy) const;
 
 	UFUNCTION()
 	void OnRep_MaxEnergy(const FGameplayAttributeData& OldMaxEnergy) const;
+
+	UFUNCTION()
+	void OnRep_Lifespan(const FGameplayAttributeData& OldLifespan) const;
 
 	/*
 	* Meta Attributes (not replicated, we set and process them on the server and then change any affected attributes based on those calculations)

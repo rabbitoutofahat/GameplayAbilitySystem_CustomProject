@@ -44,6 +44,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ShouldEnableSpecial(bool bEnable); // Used to change the ShouldUseSpecial Blackboard Key
 
+	float Lifespan = 0.f;
+
 protected:
 	virtual void BeginPlay() override;
 

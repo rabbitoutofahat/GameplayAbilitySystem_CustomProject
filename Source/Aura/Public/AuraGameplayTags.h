@@ -178,6 +178,7 @@ public:
 	FGameplayTag GameplayCue_SoulCrush;
 
 	FGameplayTag Attributes_MaxEnergy;
+	FGameplayTag Attributes_Lifespan;
 
 	FGameplayTag Buff_DemonicStrength;
 	FGameplayTag Buff_SoulInstability;

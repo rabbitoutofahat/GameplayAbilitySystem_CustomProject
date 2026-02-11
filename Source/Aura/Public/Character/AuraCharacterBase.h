@@ -87,7 +87,7 @@ public:
 	bool bIsBeingShocked = false;
 
 	UPROPERTY(BlueprintReadOnly)
-	bool IsValidTarget = true; // Used for showing/hiding actors, such that AI actors will not continue to attack target actors that have been hidden
+	bool bIsValidTarget = true; // Used for showing/hiding actors, such that AI actors will not continue to attack target actors that have been hidden
 
 	void SetCharacterClass(ECharacterClass InClass) { CharacterClass = InClass; }
 

@@ -30,9 +30,15 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<AActor> OwnerActor; // For some reason setting both the Owner and the OwnerActor Blackboard Key to GetOwner() doesn't work, so we set our own OwnerActor variable
 
-	// TODO: Move these to a DemonicSoul Subclass
+	// Health frame widget for Demonic Soul
+	UPROPERTY()
+	TObjectPtr<UAuraUserWidget> HealthFrame;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UAuraUserWidget> HealthFrameClass;
+
 	UPROPERTY(BlueprintReadWrite)
-	bool bIsBeingSpawned = false; // Controls when to switch to the Spawn Animation State in the AnimBP, used for "respawning" the Demonic Soul after Haunt ends
+	bool bIsBeingSpawned = false; // Controls when to switch to the Spawn Animation State in the AnimBP
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignature OnEnergyChanged;

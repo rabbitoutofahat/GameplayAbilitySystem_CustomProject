@@ -629,7 +629,7 @@ void UAuraAbilitySystemLibrary::HideSummon(ASummonCharacter* SummonClass, const 
 	SummonClass->SetActorHiddenInGame(Enable);
 	SummonClass->SetActorEnableCollision(!Enable);
 	SummonClass->SetActorTickEnabled(!Enable);
-	SummonClass->IsValidTarget = !Enable;
+	SummonClass->bIsValidTarget = !Enable;
 	if (Enable) Cast<AAuraAIController>(SummonClass->GetController())->GetBrainComponent()->StopLogic("Hide Summon Actor");
 	else SummonClass->bIsBeingSpawned = true;
 }

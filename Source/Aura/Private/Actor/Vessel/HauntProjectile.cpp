@@ -2,7 +2,6 @@
 
 
 #include "Actor/Vessel/HauntProjectile.h"
-#include "Character/SummonCharacter.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Character/PlayableClasses/Vessel.h"

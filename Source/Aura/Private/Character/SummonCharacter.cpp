@@ -8,6 +8,7 @@
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/Vessel/SoulSiphon.h"
+#include "UI/Widget/AuraUserWidget.h"
 
 void ASummonCharacter::PossessedBy(AController* NewController)
 {
@@ -38,6 +39,17 @@ void ASummonCharacter::Die(const FVector& DeathImpulse)
 void ASummonCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (HealthFrameClass)
+	{
+		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), HealthFrameClass);
+		HealthFrame = Cast<UAuraUserWidget>(Widget);
+		HealthFrame->SetAnchorsInViewport(FAnchors(0.0, 0.5)); // Middle-Left Screen Anchor
+		HealthFrame->SetAlignmentInViewport(FVector2D(-0.5, 1.5)); // Right and Up from the Anchor
+		HealthFrame->AddToViewport();
+		HealthFrame->SetWidgetController(this);
+		bIsDemonicSoul = true; // Only the Demonic Soul has a Health Frame widget
+	}
 
 	if (const UAuraAttributeSet* AuraAS = Cast<UAuraAttributeSet>(AttributeSet))
 	{

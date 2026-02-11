@@ -25,21 +25,13 @@ UAuraAttributeSet::UAuraAttributeSet()
 	* Mapping tags to attributes
 	*/
 
-	// Primary Attributes
-	//TagsToAttributes.Add(GameplayTags.Attributes_Primary_Strength, GetStrengthAttribute); 
-	//TagsToAttributes.Add(GameplayTags.Attributes_Primary_Intelligence, GetIntelligenceAttribute);
-	//TagsToAttributes.Add(GameplayTags.Attributes_Primary_Resilience, GetResilienceAttribute);
-	//TagsToAttributes.Add(GameplayTags.Attributes_Primary_Vigor, GetVigorAttribute);
-
 	// Attributes
 	TagsToAttributes.Add(GameplayTags.Attributes_Armour, GetArmourAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_ArmourShred, GetArmourShredAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_BlockChance, GetBlockChanceAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_CriticalHitChance, GetCritChanceAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_CriticalHitDamage, GetCritDamageAttribute);
-	//TagsToAttributes.Add(GameplayTags.Attributes_Secondary_CriticalHitResistance, GetCritResAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_HealthRegeneration, GetHealthRegenAttribute);
-	//TagsToAttributes.Add(GameplayTags.Attributes_Secondary_ManaRegeneration, GetManaRegenAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_MaxHealth, GetMaxHealthAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_MaxMana, GetMaxManaAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_MaxEnergy, GetMaxEnergyAttribute);
@@ -66,21 +58,13 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	* If the value is set on the server, replicate it, and that value will be updated and set on the client (REPNOTIFY_Always).
 	*/
 
-	// Primary Attributes
-	//DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Strength, COND_None, REPNOTIFY_Always);
-	//DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
-	//DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Resilience, COND_None, REPNOTIFY_Always);
-	//DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Vigor, COND_None, REPNOTIFY_Always);
-
 	// Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Armour, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ArmourShred, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, BlockChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CritChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CritDamage, COND_None, REPNOTIFY_Always);
-	//DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CritRes, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, HealthRegen, COND_None, REPNOTIFY_Always);
-	//DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ManaRegen, COND_None, REPNOTIFY_Always);
     DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);	
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, CooldownReduction, COND_None, REPNOTIFY_Always);
@@ -206,26 +190,6 @@ void UAuraAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute,
 * In the case of prediction, the system keeps track of changes made to attributes and their old values in case a rollback is required.
 */
 
-//void UAuraAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength) const
-//{
-//	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Strength, OldStrength);
-//}
-//
-//void UAuraAttributeSet::OnRep_Intelligence(const FGameplayAttributeData& OldIntelligence) const
-//{
-//	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Intelligence, OldIntelligence);
-//}
-//
-//void UAuraAttributeSet::OnRep_Resilience(const FGameplayAttributeData& OldResilience) const
-//{
-//	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Resilience, OldResilience);
-//}
-//
-//void UAuraAttributeSet::OnRep_Vigor(const FGameplayAttributeData& OldVigor) const
-//{
-//	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Vigor, OldVigor);
-//}
-
 void UAuraAttributeSet::OnRep_Armour(const FGameplayAttributeData& OldArmour) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Armour, OldArmour);
@@ -251,20 +215,10 @@ void UAuraAttributeSet::OnRep_CritDamage(const FGameplayAttributeData& OldCritDa
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, CritDamage, OldCritDamage);
 }
 
-//void UAuraAttributeSet::OnRep_CritRes(const FGameplayAttributeData& OldCritRes) const
-//{
-//	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, CritRes, OldCritRes);
-//}
-
 void UAuraAttributeSet::OnRep_HealthRegen(const FGameplayAttributeData& OldHealthRegen) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, HealthRegen, OldHealthRegen);
 }
-
-//void UAuraAttributeSet::OnRep_ManaRegen(const FGameplayAttributeData& OldManaRegen) const
-//{
-//	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ManaRegen, OldManaRegen);
-//}
 
 void UAuraAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldMaxHealth) const
 {

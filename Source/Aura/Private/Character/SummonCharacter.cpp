@@ -2,7 +2,6 @@
 
 
 #include "Character/SummonCharacter.h"
-#include "UI/Widget/AuraUserWidget.h"
 #include "Components/WidgetComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Character/PlayableClasses/Vessel.h"
@@ -37,17 +36,6 @@ void ASummonCharacter::Die(const FVector& DeathImpulse)
 void ASummonCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	if (HealthFrameClass != nullptr)
-	{
-		// TODO: Move to DemonicSoul / Major Summon sub-class, don't need for Minor Summons
-		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), HealthFrameClass);
-		HealthFrame = Cast<UAuraUserWidget>(Widget);
-		HealthFrame->SetAnchorsInViewport(FAnchors(0.0, 0.5)); // Middle-Left Screen Anchor
-		HealthFrame->SetAlignmentInViewport(FVector2D(-0.5, 1.5)); // Right and Up from the Anchor
-		HealthFrame->AddToViewport();
-		HealthFrame->SetWidgetController(this);
-	}
 
 	if (const UAuraAttributeSet* AuraAS = Cast<UAuraAttributeSet>(AttributeSet))
 	{

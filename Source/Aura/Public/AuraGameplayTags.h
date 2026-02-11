@@ -16,18 +16,11 @@ public:
 	static const FAuraGameplayTags& Get() { return GameplayTags; }
 	static void InitialiseNativeGameplayTags();
 
-	//FGameplayTag Attributes_Primary_Strength;
-	//FGameplayTag Attributes_Primary_Intelligence;
-	//FGameplayTag Attributes_Primary_Resilience;
-	//FGameplayTag Attributes_Primary_Vigor;
-
 	FGameplayTag Attributes_Armour;
 	FGameplayTag Attributes_ArmourShred;
 	FGameplayTag Attributes_CriticalHitChance;
 	FGameplayTag Attributes_CriticalHitDamage;
-	//FGameplayTag Attributes_Secondary_CriticalHitResistance;
 	FGameplayTag Attributes_HealthRegeneration;
-	//FGameplayTag Attributes_Secondary_ManaRegeneration;
 	FGameplayTag Attributes_MaxHealth;
 	FGameplayTag Attributes_MaxMana;
 
@@ -42,11 +35,6 @@ public:
 	FGameplayTag Attributes_BlockChance;
 	
 	FGameplayTag Attributes_Vital_Energy;
-
-	//FGameplayTag Attributes_Resistance_Fire;
-	//FGameplayTag Attributes_Resistance_Lightning;
-	//FGameplayTag Attributes_Resistance_Arcane;
-	//FGameplayTag Attributes_Resistance_Physical;
 
 	FGameplayTag Attributes_Meta_IncomingXP;
 
@@ -94,10 +82,6 @@ public:
 	FGameplayTag Abilities_Lightning_Electrocute;
 	FGameplayTag Abilities_Arcane_ArcaneShards;
 
-	//FGameplayTag Abilities_Passive_HaloOfProtection;
-	//FGameplayTag Abilities_Passive_LifeSiphon;
-	//FGameplayTag Abilities_Passive_ManaSiphon;
-
 	FGameplayTag CombatSocket_Weapon;
 	FGameplayTag CombatSocket_RightHand;
 	FGameplayTag CombatSocket_LeftHand;
@@ -108,7 +92,6 @@ public:
 	FGameplayTag Montage_Attack_3;
 	FGameplayTag Montage_Attack_4;
 
-	//TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 	//TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffs;
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToAttributes;
 

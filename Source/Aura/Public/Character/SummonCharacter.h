@@ -10,6 +10,8 @@
 class UAuraUserWidget;
 class UAuraGameplayAbility;
 
+DECLARE_DYNAMIC_DELEGATE(FOnSummonDeathSignature);
+
 /**
  * 
  */
@@ -44,7 +46,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ShouldEnableSpecial(bool bEnable); // Used to change the ShouldUseSpecial Blackboard Key
 
-	float Lifespan = 0.f;
+	float Lifespan = 0.f; // Set by the AuraAttributeSet Lifespan Attribute, used to determine how long the summon should live before automatically dying
+
+	FOnSummonDeathSignature OnSummonDeathDelegate;
 
 protected:
 	virtual void BeginPlay() override;
@@ -54,13 +58,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float EnergyOnHit = 20.f;
-
-	// TODO: Move these to a DemonicSoul Subclass
-	UPROPERTY()
-	TObjectPtr<UAuraUserWidget> HealthFrame;
-
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<UAuraUserWidget> HealthFrameClass;
 
 	UPROPERTY(EditDefaultsOnly)
 	float SummonCost;

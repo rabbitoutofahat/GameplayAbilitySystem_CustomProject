@@ -534,7 +534,7 @@ void UAuraAbilitySystemLibrary::GetClosestTargets(int32 MaxTargets, const TArray
 
 bool UAuraAbilitySystemLibrary::IsOnSameTeam(const AActor* FirstActor, const AActor* SecondActor)
 {
-	const bool bBothArePlayers = FirstActor->ActorHasTag(FName("Player")) && SecondActor->ActorHasTag(FName("Player"));
+	const bool bBothArePlayers = (FirstActor->ActorHasTag(FName("Player")) || FirstActor->ActorHasTag(FName("Summon"))) && (SecondActor->ActorHasTag(FName("Player")) || SecondActor->ActorHasTag(FName("Summon")));
 	const bool bBothAreEnemies = FirstActor->ActorHasTag(FName("Enemy")) && SecondActor->ActorHasTag(FName("Enemy"));
 	const bool bSameTeam = bBothArePlayers || bBothAreEnemies;
 	return bSameTeam;

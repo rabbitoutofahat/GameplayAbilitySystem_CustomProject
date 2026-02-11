@@ -21,6 +21,8 @@ void ASummonCharacter::Die(const FVector& DeathImpulse)
 {
 	Super::Die(DeathImpulse);
 
+	if (!bIsDemonicSoul) OnSummonDeathDelegate.Broadcast();
+
 	// If the owner is playing as Vessel and has the Soul Siphon Reclamation ability, refund mana on death based on the SummonCost
 	AVessel* Vessel = Cast<AVessel>(OwnerActor);
 	if (Vessel && Vessel->GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SoulSiphon_Reclamation))

@@ -10,7 +10,7 @@
 class UAuraUserWidget;
 class UAuraGameplayAbility;
 
-DECLARE_DYNAMIC_DELEGATE(FOnSummonDeathSignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSummonDeathSignature);
 
 /**
  * 
@@ -48,6 +48,7 @@ public:
 
 	float Lifespan = 0.f; // Set by the AuraAttributeSet Lifespan Attribute, used to determine how long the summon should live before automatically dying
 
+	UPROPERTY(BlueprintAssignable)
 	FOnSummonDeathSignature OnSummonDeathDelegate;
 
 protected:
@@ -61,4 +62,11 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	float SummonCost;
+
+	/*
+	* Need a way to discern between Demonic Soul and other summons - Demonic Soul should attack enemies and be attacked by enemies,
+	* whereas other summons may attack enemies while being ignored by them (also shouldn’t have collision with attack hitboxes)
+	*/
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsDemonicSoul = false;
 };

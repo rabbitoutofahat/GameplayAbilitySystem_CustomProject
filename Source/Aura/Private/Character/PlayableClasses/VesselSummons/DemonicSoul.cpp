@@ -7,6 +7,7 @@
 void ADemonicSoul::BeginPlay()
 {
 	Super::BeginPlay();
+	bIsDemonicSoul = true;
 
 	if (HealthFrameClass != nullptr)
 	{

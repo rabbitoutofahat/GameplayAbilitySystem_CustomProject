@@ -9,8 +9,7 @@
 
 class UAuraUserWidget;
 class UAuraGameplayAbility;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnSummonDeathSignature);
+class UGameplayEffect;
 
 /**
  * 
@@ -26,6 +25,10 @@ public:
 	/* Combat Interface */
 	virtual void Die(const FVector& DeathImpulse) override;
 	/* end Combat Interface */
+
+	/* Summon Interface */
+	virtual FOnSummonDeathSignature& GetOnSummonDeathDelegate() override;
+	/* end Summon Interface */
 
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<AActor> OwnerActor; // For some reason setting both the Owner and the OwnerActor Blackboard Key to GetOwner() doesn't work, so we set our own OwnerActor variable
@@ -54,9 +57,6 @@ public:
 
 	float Lifespan = 0.f; // Set by the AuraAttributeSet Lifespan Attribute, used to determine how long the summon should live before automatically dying
 
-	UPROPERTY(BlueprintAssignable)
-	FOnSummonDeathSignature OnSummonDeathDelegate;
-
 protected:
 	virtual void BeginPlay() override;
 
@@ -67,12 +67,15 @@ protected:
 	float EnergyOnHit = 20.f;
 
 	UPROPERTY(EditDefaultsOnly)
-	float SummonCost;
+	float SummonCost; // Used to determine the amount of resources to refund to the player character under certain conditions, i.e., possessing the Reclamation upgrade gameplay tag
 
 	/*
 	* Need a way to discern between Demonic Soul and other summons - Demonic Soul should attack enemies and be attacked by enemies,
 	* whereas other summons may attack enemies while being ignored by them (also shouldn’t have collision with attack hitboxes)
 	*/
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
 	bool bIsDemonicSoul = false;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnSummonDeathSignature OnSummonDeathDelegate; // Used for on-death effects, such as the Death Rattle upgrade buffing the Demonic Soul whenever a summon dies
 };

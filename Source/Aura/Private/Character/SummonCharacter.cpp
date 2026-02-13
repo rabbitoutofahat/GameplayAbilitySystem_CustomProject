@@ -9,6 +9,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/Vessel/SoulSiphon.h"
 #include "UI/Widget/AuraUserWidget.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 void ASummonCharacter::PossessedBy(AController* NewController)
 {
@@ -22,7 +23,12 @@ void ASummonCharacter::Die(const FVector& DeathImpulse)
 {
 	Super::Die(DeathImpulse);
 
-	if (!bIsDemonicSoul) OnSummonDeathDelegate.Broadcast();
+	if (!bIsDemonicSoul && 
+		UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OwnerActor)->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Passive_DemonicSoul_DeathRattle))
+	{
+		AVessel* Vessel = Cast<AVessel>(OwnerActor);
+		Vessel->DemonicSoul->GetOnSummonDeathDelegate().Broadcast(); // Need to broadcast specifically to the Demonic Soul's Delegate
+	}
 
 	// If the owner is playing as Vessel and has the Soul Siphon Reclamation ability, refund mana on death based on the SummonCost
 	AVessel* Vessel = Cast<AVessel>(OwnerActor);
@@ -34,6 +40,17 @@ void ASummonCharacter::Die(const FVector& DeathImpulse)
 		VesselAS->SetMana(VesselAS->GetMana() + (SummonCost * SoulSiphonAbility->ReclamationPercentage));
 		// TODO: Check if dead summon is Demonic Soul, if so restore some health
 	}
+}
+
+FOnSummonDeathSignature& ASummonCharacter::GetOnSummonDeathDelegate()
+{
+	return OnSummonDeathDelegate;
+}
+
+void ASummonCharacter::ShouldEnableSpecial(bool bEnable)
+{
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("ShouldUseSpecial"), bEnable);
+	bFullEnergy = bEnable;
 }
 
 void ASummonCharacter::BeginPlay()
@@ -48,7 +65,6 @@ void ASummonCharacter::BeginPlay()
 		HealthFrame->SetAlignmentInViewport(FVector2D(-0.5, 1.5)); // Right and Up from the Anchor
 		HealthFrame->AddToViewport();
 		HealthFrame->SetWidgetController(this);
-		bIsDemonicSoul = true; // Only the Demonic Soul has a Health Frame widget
 	}
 
 	if (const UAuraAttributeSet* AuraAS = Cast<UAuraAttributeSet>(AttributeSet))
@@ -75,7 +91,7 @@ void ASummonCharacter::BindCallbacksToDependencies(const UAuraAttributeSet* Aura
 		{
 			OnEnergyChanged.Broadcast(Data.NewValue);
 			if (Data.NewValue >= AuraAS->GetMaxEnergy()) ShouldEnableSpecial(true);
-			else ShouldEnableSpecial(false); // Should we disable here or handle in the Gameplay Ability?
+			else ShouldEnableSpecial(false);
 		}
 	);
 
@@ -92,10 +108,4 @@ void ASummonCharacter::BroadcastInitialValues(const UAuraAttributeSet* AuraAS) c
 	Super::BroadcastInitialValues(AuraAS);
 	OnEnergyChanged.Broadcast(AuraAS->GetEnergy());
 	OnMaxEnergyChanged.Broadcast(AuraAS->GetMaxEnergy());
-}
-
-void ASummonCharacter::ShouldEnableSpecial(bool bEnable)
-{
-	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("ShouldUseSpecial"), bEnable);
-	bFullEnergy = bEnable;
 }

@@ -33,12 +33,11 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<AActor> OwnerActor; // For some reason setting both the Owner and the OwnerActor Blackboard Key to GetOwner() doesn't work, so we set our own OwnerActor variable
 
-	// Health frame widget for Demonic Soul
 	UPROPERTY()
-	TObjectPtr<UAuraUserWidget> HealthFrame;
+	TObjectPtr<UAuraUserWidget> SummonFrame;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UAuraUserWidget> HealthFrameClass;
+	TSubclassOf<UAuraUserWidget> SummonFrameClass;
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsBeingSpawned = false; // Controls when to switch to the Spawn Animation State in the AnimBP
@@ -55,7 +54,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ShouldEnableSpecial(bool bEnable); // Used to change the ShouldUseSpecial Blackboard Key
 
-	float Lifespan = 0.f; // Set by the AuraAttributeSet Lifespan Attribute, used to determine how long the summon should live before automatically dying
+	float GetLifespan() { return Lifespan; }
+	void SetLifespan(float InLifespan) { Lifespan = InLifespan; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -78,4 +78,11 @@ protected:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnSummonDeathSignature OnSummonDeathDelegate; // Used for on-death effects, such as the Death Rattle upgrade buffing the Demonic Soul whenever a summon dies
+
+private:
+	/*
+	* Set by the AuraAttributeSet Lifespan Attribute, used to determine how long the summon should live before automatically dying
+	* Kept private as we don't want to expose this to the Demonic Soul class which can live indefinitely
+	*/ 
+	float Lifespan = 0.f;
 };

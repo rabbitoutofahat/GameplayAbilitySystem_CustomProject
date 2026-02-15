@@ -23,7 +23,7 @@ void ASummonCharacter::Die(const FVector& DeathImpulse)
 {
 	Super::Die(DeathImpulse);
 
-	if (!bIsDemonicSoul && 
+	if (!IsA(ADemonicSoul::StaticClass()) &&
 		UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OwnerActor)->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Passive_DemonicSoul_DeathRattle))
 	{
 		AVessel* Vessel = Cast<AVessel>(OwnerActor);
@@ -57,14 +57,14 @@ void ASummonCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (HealthFrameClass)
+	if (SummonFrameClass)
 	{
-		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), HealthFrameClass);
-		HealthFrame = Cast<UAuraUserWidget>(Widget);
-		HealthFrame->SetAnchorsInViewport(FAnchors(0.0, 0.5)); // Middle-Left Screen Anchor
-		HealthFrame->SetAlignmentInViewport(FVector2D(-0.5, 1.5)); // Right and Up from the Anchor
-		HealthFrame->AddToViewport();
-		HealthFrame->SetWidgetController(this);
+		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), SummonFrameClass);
+		SummonFrame = Cast<UAuraUserWidget>(Widget);
+		SummonFrame->SetAnchorsInViewport(FAnchors(0.0, 0.5)); // Middle-Left Screen Anchor
+		SummonFrame->SetAlignmentInViewport(FVector2D(-0.5, 1.5)); // Right and Up from the Anchor
+		SummonFrame->AddToViewport();
+		SummonFrame->SetWidgetController(this);
 	}
 
 	if (const UAuraAttributeSet* AuraAS = Cast<UAuraAttributeSet>(AttributeSet))

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Character/AuraCharacter.h"
 #include "Character/SummonCharacter.h"
+#include "Character/Summons/DemonicSoul.h"
 #include "Vessel.generated.h"
 
 /**
@@ -20,11 +21,11 @@ public:
 	ASummonCharacter* SpawnSummonedMinion(UClass* Class, const FTransform& SpawnTransform, int32 OwnerLevel);
 
 	UPROPERTY(BlueprintReadWrite)
-	TObjectPtr<ASummonCharacter> DemonicSoul; // Set in GA_DemonicSoul
+	TObjectPtr<ADemonicSoul> DemonicSoul; // Set in GA_DemonicSoul
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<ASummonCharacter> DemonicSoulClass;
+	TSubclassOf<ADemonicSoul> DemonicSoulClass;
 
 	/*
     * Lesser Demons can be spawned in multiple ways via upgrades on different abilities, so we set a reference here as we need to access the Vessel 

@@ -24,5 +24,5 @@ class AURA_API ISummonInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual FOnSummonDeathSignature& GetOnSummonDeathDelegate() = 0;
+	virtual FOnSummonDeathSignature& GetOnSummonDeathDelegate() = 0; // So far only the Demonic Soul's delegate is used, but the functionality will be kept here in case of future mechanics
 };

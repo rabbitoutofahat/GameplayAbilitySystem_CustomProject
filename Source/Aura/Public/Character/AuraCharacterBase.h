@@ -57,8 +57,8 @@ public:
 	virtual FOnDeathSignature& GetOnDeathDelegate() override;
 	/* End Combat Interface */
 
-	FOnASCRegisteredSignature OnASCRegistered;
-	FOnDeathSignature OnDeath;
+	FOnASCRegisteredSignature OnASCRegistered; // For setting Debuff and Passive Niagara Components
+	FOnDeathSignature OnDeath; // Broadcasts when an enemy dies to destroy any active Debuff Niagara Components and end any offensive abilities Aura is channeling on that target
 
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath(const FVector& DeathImpulse); // For replicating death effects like ragdolls, animations, etc, to all clients
@@ -118,7 +118,7 @@ protected:
 	FName TailSocketName;
 
 	UPROPERTY(BlueprintReadOnly)
-	bool bDead = false;
+	bool bDead = false; // Boolean that is checked in the animation blueprint to transition between states
 
 	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 

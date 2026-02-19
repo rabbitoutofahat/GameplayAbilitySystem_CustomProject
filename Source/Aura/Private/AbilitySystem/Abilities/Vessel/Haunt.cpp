@@ -16,7 +16,7 @@ void UHaunt::SpawnReturnProjectile()
 	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
 
-	ASummonCharacter* DemonicSoul = Cast<AVessel>(GetAvatarActorFromActorInfo())->DemonicSoul;
+	ADemonicSoul* DemonicSoul = Cast<AVessel>(GetAvatarActorFromActorInfo())->DemonicSoul;
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(DemonicSoul->GetActorLocation());
 	SpawnTransform.SetRotation(DemonicSoul->GetActorQuat());

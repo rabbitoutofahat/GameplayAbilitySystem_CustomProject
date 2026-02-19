@@ -6,6 +6,8 @@
 #include "Character/SummonCharacter.h"
 #include "DemonicSoul.generated.h"
 
+class UHaunt;
+
 /**
  * 
  */
@@ -18,4 +20,13 @@ public:
 	/* Combat Interface */
 	virtual void Die(const FVector& DeathImpulse) override;
 	/* end Combat Interface */	
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float RespawnTimer = 20.f;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UHaunt> HauntAbilityClass;
+
+	void Respawn();
 };

@@ -31,7 +31,7 @@ public:
 	/* end Summon Interface */
 
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<AActor> OwnerActor; // For some reason setting both the Owner and the OwnerActor Blackboard Key to GetOwner() doesn't work, so we set our own OwnerActor variable
+	TObjectPtr<AActor> OwnerActor; // For some reason setting both the Owner to GetOwner() doesn't work, so we set our own OwnerActor variable
 
 	UPROPERTY()
 	TObjectPtr<UAuraUserWidget> SummonFrame;
@@ -68,13 +68,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly)
 	float SummonCost; // Used to determine the amount of resources to refund to the player character under certain conditions, i.e., possessing the Reclamation upgrade gameplay tag
-
-	/*
-	* Need a way to discern between Demonic Soul and other summons - Demonic Soul should attack enemies and be attacked by enemies,
-	* whereas other summons may attack enemies while being ignored by them (also shouldn’t have collision with attack hitboxes)
-	*/
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	bool bIsDemonicSoul = false;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnSummonDeathSignature OnSummonDeathDelegate; // Used for on-death effects, such as the Death Rattle upgrade buffing the Demonic Soul whenever a summon dies

@@ -33,10 +33,14 @@ void AAICharacterBase::PossessedBy(AController* NewController)
 
 	if (!HasAuthority()) return;
 	AuraAIController = Cast<AAuraAIController>(NewController);
+
+	// Blackboard & Behaviour Tree
 	AuraAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	AuraAIController->RunBehaviorTree(BehaviorTree);
 	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), false);
 	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), CharacterClass != ECharacterClass::Warrior);
+
+	// State Tree
 }
 
 void AAICharacterBase::SetCombatTarget_Implementation(AActor* InCombatTarget)

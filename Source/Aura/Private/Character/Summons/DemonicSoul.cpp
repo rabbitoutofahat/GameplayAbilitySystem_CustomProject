@@ -7,6 +7,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "UI/Widget/AuraUserWidget.h"
 
 void ADemonicSoul::Die(const FVector& DeathImpulse)
 {
@@ -25,6 +26,7 @@ void ADemonicSoul::Die(const FVector& DeathImpulse)
 	
 	FTimerHandle RespawnTimerHandle;
 	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ADemonicSoul::Respawn, RespawnTimer, false);
+	RespawnTimerStartDelegate.Broadcast();
 }
 
 void ADemonicSoul::Respawn()
@@ -33,10 +35,10 @@ void ADemonicSoul::Respawn()
 	FVector VesselLocation = Vessel->GetActorLocation();
 	FHitResult Hit;
 	FVector SpawnLocation;
-	GetWorld()->LineTraceSingleByChannel(Hit, VesselLocation + FVector(150.f, 0.f, 500.f), VesselLocation + FVector(150.f, 0.f, -500.f), ECollisionChannel::ECC_Visibility);
-	if (Hit.bBlockingHit) SpawnLocation = Hit.ImpactPoint + 88.f;
+	GetWorld()->LineTraceSingleByChannel(Hit, VesselLocation + LineTraceStart, VesselLocation + LineTraceEnd, ECollisionChannel::ECC_Visibility);
+	if (Hit.bBlockingHit) SpawnLocation = Hit.ImpactPoint + SpawnLocationZOffset;
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(SpawnLocation);
 	ASummonCharacter* Summon = Vessel->SpawnSummonedMinion(Vessel->DemonicSoulClass, SpawnTransform, Execute_GetPlayerLevel(Vessel));
-	Vessel->DemonicSoul = Cast<ADemonicSoul>(Summon);
+	Vessel->DemonicSoul = Cast<ADemonicSoul>(Summon); // Set the newly respawned Demonic Soul as the Vessel's current Demonic Soul reference
 }

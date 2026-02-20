@@ -8,6 +8,8 @@
 #include "AuraGameplayTags.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "UI/Widget/AuraUserWidget.h"
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 void ADemonicSoul::Die(const FVector& DeathImpulse)
 {
@@ -20,26 +22,25 @@ void ADemonicSoul::Die(const FVector& DeathImpulse)
 
 	//TODO: Add special effect when Demonic Soul dies, "retreating" back to the Vessel
 	//GetAvatarActorFromActorInfo() returns nullptr
-	// 
 	//AVessel* Vessel = Cast<AVessel>(OwnerActor);
 	//UAuraAbilitySystemComponent* VesselASC = Cast<UAuraAbilitySystemComponent>(Vessel->GetAbilitySystemComponent());
 	//UHaunt* HauntAbility = Cast<UHaunt>(VesselASC->GetAbilitySpecFromTag(FAuraGameplayTags::Get().Abilities_Utility_Haunt)->Ability);
 	//HauntAbility->SpawnReturnProjectile();
 
-	if (GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Buff_HellforgedReconstitution))
+	if (GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Buff_HellforgedReconstitution)) // TODO: Once more floors are implemented, grant another buff tag on floor change
 	{
-		RespawnTimer = 3.f;
+		RespawnTimer = HellforgedReconstitutionRespawnTimer;
 		FGameplayTagContainer EffectsToRemove;
 		EffectsToRemove.AddTag(FAuraGameplayTags::Get().Buff_HellforgedReconstitution);
 		GetAbilitySystemComponent()->RemoveActiveEffectsWithGrantedTags(EffectsToRemove);
 	}
 	
 	FTimerHandle RespawnTimerHandle;
-	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ADemonicSoul::Respawn, RespawnTimer, false);
+	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ADemonicSoul::OnRespawnTimerEnd, RespawnTimer, false);
 	RespawnTimerStartDelegate.Broadcast();
 }
 
-void ADemonicSoul::Respawn()
+void ADemonicSoul::OnRespawnTimerEnd()
 {
 	AVessel* Vessel = Cast<AVessel>(OwnerActor);
 	FVector VesselLocation = Vessel->GetActorLocation();
@@ -51,4 +52,67 @@ void ADemonicSoul::Respawn()
 	SpawnTransform.SetLocation(SpawnLocation);
 	ASummonCharacter* Summon = Vessel->SpawnSummonedMinion(Vessel->DemonicSoulClass, SpawnTransform, Execute_GetPlayerLevel(Vessel));
 	Vessel->DemonicSoul = Cast<ADemonicSoul>(Summon); // Set the newly respawned Demonic Soul as the Vessel's current Demonic Soul reference
+
+	if (Vessel && Summon)
+	{
+		if (Vessel->GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Passive_DemonicSoul_HellforgedReconstitution))
+		{
+			CreateExplosionOnRevival();
+		}
+		if (Vessel->GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Passive_DemonicSoul_FriendsInLowPlaces))
+		{
+
+		}
+	}
+}
+
+void ADemonicSoul::CreateExplosionOnRevival()
+{
+	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.Add(OwnerActor);
+	TArray<AActor*> ActorsToDamage;
+	FDamageEffectParams DamageEffectParams = MakeReviveExplosionDamageEffectParams();
+	UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(DamageEffectParams.WorldContextObject, ActorsToDamage, ActorsToIgnore, DamageEffectParams.RadialDamageOuterRadius, DamageEffectParams.RadialDamageOrigin);
+
+	for (AActor* Actor : ActorsToDamage)
+	{
+		if (!Actor->ActorHasTag(FName("Enemy"))) continue;
+		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor))
+		{
+			FVector Direction = Actor->GetActorLocation() - GetActorLocation();
+			Direction.Z = 0.f;
+			Direction.Normalize();
+			const FVector ToTarget = Direction + FVector::UpVector * FMath::Sin(FMath::DegreesToRadians(KnockbackPitch));
+
+			DamageEffectParams.Knockback = ToTarget * DamageEffectParams.KnockbackMagnitude;
+			DamageEffectParams.DeathImpulse = ToTarget * DamageEffectParams.DeathImpulseMagnitude;
+			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
+			UAuraAbilitySystemLibrary::ApplyDamageEffectToTarget(DamageEffectParams);
+		}
+	}
+}
+
+FDamageEffectParams ADemonicSoul::MakeReviveExplosionDamageEffectParams()
+{
+	FDamageEffectParams Params;
+	Params.WorldContextObject = this;
+	Params.DamageGameplayEffectClass = ReviveExplosionDamageEffectClass;
+	Params.SourceAbilitySystemComponent = GetAbilitySystemComponent();
+	Params.BaseDamage = ExplosionBaseDamage;
+	Params.AbilityLevel = 1.f;
+	Params.DamageType = FAuraGameplayTags::Get().Damage_Shadow;
+	Params.DebuffChance = 0.f;
+	Params.DebuffDamage = 0.f;
+	Params.DebuffDuration = 0.f;
+	Params.DebuffFrequency = 0.f;
+	Params.DeathImpulseMagnitude = DeathImpulseMagnitude;
+	Params.KnockbackMagnitude = KnockbackMagnitude;
+	Params.KnockbackChance = 100.f;
+
+	Params.bIsRadialDamage = true;
+	Params.RadialDamageInnerRadius = RadialDamageInnerRadius;
+	Params.RadialDamageOuterRadius = RadialDamageOuterRadius;
+	Params.RadialDamageOrigin = GetActorLocation();
+
+	return Params;
 }

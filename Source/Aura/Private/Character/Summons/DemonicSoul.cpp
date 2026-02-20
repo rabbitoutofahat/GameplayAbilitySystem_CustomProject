@@ -18,11 +18,21 @@ void ADemonicSoul::Die(const FVector& DeathImpulse)
 	*/
 	Super::Die(DeathImpulse);
 
-	// GetAvatarActorFromActorInfo() returns nullptr
+	//TODO: Add special effect when Demonic Soul dies, "retreating" back to the Vessel
+	//GetAvatarActorFromActorInfo() returns nullptr
+	// 
 	//AVessel* Vessel = Cast<AVessel>(OwnerActor);
 	//UAuraAbilitySystemComponent* VesselASC = Cast<UAuraAbilitySystemComponent>(Vessel->GetAbilitySystemComponent());
 	//UHaunt* HauntAbility = Cast<UHaunt>(VesselASC->GetAbilitySpecFromTag(FAuraGameplayTags::Get().Abilities_Utility_Haunt)->Ability);
 	//HauntAbility->SpawnReturnProjectile();
+
+	if (GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Buff_HellforgedReconstitution))
+	{
+		RespawnTimer = 3.f;
+		FGameplayTagContainer EffectsToRemove;
+		EffectsToRemove.AddTag(FAuraGameplayTags::Get().Buff_HellforgedReconstitution);
+		GetAbilitySystemComponent()->RemoveActiveEffectsWithGrantedTags(EffectsToRemove);
+	}
 	
 	FTimerHandle RespawnTimerHandle;
 	GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ADemonicSoul::Respawn, RespawnTimer, false);

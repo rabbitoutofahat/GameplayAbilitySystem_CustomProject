@@ -165,6 +165,7 @@ public:
 
 	FGameplayTag Buff_DemonicStrength;
 	FGameplayTag Buff_SoulInstability;
+	FGameplayTag Buff_HellforgedReconstitution;
 
 private:
 	static FAuraGameplayTags GameplayTags;

@@ -216,4 +216,5 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 
 	GameplayTags.Buff_DemonicStrength = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.DemonicStrength"), FString("Given to Vessel's demons, allows one free use of their respective special ability"));
 	GameplayTags.Buff_SoulInstability = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.SoulInstability"), FString("Given to the player when they use Haunt, creating a brief window where recasting Haunt deals additional damage"));
+	GameplayTags.Buff_HellforgedReconstitution = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.HellforgedReconstitution"), FString("Given to the Vessel's Demonic Soul, significantly reducing the time before their next respawn"));
 }

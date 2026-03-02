@@ -63,6 +63,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|ReviveExplosion")
 	float RadialDamageOuterRadius = 500.f;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|LesserDemonSpawn")
+	int32 NumDemonsSpawned = 2;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|LesserDemonSpawn")
+	float LesserDemonSpawnDistance = 100.f;
+
 private:
 	FVector LineTraceStart = FVector(150.f, 0.f, 500.f);
 	FVector LineTraceEnd = FVector(150.f, 0.f, -500.f);

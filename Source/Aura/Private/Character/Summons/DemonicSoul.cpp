@@ -62,7 +62,19 @@ void ADemonicSoul::OnRespawnTimerEnd()
 		}
 		if (Vessel->GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Passive_DemonicSoul_FriendsInLowPlaces))
 		{
-
+			//// Create "Secondary" Hit Locations based off the Demonic Soul's location for spawning Lesser Demons as per this particular upgrade's functionality
+			//FVector SummonLocation = Summon->GetActorLocation();
+			//FVector SummonForwardVector = Summon->GetActorForwardVector();
+			//FHitResult SecondaryHit;
+			//GetWorld()->LineTraceSingleByChannel(SecondaryHit, SummonLocation + LineTraceStart, SummonLocation + LineTraceEnd, ECollisionChannel::ECC_Visibility);
+		
+			TArray<FVector> LesserDemonSpawnLocations = UAuraAbilitySystemLibrary::EvenlyRotatedVectors(Summon->GetActorForwardVector(), FVector::UpVector, 180.f, NumDemonsSpawned);
+			for (const FVector& LesserDemonSpawn : LesserDemonSpawnLocations)
+			{
+				FTransform LesserDemonSpawnTransform;
+				LesserDemonSpawnTransform.SetLocation(Summon->GetActorLocation() + (LesserDemonSpawn * LesserDemonSpawnDistance) + SpawnLocationZOffset);
+				Vessel->SpawnSummonedMinion(Vessel->LesserDemonClass, LesserDemonSpawnTransform, Execute_GetPlayerLevel(Vessel));
+			}
 		}
 	}
 }

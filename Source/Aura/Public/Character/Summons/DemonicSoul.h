@@ -7,6 +7,7 @@
 #include "DemonicSoul.generated.h"
 
 class UHaunt;
+struct FDamageEffectParams;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FRespawnTimerStartSignature);
 

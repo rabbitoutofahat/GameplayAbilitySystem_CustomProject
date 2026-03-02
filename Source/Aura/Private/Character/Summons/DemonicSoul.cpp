@@ -10,6 +10,7 @@
 #include "UI/Widget/AuraUserWidget.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "GameplayCueManager.h"
 
 void ADemonicSoul::Die(const FVector& DeathImpulse)
 {
@@ -90,6 +91,10 @@ void ADemonicSoul::CreateExplosionOnRevival()
 			UAuraAbilitySystemLibrary::ApplyDamageEffectToTarget(DamageEffectParams);
 		}
 	}
+
+	FGameplayCueParameters CueParams;
+	CueParams.Location = DamageEffectParams.RadialDamageOrigin;
+	UGameplayCueManager::ExecuteGameplayCue_NonReplicated(GetOwner(), FAuraGameplayTags::Get().GameplayCue_Explosion_Blue, CueParams);
 }
 
 FDamageEffectParams ADemonicSoul::MakeReviveExplosionDamageEffectParams()

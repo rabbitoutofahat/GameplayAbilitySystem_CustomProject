@@ -157,8 +157,7 @@ public:
 	FGameplayTag GameplayCue_Rift_Dregling;
 	FGameplayTag GameplayCue_Rift_InfernalGolem;
 	FGameplayTag GameplayCue_Rift_ChaosElemental;
-	FGameplayTag GameplayCue_Explosion_Red;
-	FGameplayTag GameplayCue_Explosion_Blue;
+	FGameplayTag GameplayCue_ReviveExplosion;
 	FGameplayTag GameplayCue_SoulCrush;
 
 	FGameplayTag Attributes_MaxEnergy;

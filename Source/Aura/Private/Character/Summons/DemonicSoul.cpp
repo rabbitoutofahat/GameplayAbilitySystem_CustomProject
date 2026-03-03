@@ -28,6 +28,8 @@ void ADemonicSoul::Die(const FVector& DeathImpulse)
 	//UHaunt* HauntAbility = Cast<UHaunt>(VesselASC->GetAbilitySpecFromTag(FAuraGameplayTags::Get().Abilities_Utility_Haunt)->Ability);
 	//HauntAbility->SpawnReturnProjectile();
 
+	//TODO: If the player has the Hellforged Reconstitution Upgrade, create a radial Niagara Effect indicating the effective range of the respawn explosion
+
 	if (GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Buff_HellforgedReconstitution)) // TODO: Once more floors are implemented, grant another buff tag on floor change
 	{
 		RespawnTimer = HellforgedReconstitutionRespawnTimer;
@@ -44,13 +46,12 @@ void ADemonicSoul::Die(const FVector& DeathImpulse)
 void ADemonicSoul::OnRespawnTimerEnd()
 {
 	AVessel* Vessel = Cast<AVessel>(OwnerActor);
-	FVector VesselLocation = Vessel->GetActorLocation();
 	FHitResult Hit;
 	FVector SpawnLocation;
-	GetWorld()->LineTraceSingleByChannel(Hit, VesselLocation + LineTraceStart, VesselLocation + LineTraceEnd, ECollisionChannel::ECC_Visibility);
+	GetWorld()->LineTraceSingleByChannel(Hit, GetActorLocation() + LineTraceStart, GetActorLocation() + LineTraceEnd, ECollisionChannel::ECC_Visibility);
 	if (Hit.bBlockingHit) SpawnLocation = Hit.ImpactPoint + SpawnLocationZOffset;
 	FTransform SpawnTransform;
-	SpawnTransform.SetLocation(SpawnLocation);
+	SpawnTransform.SetLocation(GetActorLocation());
 	ASummonCharacter* Summon = Vessel->SpawnSummonedMinion(Vessel->DemonicSoulClass, SpawnTransform, Execute_GetPlayerLevel(Vessel));
 	Vessel->DemonicSoul = Cast<ADemonicSoul>(Summon); // Set the newly respawned Demonic Soul as the Vessel's current Demonic Soul reference
 
@@ -62,13 +63,7 @@ void ADemonicSoul::OnRespawnTimerEnd()
 		}
 		if (Vessel->GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Passive_DemonicSoul_FriendsInLowPlaces))
 		{
-			//// Create "Secondary" Hit Locations based off the Demonic Soul's location for spawning Lesser Demons as per this particular upgrade's functionality
-			//FVector SummonLocation = Summon->GetActorLocation();
-			//FVector SummonForwardVector = Summon->GetActorForwardVector();
-			//FHitResult SecondaryHit;
-			//GetWorld()->LineTraceSingleByChannel(SecondaryHit, SummonLocation + LineTraceStart, SummonLocation + LineTraceEnd, ECollisionChannel::ECC_Visibility);
-		
-			TArray<FVector> LesserDemonSpawnLocations = UAuraAbilitySystemLibrary::EvenlyRotatedVectors(Summon->GetActorForwardVector(), FVector::UpVector, 180.f, NumDemonsSpawned);
+			TArray<FVector> LesserDemonSpawnLocations = UAuraAbilitySystemLibrary::EvenlyRotatedVectors(Summon->GetActorForwardVector(), FVector::UpVector, SpawnSpread, NumDemonsSpawned);
 			for (const FVector& LesserDemonSpawn : LesserDemonSpawnLocations)
 			{
 				FTransform LesserDemonSpawnTransform;
@@ -106,7 +101,7 @@ void ADemonicSoul::CreateExplosionOnRevival()
 
 	FGameplayCueParameters CueParams;
 	CueParams.Location = DamageEffectParams.RadialDamageOrigin;
-	UGameplayCueManager::ExecuteGameplayCue_NonReplicated(GetOwner(), FAuraGameplayTags::Get().GameplayCue_Explosion_Blue, CueParams);
+	UGameplayCueManager::ExecuteGameplayCue_NonReplicated(GetOwner(), FAuraGameplayTags::Get().GameplayCue_ReviveExplosion, CueParams);
 }
 
 FDamageEffectParams ADemonicSoul::MakeReviveExplosionDamageEffectParams()

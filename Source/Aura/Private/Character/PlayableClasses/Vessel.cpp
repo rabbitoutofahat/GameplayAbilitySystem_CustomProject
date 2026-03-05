@@ -20,5 +20,11 @@ ASummonCharacter* AVessel::SpawnSummonedMinion(UClass* Class, const FTransform& 
 
 	Summon->FinishSpawning(SpawnTransform);
 	Summon->SpawnDefaultController();
+
+	if (GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Passive_DemonicSoul_AbyssalDominion))
+	{
+		Summon->GetAbilitySystemComponent()->ApplyGameplayEffectToSelf(AbyssalDominionBuffClass.GetDefaultObject(), 1.f, Summon->GetAbilitySystemComponent()->MakeEffectContext());
+	}
+
 	return Summon;
 }

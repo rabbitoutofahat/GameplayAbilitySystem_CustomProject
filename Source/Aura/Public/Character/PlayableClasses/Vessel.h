@@ -32,4 +32,10 @@ public:
 	*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<ASummonCharacter> LesserDemonClass;
+
+	/*
+	* Check for the Abyssal Dominion upgrade tag when summoning Demons. If present, apply the buff to the demon being summoned.
+	*/
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameplayEffect> AbyssalDominionBuffClass;
 };

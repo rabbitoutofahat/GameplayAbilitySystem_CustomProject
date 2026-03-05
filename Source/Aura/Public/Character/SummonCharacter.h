@@ -54,8 +54,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ShouldEnableSpecial(bool bEnable); // Used to change the ShouldUseSpecial Blackboard Key
 
-	float GetLifespan() { return Lifespan; }
-	void SetLifespan(float InLifespan) { Lifespan = InLifespan; }
+	void AddLifespan(float InLifespan); // Add difference between new and old Lifespan to AdditionalLifespan and set Lifespan to new value
 
 protected:
 	virtual void BeginPlay() override;
@@ -72,10 +71,20 @@ protected:
 	UPROPERTY(BlueprintAssignable)
 	FOnSummonDeathSignature OnSummonDeathDelegate; // Used for on-death effects, such as the Death Rattle upgrade buffing the Demonic Soul whenever a summon dies
 
+	void OnLifespanTimerEnd();
+
 private:
 	/*
-	* Set by the AuraAttributeSet Lifespan Attribute, used to determine how long the summon should live before automatically dying
-	* Kept private as we don't want to expose this to the Demonic Soul class which can live indefinitely
+	* Set by the AuraAttributeSet Lifespan Attribute, used to determine how long the summon should live before automatically dying.
+	* Kept private as we don't want to expose this to the Demonic Soul class which can live indefinitely.
 	*/ 
 	float Lifespan = 0.f;
+
+	/*
+	* Extend a summon's lifespan by adding to the AdditionalLifespan variable.
+	* When a summon reaches the end of its initial Lifespan, if AdditionalLifespan is greater than 0, the summon will be given that much more time to live and AdditionalLifespan will be reset to 0. 
+	*/
+	float AdditionalLifespan = 0.f;
+	FTimerHandle LifespanTimerHandle;
+	FTimerDelegate LifespanDelegate;
 };

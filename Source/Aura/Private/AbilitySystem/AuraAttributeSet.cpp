@@ -180,7 +180,7 @@ void UAuraAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute,
 	{
 		if (ASummonCharacter* Summon = Cast<ASummonCharacter>(GetActorInfo()->AvatarActor))
 		{
-			Summon->SetLifespan(NewValue);
+			Summon->AddLifespan(NewValue); // Assuming we always increase lifespan by a positive amount
 		}
 	}
 }

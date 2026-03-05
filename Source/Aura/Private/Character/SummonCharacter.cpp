@@ -53,6 +53,13 @@ void ASummonCharacter::ShouldEnableSpecial(bool bEnable)
 	bFullEnergy = bEnable;
 }
 
+void ASummonCharacter::AddLifespan(float InLifespan)
+{
+	if (Lifespan <= 0.f) return; // Avoid executing this function on spawn before Lifespan is set by the Attribute Set
+	AdditionalLifespan += InLifespan - Lifespan;
+	Lifespan = InLifespan;
+}
+
 void ASummonCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -72,12 +79,10 @@ void ASummonCharacter::BeginPlay()
 		BindCallbacksToDependencies(AuraAS);
 		BroadcastInitialValues(AuraAS);
 		BindHitReactTagChangeDelegate();
-		
+
 		Lifespan = AuraAS->GetLifespan();
-		FTimerDelegate LifespanDelegate;
 		// Callback function has an input parameter so we need to bind a lambda. If a summon reaches its full lifespan, no death impulse is needed
-		LifespanDelegate.BindLambda([this]() {Die(FVector::ZeroVector); }); 
-		FTimerHandle LifespanTimerHandle;
+		LifespanDelegate.BindLambda([this]() {OnLifespanTimerEnd(); });
 		GetWorldTimerManager().SetTimer(LifespanTimerHandle, LifespanDelegate, Lifespan, false);
 	}
 }
@@ -108,4 +113,15 @@ void ASummonCharacter::BroadcastInitialValues(const UAuraAttributeSet* AuraAS) c
 	Super::BroadcastInitialValues(AuraAS);
 	OnEnergyChanged.Broadcast(AuraAS->GetEnergy());
 	OnMaxEnergyChanged.Broadcast(AuraAS->GetMaxEnergy());
+}
+
+void ASummonCharacter::OnLifespanTimerEnd()
+{
+	if (AdditionalLifespan > 0.1f)
+	{
+		GetWorldTimerManager().ClearTimer(LifespanTimerHandle);
+		GetWorldTimerManager().SetTimer(LifespanTimerHandle, LifespanDelegate, AdditionalLifespan, false);
+		AdditionalLifespan = 0.f; // Reset AdditionalLifespan so that it doesn't interfere with future lifespan changes
+	}
+	else Die(FVector::ZeroVector);
 }

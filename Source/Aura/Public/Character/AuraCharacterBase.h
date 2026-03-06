@@ -122,8 +122,13 @@ protected:
 
 	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
+	/*
+	* We set MaxWalkSpeed in the Character Movement Component to this value, although now we also need to set walk speed as an attribute
+	* Make sure BaseWalkSpeed, MaxWalkSpeed, and MovementSpeed Attribute align
+	* TODO: Revisit BaseWalkSpeed at a later date to determine whether MovementSpeed Attribute makes it redundant
+	*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
-	float BaseWalkSpeed = 600.f;
+	float BaseWalkSpeed = 600.f; 
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;

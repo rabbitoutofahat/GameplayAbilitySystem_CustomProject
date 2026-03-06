@@ -165,7 +165,7 @@ void UAuraAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute,
 	{
 		if (UCharacterMovementComponent* CharacterMovementComponent = Cast<UCharacterMovementComponent>(GetActorInfo()->MovementComponent))
 		{
-			CharacterMovementComponent->MaxWalkSpeed = NewValue;
+			CharacterMovementComponent->MaxWalkSpeed = NewValue; // By setting base MovementSpeed to our BaseWalkSpeed variable, we can account for both additive and multiplicative changes to MovementSpeed
 		}
 	}
 	if (Attribute == GetAttackSpeedAttribute())

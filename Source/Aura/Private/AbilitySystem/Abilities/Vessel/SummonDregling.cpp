@@ -5,6 +5,8 @@
 #include "Actor/AuraProjectile.h"
 #include "GameplayCueManager.h"
 #include "AuraGameplayTags.h"
+#include "Character/PlayableClasses/Vessel.h"
+#include "AbilitySystemComponent.h"
 
 void USummonDregling::SpawnDreglingProjectile(const FVector& TargetLocation, const float XOffset, const float YOffset)
 {
@@ -25,4 +27,25 @@ void USummonDregling::SpawnDreglingProjectile(const FVector& TargetLocation, con
 
 	DreglingProjectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 	DreglingProjectile->FinishSpawning(SpawnTransform);
+
+	if (Cast<AVessel>(GetAvatarActorFromActorInfo())->GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SummonDregling_KineticBombardment))
+	{
+		for (int32 i = 0; i < KineticBombardmentNumProjectiles; i++)
+		{
+			float RandomProjectileSpread = FMath::RandRange(-ProjectileSpread, ProjectileSpread);
+			FTransform KineticBombardmentTransform;
+			KineticBombardmentTransform.SetLocation(SpawnLocation);
+			KineticBombardmentTransform.SetRotation((TargetLocation - SpawnLocation + FVector(RandomProjectileSpread, RandomProjectileSpread, 0.f)).ToOrientationQuat());
+		
+			AAuraProjectile* KineticBombardmentProjectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
+				KineticBombardmentProjectileClass,
+				KineticBombardmentTransform,
+				GetAvatarActorFromActorInfo(),
+				CurrentActorInfo->PlayerController->GetPawn(),
+				ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
+
+			KineticBombardmentProjectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+			KineticBombardmentProjectile->FinishSpawning(KineticBombardmentTransform);
+		}
+	}
 }

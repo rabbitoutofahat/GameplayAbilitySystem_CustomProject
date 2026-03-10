@@ -32,7 +32,7 @@ void ADreglingProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedCompone
 			{
 				if (VesselASC->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SummonDregling_MoltenTouch) && bIsPrimaryProjectile)
 				{
-					ADregling* Dregling = Cast<ADregling>(DreglingClass.GetDefaultObject());
+					ADregling* Dregling = Cast<ADregling>(ClassToSpawn.GetDefaultObject());
 					Cast<AAuraCharacterBase>(Actor)->GetAbilitySystemComponent()->ApplyGameplayEffectToSelf(Dregling->MoltenTouchDebuffClass.GetDefaultObject(), 1.f, VesselASC->MakeEffectContext());
 				}
 
@@ -54,7 +54,7 @@ void ADreglingProjectile::PlayImpactEffects()
 
 	if (AVessel* Vessel = Cast<AVessel>(DamageEffectParams.WorldContextObject))
 	{
-		ASummonCharacter* Dregling = Vessel->SpawnSummonedMinion(DreglingClass, FTransform(GetActorRotation(), GetActorLocation()), Vessel->GetPlayerLevel_Implementation());
+		ASummonCharacter* Dregling = Vessel->SpawnSummonedMinion(ClassToSpawn, FTransform(GetActorRotation(), GetActorLocation()), Vessel->GetPlayerLevel_Implementation());
 		Cast<AAuraAIController>(Dregling->GetController())->GetBrainComponent()->StopLogic("Start Spawning Actor");
 		Dregling->bIsBeingSpawned = true;
 	}

@@ -26,5 +26,5 @@ protected:
 
 private:
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<ASummonCharacter> DreglingClass;
+	TSubclassOf<ASummonCharacter> ClassToSpawn;
 };

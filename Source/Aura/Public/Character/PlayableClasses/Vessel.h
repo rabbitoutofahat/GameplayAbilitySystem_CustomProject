@@ -38,4 +38,11 @@ public:
 	*/
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UGameplayEffect> AbyssalDominionBuffClass;
+
+	/*
+	* Cooldown variables for the Kinetic Bombardment upgrade for Summon Dregling stored here since the cooldown needs to be tracked across multiple uses of the ability.
+	* Set true by default so we don't have to worry about turning it on when the player gets the Kinetic Bombardment upgrade.
+	*/
+	bool bKineticBombardmentOffCD = true;
+	FTimerHandle KineticBombardmentTimerHandle;
 };

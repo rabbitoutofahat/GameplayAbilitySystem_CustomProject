@@ -28,10 +28,12 @@ void USummonDregling::SpawnDreglingProjectile(const FVector& TargetLocation, con
 	DreglingProjectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 	DreglingProjectile->FinishSpawning(SpawnTransform);
 
-	if (Cast<AVessel>(GetAvatarActorFromActorInfo())->GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SummonDregling_KineticBombardment))
+	AVessel* Vessel = Cast<AVessel>(GetAvatarActorFromActorInfo());
+	if (Vessel->GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SummonDregling_KineticBombardment) && Vessel->bKineticBombardmentOffCD)
 	{
 		for (int32 i = 0; i < KineticBombardmentNumProjectiles; i++)
 		{
+			// Add deviation from main Dregling Projectile's target location
 			float RandomProjectileSpread = FMath::RandRange(-ProjectileSpread, ProjectileSpread);
 			FTransform KineticBombardmentTransform;
 			KineticBombardmentTransform.SetLocation(SpawnLocation);
@@ -47,5 +49,14 @@ void USummonDregling::SpawnDreglingProjectile(const FVector& TargetLocation, con
 			KineticBombardmentProjectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 			KineticBombardmentProjectile->FinishSpawning(KineticBombardmentTransform);
 		}
+
+		Vessel->bKineticBombardmentOffCD = false;
+		FTimerDelegate KineticBombardmentDelegate;
+		KineticBombardmentDelegate.BindLambda([this, Vessel]()
+			{
+				GetWorld()->GetTimerManager().ClearTimer(Vessel->KineticBombardmentTimerHandle);
+				Vessel->bKineticBombardmentOffCD = true;
+			});
+		GetWorld()->GetTimerManager().SetTimer(Vessel->KineticBombardmentTimerHandle, KineticBombardmentDelegate, KineticBombardmentCooldown, false);
 	}
 }

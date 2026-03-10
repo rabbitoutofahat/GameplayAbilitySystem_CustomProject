@@ -28,12 +28,15 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AAuraProjectile> DreglingProjectileClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Upgrades")
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|KineticBombardment")
 	TSubclassOf<AAuraProjectile> KineticBombardmentProjectileClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Upgrades")
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|KineticBombardment")
 	int32 KineticBombardmentNumProjectiles = 2;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Upgrades")
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|KineticBombardment")
 	float ProjectileSpread = 15.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|KineticBombardment")
+	float KineticBombardmentCooldown = 20.f;
 };

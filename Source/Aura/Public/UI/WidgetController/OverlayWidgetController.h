@@ -42,6 +42,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float,
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLevelChangedSignature, int32, NewLevel, bool, bLevelUp);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityLevelChangedSignature, int32, NewLevel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FSpellGlobeLightUpSignature, bool, bLightUp, const FGameplayTag&, AbilityTag);
 
 
 /**
@@ -85,6 +86,10 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Abilities")
 	FAbilityLevelChangedSignature AbilityLevelChangedDelegate;
+
+	// Some ability upgrades may cause the *next cast* of that ability to do something special, so we light up the spell globe it is assigned to in order to indicate that
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Abilities")
+	FSpellGlobeLightUpSignature SpellGlobeLightUpDelegate; 
 
 protected:
 	// Creates a widget data property for OverlayWidgetController blueprint(s) that lets us lookup tags in our MessageWidgetDataTable here in C++

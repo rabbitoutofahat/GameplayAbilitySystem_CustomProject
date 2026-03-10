@@ -16,6 +16,9 @@ class AURA_API USummonDregling : public UAuraDamageGameplayAbility
 {
 	GENERATED_BODY()
 	
+public:
+	// When the next cast of Summon Dregling triggers Kinetic Bombardment, the Spell Globe widget should light up
+
 protected:
 	// Summons a Dregling Summon Character from the sky that crashes down onto the TargetLocation. Should feel like a meteor strike, with XY-offsets to have it come down at an angle.
 	UFUNCTION(BlueprintCallable)
@@ -28,15 +31,17 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AAuraProjectile> DreglingProjectileClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|KineticBombardment")
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|Kinetic Bombardment")
 	TSubclassOf<AAuraProjectile> KineticBombardmentProjectileClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|KineticBombardment")
-	int32 KineticBombardmentNumProjectiles = 2;
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|Kinetic Bombardment")
+	int32 NumProjectiles = 2;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|KineticBombardment")
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|Kinetic Bombardment")
 	float ProjectileSpread = 15.f;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|KineticBombardment")
-	float KineticBombardmentCooldown = 20.f;
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|Kinetic Bombardment")
+	float Cooldown = 20.f;
+
+	void SetKineticBombardmentActiveStatus(bool bInStatus);
 };

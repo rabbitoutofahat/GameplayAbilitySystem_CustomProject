@@ -64,6 +64,12 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 			{
 				AbilityLevelChangedDelegate.Broadcast(NewLevel);
 			});
+
+		GetAuraASC()->SpellGlobeLightUp.AddLambda(
+			[this](bool bLightUp, const FGameplayTag& AbilityTag) 
+			{
+				SpellGlobeLightUpDelegate.Broadcast(bLightUp, AbilityTag);
+			});
 	}
 
 	GetAuraPS()->OnXPChanged.AddUObject(this, &UOverlayWidgetController::OnXPChanged);

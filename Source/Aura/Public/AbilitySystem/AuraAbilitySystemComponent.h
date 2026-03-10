@@ -15,6 +15,7 @@ DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityStatusChangedSignature, const FGa
 DECLARE_MULTICAST_DELEGATE_FiveParams(FAbilityEquippedSignature, const FGameplayTag& /*AbilityTag*/, const FGameplayTag& /*StatusTag*/, const int32 /*Level*/, const FGameplayTag& /*NewInputSlot*/, const FGameplayTag& /*OldInputSlot*/);
 DECLARE_MULTICAST_DELEGATE_OneParam(FDeactivatePassiveSignature, const FGameplayTag& /*AbilityTag*/);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FActivatePassiveSignature, const FGameplayTag& /*AbilityTag*/, bool /*bActivate*/);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FSpellGlobeLightUp, bool /*bLightUp*/, const FGameplayTag& /*AbilityTag*/);
 
 /**
  * 
@@ -33,6 +34,7 @@ public:
 	FAbilityEquippedSignature AbilityEquippedDelegate;
 	FDeactivatePassiveSignature DeactivatePassiveDelegate;
 	FActivatePassiveSignature ActivatePassiveDelegate;
+	FSpellGlobeLightUp SpellGlobeLightUp;
 
 	void AddCharacterAbilitiesFromSaveData(ULoadScreenSaveGame* SaveData);
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);

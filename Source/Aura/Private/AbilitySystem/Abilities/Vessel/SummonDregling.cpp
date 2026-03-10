@@ -6,7 +6,7 @@
 #include "GameplayCueManager.h"
 #include "AuraGameplayTags.h"
 #include "Character/PlayableClasses/Vessel.h"
-#include "AbilitySystemComponent.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 
 void USummonDregling::SpawnDreglingProjectile(const FVector& TargetLocation, const float XOffset, const float YOffset)
 {
@@ -31,7 +31,7 @@ void USummonDregling::SpawnDreglingProjectile(const FVector& TargetLocation, con
 	AVessel* Vessel = Cast<AVessel>(GetAvatarActorFromActorInfo());
 	if (Vessel->GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SummonDregling_KineticBombardment) && Vessel->bKineticBombardmentOffCD)
 	{
-		for (int32 i = 0; i < KineticBombardmentNumProjectiles; i++)
+		for (int32 i = 0; i < NumProjectiles; i++)
 		{
 			// Add deviation from main Dregling Projectile's target location
 			float RandomProjectileSpread = FMath::RandRange(-ProjectileSpread, ProjectileSpread);
@@ -50,13 +50,20 @@ void USummonDregling::SpawnDreglingProjectile(const FVector& TargetLocation, con
 			KineticBombardmentProjectile->FinishSpawning(KineticBombardmentTransform);
 		}
 
-		Vessel->bKineticBombardmentOffCD = false;
+		SetKineticBombardmentActiveStatus(false);
 		FTimerDelegate KineticBombardmentDelegate;
 		KineticBombardmentDelegate.BindLambda([this, Vessel]()
 			{
 				GetWorld()->GetTimerManager().ClearTimer(Vessel->KineticBombardmentTimerHandle);
-				Vessel->bKineticBombardmentOffCD = true;
+				SetKineticBombardmentActiveStatus(true);
 			});
-		GetWorld()->GetTimerManager().SetTimer(Vessel->KineticBombardmentTimerHandle, KineticBombardmentDelegate, KineticBombardmentCooldown, false);
+		GetWorld()->GetTimerManager().SetTimer(Vessel->KineticBombardmentTimerHandle, KineticBombardmentDelegate, Cooldown, false);
 	}
+}
+
+void USummonDregling::SetKineticBombardmentActiveStatus(bool bInStatus)
+{
+	AVessel* Vessel = Cast<AVessel>(GetAvatarActorFromActorInfo());
+	Vessel->bKineticBombardmentOffCD = bInStatus;
+	Cast<UAuraAbilitySystemComponent>(Vessel->GetAbilitySystemComponent())->SpellGlobeLightUp.Broadcast(bInStatus, FAuraGameplayTags::Get().Abilities_Vessel_SummonDregling);
 }

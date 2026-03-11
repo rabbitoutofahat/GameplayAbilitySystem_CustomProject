@@ -31,39 +31,42 @@ void USummonDregling::SpawnDreglingProjectile(const FVector& TargetLocation, con
 	AVessel* Vessel = Cast<AVessel>(GetAvatarActorFromActorInfo());
 	if (Vessel->GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SummonDregling_KineticBombardment) && Vessel->bKineticBombardmentOffCD)
 	{
-		for (int32 i = 0; i < NumProjectiles; i++)
-		{
-			// Add deviation from main Dregling Projectile's target location
-			float RandomProjectileSpread = FMath::RandRange(-ProjectileSpread, ProjectileSpread);
-			FTransform KineticBombardmentTransform;
-			KineticBombardmentTransform.SetLocation(SpawnLocation);
-			KineticBombardmentTransform.SetRotation((TargetLocation - SpawnLocation + FVector(RandomProjectileSpread, RandomProjectileSpread, 0.f)).ToOrientationQuat());
-		
-			AAuraProjectile* KineticBombardmentProjectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
-				KineticBombardmentProjectileClass,
-				KineticBombardmentTransform,
-				GetAvatarActorFromActorInfo(),
-				CurrentActorInfo->PlayerController->GetPawn(),
-				ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
-
-			KineticBombardmentProjectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
-			KineticBombardmentProjectile->FinishSpawning(KineticBombardmentTransform);
-		}
-
-		SetKineticBombardmentActiveStatus(false);
+		SpawnKineticBombardmentProjectiles(SpawnLocation, TargetLocation);
+		SetKineticBombardmentActiveStatus(Vessel, false);
 		FTimerDelegate KineticBombardmentDelegate;
 		KineticBombardmentDelegate.BindLambda([this, Vessel]()
 			{
 				GetWorld()->GetTimerManager().ClearTimer(Vessel->KineticBombardmentTimerHandle);
-				SetKineticBombardmentActiveStatus(true);
+				SetKineticBombardmentActiveStatus(Vessel, true);
 			});
 		GetWorld()->GetTimerManager().SetTimer(Vessel->KineticBombardmentTimerHandle, KineticBombardmentDelegate, Cooldown, false);
 	}
 }
 
-void USummonDregling::SetKineticBombardmentActiveStatus(bool bInStatus)
+void USummonDregling::SpawnKineticBombardmentProjectiles(const FVector& SpawnLocation, const FVector& TargetLocation)
 {
-	AVessel* Vessel = Cast<AVessel>(GetAvatarActorFromActorInfo());
+	for (int32 i = 0; i < NumProjectiles; i++)
+	{
+		// Add deviation from main Dregling Projectile's target location
+		float RandomProjectileSpread = FMath::RandRange(-ProjectileSpread, ProjectileSpread);
+		FTransform KineticBombardmentTransform;
+		KineticBombardmentTransform.SetLocation(SpawnLocation);
+		KineticBombardmentTransform.SetRotation((TargetLocation - SpawnLocation + FVector(RandomProjectileSpread, RandomProjectileSpread, 0.f)).ToOrientationQuat());
+
+		AAuraProjectile* KineticBombardmentProjectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
+			KineticBombardmentProjectileClass,
+			KineticBombardmentTransform,
+			GetAvatarActorFromActorInfo(),
+			CurrentActorInfo->PlayerController->GetPawn(),
+			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
+
+		KineticBombardmentProjectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+		KineticBombardmentProjectile->FinishSpawning(KineticBombardmentTransform);
+	}
+}
+
+void USummonDregling::SetKineticBombardmentActiveStatus(AVessel* Vessel, bool bInStatus)
+{
 	Vessel->bKineticBombardmentOffCD = bInStatus;
 	Cast<UAuraAbilitySystemComponent>(Vessel->GetAbilitySystemComponent())->SpellGlobeLightUp.Broadcast(bInStatus, FAuraGameplayTags::Get().Abilities_Vessel_SummonDregling);
 }

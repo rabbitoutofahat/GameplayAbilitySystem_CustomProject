@@ -7,6 +7,7 @@
 #include "SummonDregling.generated.h"
 
 class AAuraProjectile;
+class AVessel;
 
 /**
  * 
@@ -43,5 +44,6 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|Kinetic Bombardment")
 	float Cooldown = 20.f;
 
-	void SetKineticBombardmentActiveStatus(bool bInStatus);
+	void SpawnKineticBombardmentProjectiles(const FVector& SpawnLocation, const FVector& TargetLocation);
+	void SetKineticBombardmentActiveStatus(AVessel* Vessel, bool bInStatus);
 };

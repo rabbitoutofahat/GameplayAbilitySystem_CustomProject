@@ -44,7 +44,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidge
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityLevelChangedSignature, int32, NewLevel);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FSpellGlobeLightUpSignature, bool, bLightUp, const FGameplayTag&, AbilityTag);
 
-
 /**
  * 
  */

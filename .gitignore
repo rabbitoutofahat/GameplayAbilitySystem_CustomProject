@@ -3,10 +3,13 @@ DerivatedDataCache
 Intermediate
 Saved
 Build
-Content/ElementalsBundle
-Content/Vefects
+Content/__ExternalActors__
+Content/__ExternalObjects__
 Content/ArrowTrail
 Content/DemonHandShield
+Content/ElementalsBundle
+Content/Free_Magic
+Content/Vefects
 
 .vscode
 .vs

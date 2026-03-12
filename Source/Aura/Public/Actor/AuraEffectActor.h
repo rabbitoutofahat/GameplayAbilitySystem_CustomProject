@@ -89,6 +89,9 @@ protected:
 	bool bDestroyOnEffectApplication = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
+	bool bApplyEffectsToPlayers = false; // Want players to ignore damaging effects spawned by their own abilities or that of other players
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	bool bApplyEffectsToEnemies = false; // Want enemies to ignore certain effect actors, such as potions, and be affected by others, such as fire areas
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")

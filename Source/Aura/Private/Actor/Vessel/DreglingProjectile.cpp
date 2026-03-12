@@ -47,14 +47,7 @@ void ADreglingProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedCompone
 
 		if (VesselASC->HasMatchingGameplayTag(GameplayTags.Abilities_Vessel_SummonDregling_FlamePatch) && bIsPrimaryProjectile)
 		{
-			AAuraEffectActor* FlamePatch = GetWorld()->SpawnActorDeferred<AAuraEffectActor>(
-				FlamePatchClass,
-				GetActorTransform(),
-				Vessel,
-				Vessel,
-				ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
-			FlamePatch->ActorLevel = Vessel->GetPlayerLevel_Implementation();
-			FlamePatch->FinishSpawning(GetActorTransform());
+			SpawnFlamePatch(Vessel->GetPlayerLevel_Implementation());
 		}
 
 		Destroy();
@@ -73,5 +66,24 @@ void ADreglingProjectile::PlayImpactEffects()
 		ASummonCharacter* Dregling = Vessel->SpawnSummonedMinion(ClassToSpawn, FTransform(GetActorRotation(), GetActorLocation()), Vessel->GetPlayerLevel_Implementation());
 		Cast<AAuraAIController>(Dregling->GetController())->GetBrainComponent()->StopLogic("Start Spawning Actor");
 		Dregling->bIsBeingSpawned = true;
+	}
+}
+
+void ADreglingProjectile::SpawnFlamePatch(int32 Level)
+{
+	FHitResult Hit;
+	GetWorld()->LineTraceSingleByChannel(Hit, GetActorLocation() + FVector(0.f, 0.f, 400.f), GetActorLocation() - FVector(0.f, 0.f, 400.f), ECollisionChannel::ECC_GameTraceChannel3); // (Exclude Players)
+	if (Hit.bBlockingHit)
+	{
+		FTransform FlamePatchTransform;
+		FlamePatchTransform.SetLocation(Hit.ImpactPoint);
+		AAuraEffectActor* FlamePatch = GetWorld()->SpawnActorDeferred<AAuraEffectActor>(
+			FlamePatchClass,
+			FlamePatchTransform,
+			this,
+			Cast<APawn>(DamageEffectParams.WorldContextObject),
+			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
+		FlamePatch->ActorLevel = Level;
+		FlamePatch->FinishSpawning(FlamePatchTransform);
 	}
 }

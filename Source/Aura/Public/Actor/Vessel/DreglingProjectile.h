@@ -26,12 +26,11 @@ protected:
 	bool bIsPrimaryProjectile = true;
 
 private:
+	void SpawnFlamePatch(int32 Level); // Spawn a flame patch effect actor on the ground, whose damage scales with the effect actor's level
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<ASummonCharacter> ClassToSpawn;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Upgrades")
 	TSubclassOf<AAuraEffectActor> FlamePatchClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Upgrades")
-	float FlamePatchLifetime = 3.f;
 };

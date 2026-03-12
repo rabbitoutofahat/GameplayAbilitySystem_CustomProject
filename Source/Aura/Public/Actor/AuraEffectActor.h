@@ -36,6 +36,13 @@ public:
 	AAuraEffectActor();
 	virtual void Tick(float DeltaTime) override;
 
+	/*
+	* For use in UE editor curve tables for gameplay effect scalable floats.
+	* For example, the actor level on a health potion maps to a value on the "healing curve" which represents how much health will be restored by the gameplay effect
+	*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Applied Effects")
+	float ActorLevel = 1.f;
+
 protected:
 	virtual void BeginPlay() override;
 	
@@ -108,15 +115,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	TEnumAsByte<EEffectRemovalPolicy> InfiniteEffectRemovalPolicy = EEffectRemovalPolicy::RemoveOnEndOverlap;
-
+	
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandles; // Used for infinite effect removal policy
-    
-	/* 
-	* For use in UE editor curve tables for gameplay effect scalable floats.
-	* For example, the actor level on a health potion maps to a value on the "healing curve" which represents how much health will be restored by the gameplay effect
-	*/
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Applied Effects")
-	float ActorLevel = 1.f; 
 
 private:
 	float RunningTime = 0.f;

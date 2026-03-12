@@ -9,6 +9,7 @@
 #include "AbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
 #include "Character/Summons/Dregling.h"
+#include "Actor/AuraEffectActor.h"
 
 void ADreglingProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -19,6 +20,7 @@ void ADreglingProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedCompone
 	{
 		AVessel* Vessel = Cast<AVessel>(DamageEffectParams.WorldContextObject);
 		UAbilitySystemComponent* VesselASC = Vessel->GetAbilitySystemComponent();
+		FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
 		TArray<AActor*> ActorsToIgnore;
 		ActorsToIgnore.Add(Vessel); // TODO: If multiplayer, add all player characters
 		TArray<AActor*> ActorsToDamage;
@@ -30,7 +32,7 @@ void ADreglingProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedCompone
 			if (!Actor->ActorHasTag(FName("Enemy"))) continue; // With the addition of more tags beyond "Player" and "Enemy", we need to if statement to filter out all non-enemies
 			if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor))
 			{
-				if (VesselASC->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SummonDregling_MoltenTouch) && bIsPrimaryProjectile)
+				if (VesselASC->HasMatchingGameplayTag(GameplayTags.Abilities_Vessel_SummonDregling_MoltenTouch) && bIsPrimaryProjectile)
 				{
 					ADregling* Dregling = Cast<ADregling>(ClassToSpawn.GetDefaultObject());
 					Cast<AAuraCharacterBase>(Actor)->GetAbilitySystemComponent()->ApplyGameplayEffectToSelf(Dregling->MoltenTouchDebuffClass.GetDefaultObject(), 1.f, VesselASC->MakeEffectContext());
@@ -43,9 +45,23 @@ void ADreglingProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedCompone
 			}
 		}
 
+		if (VesselASC->HasMatchingGameplayTag(GameplayTags.Abilities_Vessel_SummonDregling_FlamePatch) && bIsPrimaryProjectile)
+		{
+			AAuraEffectActor* FlamePatch = GetWorld()->SpawnActorDeferred<AAuraEffectActor>(
+				FlamePatchClass,
+				GetActorTransform(),
+				Vessel,
+				Vessel,
+				ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
+			FlamePatch->ActorLevel = Vessel->GetPlayerLevel_Implementation();
+			FlamePatch->FinishSpawning(GetActorTransform());
+		}
+
 		Destroy();
 	}
 	else bHit = true;
+
+	
 }
 
 void ADreglingProjectile::PlayImpactEffects()

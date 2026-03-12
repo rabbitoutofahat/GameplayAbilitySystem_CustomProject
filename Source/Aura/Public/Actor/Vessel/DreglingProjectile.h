@@ -7,6 +7,7 @@
 #include "DreglingProjectile.generated.h"
 
 class ASummonCharacter;
+class AAuraEffectActor;
 
 /**
  * 
@@ -27,4 +28,10 @@ protected:
 private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<ASummonCharacter> ClassToSpawn;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades")
+	TSubclassOf<AAuraEffectActor> FlamePatchClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades")
+	float FlamePatchLifetime = 3.f;
 };

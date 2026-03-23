@@ -4,7 +4,7 @@
 #include "Character/PlayableClasses/Vessel.h"
 #include "GameplayAbilitySpec.h"
 #include "AuraGameplayTags.h"
-#include "AbilitySystemComponent.h"
+#include "AuraAbilitySystemComponent.h"
 
 ASummonCharacter* AVessel::SpawnSummonedMinion(UClass* Class, const FTransform& SpawnTransform, int32 OwnerLevel)
 {
@@ -24,6 +24,11 @@ ASummonCharacter* AVessel::SpawnSummonedMinion(UClass* Class, const FTransform& 
 	if (GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Passive_DemonicSoul_AbyssalDominion))
 	{
 		Summon->GetAbilitySystemComponent()->ApplyGameplayEffectToSelf(AbyssalDominionBuffClass.GetDefaultObject(), 1.f, Summon->GetAbilitySystemComponent()->MakeEffectContext());
+	}
+
+	if (GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SummonDregling_PortentOfDestruction))
+	{
+		Cast<UAuraAbilitySystemComponent>(GetAbilitySystemComponent())->PortentOfDestructionDelegate.Broadcast();
 	}
 
 	return Summon;

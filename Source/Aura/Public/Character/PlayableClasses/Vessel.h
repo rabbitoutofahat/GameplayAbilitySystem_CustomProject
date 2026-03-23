@@ -36,8 +36,14 @@ public:
 	/*
 	* Check for the Abyssal Dominion upgrade tag when summoning Demons. If present, apply the buff to the demon being summoned.
 	*/
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Buffs")
 	TSubclassOf<UGameplayEffect> AbyssalDominionBuffClass;
+
+	/*
+	* Check for the Portent of Destruction upgrade tag when using abilities that open rifts. If present, apply the buff to the Vessel, making the next Summon Dregling cast free
+	*/
+	UPROPERTY(EditDefaultsOnly, Category = "Buffs")
+	TSubclassOf<UGameplayEffect> PortentOfDestructionBuffClass;
 
 	/*
 	* Cooldown variables for the Kinetic Bombardment upgrade for Summon Dregling stored here since the cooldown needs to be tracked across multiple uses of the ability.

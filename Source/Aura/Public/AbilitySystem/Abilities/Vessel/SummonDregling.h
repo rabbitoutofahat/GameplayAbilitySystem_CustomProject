@@ -8,6 +8,7 @@
 
 class AAuraProjectile;
 class AVessel;
+class UAuraAbilitySystemComponent;
 
 /**
  * 
@@ -18,7 +19,7 @@ class AURA_API USummonDregling : public UAuraDamageGameplayAbility
 	GENERATED_BODY()
 	
 public:
-	// When the next cast of Summon Dregling triggers Kinetic Bombardment, the Spell Globe widget should light up
+	static float GetPortentProcChance(UAuraAbilitySystemComponent* ASC);
 
 protected:
 	// Summons a Dregling Summon Character from the sky that crashes down onto the TargetLocation. Should feel like a meteor strike, with XY-offsets to have it come down at an angle.
@@ -31,6 +32,9 @@ protected:
 private:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AAuraProjectile> DreglingProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|Portent Of Destruction")
+	float ProcChance = 20.f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|Kinetic Bombardment")
 	TSubclassOf<AAuraProjectile> KineticBombardmentProjectileClass;

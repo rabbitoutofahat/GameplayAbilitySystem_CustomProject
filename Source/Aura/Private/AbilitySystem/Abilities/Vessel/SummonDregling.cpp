@@ -8,6 +8,14 @@
 #include "Character/PlayableClasses/Vessel.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 
+float USummonDregling::GetPortentProcChance(UAuraAbilitySystemComponent* ASC)
+{
+	FGameplayAbilitySpec* SummonDreglingSpec = ASC->GetAbilitySpecFromTag(FAuraGameplayTags::Get().Abilities_Vessel_SummonDregling);
+	if (SummonDreglingSpec == nullptr) return -1.f;
+	USummonDregling* SummonDreglingAbility = Cast<USummonDregling>(SummonDreglingSpec->Ability);
+	return SummonDreglingAbility->ProcChance;
+}
+
 void USummonDregling::SpawnDreglingProjectile(const FVector& TargetLocation, const float XOffset, const float YOffset)
 {
 	const FVector SpawnLocation = TargetLocation + FVector(XOffset, YOffset, SpawnHeight);

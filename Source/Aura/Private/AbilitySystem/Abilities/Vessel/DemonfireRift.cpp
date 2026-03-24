@@ -4,8 +4,10 @@
 #include "AbilitySystem/Abilities/Vessel/DemonfireRift.h"
 #include "Actor/ProjectileSpawner.h"
 #include "AbilitySystemBlueprintLibrary.h"
-#include "AbilitySystemComponent.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/Abilities/Vessel/SummonDregling.h"
 #include "AuraGameplayTags.h"
+#include "Character/PlayableClasses/Vessel.h"
 
 void UDemonfireRift::SpawnRift()
 {
@@ -30,9 +32,20 @@ void UDemonfireRift::SpawnRift()
 	Rift->Owner = GetAvatarActorFromActorInfo();
 	Rift->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 
-	UAbilitySystemComponent* AvatarASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
-	if (AvatarASC && AvatarASC->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_DemonfireRift_RiftMastery)) Rift->NumProjectiles += AdditionalBolts;
-
+	AVessel* Vessel = Cast<AVessel>(GetAvatarActorFromActorInfo());
+	UAuraAbilitySystemComponent* VesselASC = Cast<UAuraAbilitySystemComponent>(Vessel->GetAbilitySystemComponent());
+	
+	if (VesselASC->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_DemonfireRift_RiftMastery)) Rift->NumProjectiles += AdditionalBolts;
+	if (VesselASC->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SummonDregling_PortentOfDestruction))
+	{
+		/*
+		* "Open rift" -> determine whether to grant the buff associated with this upgrade passive
+		* Use the static getter on USummonDregling Ability Class to get the proc chance for this passive
+		*/
+		const float ProcChance = USummonDregling::GetPortentProcChance(VesselASC);
+		if (FMath::RandRange(0.f, 100.f) <= ProcChance) VesselASC->ApplyGameplayEffectToSelf(Vessel->PortentOfDestructionBuffClass.GetDefaultObject(), 1.f, VesselASC->MakeEffectContext());
+	}
+	
 	Rift->SetActorEnableCollision(false);
 	Rift->FinishSpawning(SpawnTransform);
 }

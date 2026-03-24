@@ -29,6 +29,10 @@ ASummonCharacter* AVessel::SpawnSummonedMinion(UClass* Class, const FTransform& 
 
 	if (GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Abilities_Vessel_SummonDregling_PortentOfDestruction))
 	{
+		/*
+		* "Open rift" -> determine whether to grant the buff associated with this upgrade passive
+		* Use the static getter on USummonDregling Ability Class to get the proc chance for this passive 
+		*/
 		const float ProcChance = USummonDregling::GetPortentProcChance(Cast<UAuraAbilitySystemComponent>(GetAbilitySystemComponent()));
 		if (FMath::RandRange(0.f, 100.f) <= ProcChance) GetAbilitySystemComponent()->ApplyGameplayEffectToSelf(PortentOfDestructionBuffClass.GetDefaultObject(), 1.f, GetAbilitySystemComponent()->MakeEffectContext());
 	}

@@ -21,6 +21,9 @@ class AURA_API USummonDregling : public UAuraDamageGameplayAbility
 public:
 	static float GetPortentProcChance(UAuraAbilitySystemComponent* ASC);
 
+	UPROPERTY(EditDefaultsOnly)
+	FScalableFloat AbilityCost; // As we use an MMC to calculate ability cost under certain conditions, store cost curve table here rather than on the cost gameplay effect associated with this ability
+
 protected:
 	// Summons a Dregling Summon Character from the sky that crashes down onto the TargetLocation. Should feel like a meteor strike, with XY-offsets to have it come down at an angle.
 	UFUNCTION(BlueprintCallable)

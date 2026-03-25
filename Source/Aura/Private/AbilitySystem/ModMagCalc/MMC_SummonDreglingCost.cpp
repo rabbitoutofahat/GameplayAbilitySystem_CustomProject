@@ -11,15 +11,17 @@
 float UMMC_SummonDreglingCost::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
 {
     const USummonDregling* SummonDreglingAbility = Cast<USummonDregling>(Spec.GetContext().GetAbilityInstance_NotReplicated());
+    /*
+    * This function is called multiple times per cast of the ability, ultimately returning all possible float values, but the Summon Dregling Ability instance 
+    * is only valid once per cast, which is when we actually want to determine the ability's cost and commit the ability.
+    */
     if (!SummonDreglingAbility) return 0.f;
 
-    AVessel* Vessel = Cast<AVessel>(SummonDreglingAbility->GetAvatarActorFromActorInfo());
-    if (Vessel)
-    {
-        // If Portent of Destruction (upgrade for Summon Dregling) procs, Summon Dregling can be used for free regardless of current amount of souls so we need to set cost to 0 
-        UAuraAbilitySystemComponent* VesselASC = Cast<UAuraAbilitySystemComponent>(Vessel->GetAbilitySystemComponent());
-        if (VesselASC && VesselASC->HasMatchingGameplayTag(FAuraGameplayTags::Get().Buff_PortentOfDestruction)) return 0.f;
-    }
-
-    return SummonDreglingAbility->AbilityCost.GetValueAtLevel(SummonDreglingAbility->GetAbilityLevel());
+    /*
+    * If Portent of Destruction (upgrade for Summon Dregling) procs, this particular ability instance of Summon Dregling is free to cast regardless of the 
+    * player's current resources, otherwise it is the value specified by the ability's scalable float member variable. 
+    */ 
+    const FGameplayTagContainer& ActorTags = GetSourceActorTags(Spec);
+    if (ActorTags.HasTagExact(FAuraGameplayTags::Get().Buff_PortentOfDestruction)) return 0.f;
+    else return SummonDreglingAbility->AbilityCost.GetValueAtLevel(SummonDreglingAbility->GetAbilityLevel());
 }

@@ -34,7 +34,7 @@ ASummonCharacter* AVessel::SpawnSummonedMinion(UClass* Class, const FTransform& 
 		* Use the static getter on USummonDregling Ability Class to get the proc chance for this passive 
 		*/
 		const float ProcChance = USummonDregling::GetPortentProcChance(Cast<UAuraAbilitySystemComponent>(GetAbilitySystemComponent()));
-		if (FMath::RandRange(0.f, 100.f) <= ProcChance) GetAbilitySystemComponent()->ApplyGameplayEffectToSelf(PortentOfDestructionBuffClass.GetDefaultObject(), 1.f, GetAbilitySystemComponent()->MakeEffectContext());
+		if (FMath::RandRange(0.f, 1.f) <= ProcChance) GetAbilitySystemComponent()->ApplyGameplayEffectToSelf(PortentOfDestructionBuffClass.GetDefaultObject(), 1.f, GetAbilitySystemComponent()->MakeEffectContext());
 	}
 
 	return Summon;

@@ -32,7 +32,7 @@ void ADemonicSoul::Die(const FVector& DeathImpulse)
 
 	if (GetAbilitySystemComponent()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Buff_HellforgedReconstitution)) // TODO: Once more floors are implemented, grant another buff tag on floor change
 	{
-		RespawnTimer = HellforgedReconstitutionRespawnTimer;
+		RespawnTimer = ImprovedRespawnTimer;
 		FGameplayTagContainer EffectsToRemove;
 		EffectsToRemove.AddTag(FAuraGameplayTags::Get().Buff_HellforgedReconstitution);
 		GetAbilitySystemComponent()->RemoveActiveEffectsWithGrantedTags(EffectsToRemove);

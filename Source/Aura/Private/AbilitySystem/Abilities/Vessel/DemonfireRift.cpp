@@ -43,7 +43,7 @@ void UDemonfireRift::SpawnRift()
 		* Use the static getter on USummonDregling Ability Class to get the proc chance for this passive
 		*/
 		const float ProcChance = USummonDregling::GetPortentProcChance(VesselASC);
-		if (FMath::RandRange(0.f, 100.f) <= ProcChance) VesselASC->ApplyGameplayEffectToSelf(Vessel->PortentOfDestructionBuffClass.GetDefaultObject(), 1.f, VesselASC->MakeEffectContext());
+		if (FMath::RandRange(0.f, 1.f) <= ProcChance) VesselASC->ApplyGameplayEffectToSelf(Vessel->PortentOfDestructionBuffClass.GetDefaultObject(), 1.f, VesselASC->MakeEffectContext());
 	}
 	
 	Rift->SetActorEnableCollision(false);

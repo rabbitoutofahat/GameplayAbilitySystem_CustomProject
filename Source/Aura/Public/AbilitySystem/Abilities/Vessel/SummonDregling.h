@@ -19,6 +19,7 @@ class AURA_API USummonDregling : public UAuraDamageGameplayAbility
 	GENERATED_BODY()
 	
 public:
+	UFUNCTION(BlueprintCallable)
 	static float GetPortentProcChance(UAuraAbilitySystemComponent* ASC);
 
 	UPROPERTY(EditDefaultsOnly)
@@ -37,7 +38,7 @@ private:
 	TSubclassOf<AAuraProjectile> DreglingProjectileClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|Portent Of Destruction")
-	float ProcChance = 20.f;
+	float ProcChance = 0.2f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|Kinetic Bombardment")
 	TSubclassOf<AAuraProjectile> KineticBombardmentProjectileClass;

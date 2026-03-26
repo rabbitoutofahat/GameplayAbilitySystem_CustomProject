@@ -39,6 +39,7 @@ UAuraAttributeSet::UAuraAttributeSet()
 	TagsToAttributes.Add(GameplayTags.Attributes_AttackSpeed, GetAttackSpeedAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_MovementSpeed, GetMovementSpeedAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_StunBuildup, GetStunBuildupAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_DamageVulnerability, GetDamageVulnerabilityAttribute);
 
 	TagsToAttributes.Add(GameplayTags.Attributes_Damage_Physical, GetPhysicalDamageAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Damage_Fire, GetFireDamageAttribute);
@@ -71,6 +72,7 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, AttackSpeed, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MovementSpeed, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, StunBuildup, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, DamageVulnerability, COND_None, REPNOTIFY_Always);
 
 	// Damage Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, PhysicalDamage, COND_None, REPNOTIFY_Always);
@@ -248,6 +250,11 @@ void UAuraAttributeSet::OnRep_MovementSpeed(const FGameplayAttributeData& OldMov
 void UAuraAttributeSet::OnRep_StunBuildup(const FGameplayAttributeData& OldStunBuildup) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, StunBuildup, OldStunBuildup);
+}
+
+void UAuraAttributeSet::OnRep_DamageVulnerability(const FGameplayAttributeData& OldDamageVulnerability) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, DamageVulnerability, OldDamageVulnerability);
 }
 
 void UAuraAttributeSet::OnRep_PhysicalDamage(const FGameplayAttributeData& OldPhysicalDamage) const

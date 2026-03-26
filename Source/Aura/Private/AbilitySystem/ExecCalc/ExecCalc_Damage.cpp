@@ -15,15 +15,10 @@ struct AuraDamageStatics // Raw struct whose scope is entirely contained within 
 	DECLARE_ATTRIBUTE_CAPTUREDEF(ArmourShred);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(BlockChance);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CritChance);
-	//DECLARE_ATTRIBUTE_CAPTUREDEF(CritRes);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CritDamage);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(DamageVulnerability);
 
-	//DECLARE_ATTRIBUTE_CAPTUREDEF(FireRes);
-	//DECLARE_ATTRIBUTE_CAPTUREDEF(LightningRes);
-	//DECLARE_ATTRIBUTE_CAPTUREDEF(ArcaneRes);
-	//DECLARE_ATTRIBUTE_CAPTUREDEF(PhysicalRes);
-
-	DECLARE_ATTRIBUTE_CAPTUREDEF(GlobalDamage);
+	//DECLARE_ATTRIBUTE_CAPTUREDEF(GlobalDamage); // Might be useful if we add more damage types
 	DECLARE_ATTRIBUTE_CAPTUREDEF(PhysicalDamage);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(FireDamage);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(LightningDamage);
@@ -42,8 +37,8 @@ struct AuraDamageStatics // Raw struct whose scope is entirely contained within 
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, ArmourShred, Source, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, BlockChance, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CritChance, Source, false);
-		//DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CritRes, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, CritDamage, Source, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, DamageVulnerability, Target, false);
 	
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, PhysicalDamage, Source, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, FireDamage, Source, false);
@@ -64,8 +59,8 @@ UExecCalc_Damage::UExecCalc_Damage()
 	RelevantAttributesToCapture.Add(DamageStatics().ArmourShredDef);
 	RelevantAttributesToCapture.Add(DamageStatics().BlockChanceDef);
 	RelevantAttributesToCapture.Add(DamageStatics().CritChanceDef);
-	//RelevantAttributesToCapture.Add(DamageStatics().CritResDef);
 	RelevantAttributesToCapture.Add(DamageStatics().CritDamageDef);
+	RelevantAttributesToCapture.Add(DamageStatics().DamageVulnerabilityDef);
 
 	RelevantAttributesToCapture.Add(DamageStatics().PhysicalDamageDef);
 	RelevantAttributesToCapture.Add(DamageStatics().FireDamageDef);
@@ -86,10 +81,9 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 
 	TagsToCaptureDefs.Add(Tags.Attributes_Armour, DamageStatics().ArmourDef);
 	TagsToCaptureDefs.Add(Tags.Attributes_ArmourShred, DamageStatics().ArmourShredDef);
-	//TagsToCaptureDefs.Add(Tags.Attributes_Secondary_BlockChance, DamageStatics().BlockChanceDef);
 	TagsToCaptureDefs.Add(Tags.Attributes_CriticalHitChance, DamageStatics().CritChanceDef);
-	//TagsToCaptureDefs.Add(Tags.Attributes_Secondary_CriticalHitResistance, DamageStatics().CritResDef);
 	TagsToCaptureDefs.Add(Tags.Attributes_CriticalHitDamage, DamageStatics().CritDamageDef);
+	TagsToCaptureDefs.Add(Tags.Attributes_DamageVulnerability, DamageStatics().DamageVulnerabilityDef);
 
 	TagsToCaptureDefs.Add(Tags.Attributes_Damage_Physical, DamageStatics().PhysicalDamageDef);
 	TagsToCaptureDefs.Add(Tags.Attributes_Damage_Fire, DamageStatics().FireDamageDef);
@@ -130,7 +124,6 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	/*
 	* TODO: REWORK DEBUFFS
 	*/
-
 	//DetermineDebuff(Spec, ExecutionParams, EvaluationParameters, TagsToCaptureDefs, EffectContextHandle);
 
 	// Get Damage Set by Caller Magnitude for each Damage Type found in our DamageTypesToAttributes container
@@ -196,20 +189,15 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	// Armour ignores a percentage of incoming damage
 	Damage *= (100.f - EffectiveArmour * EffectiveArmourCoeff) / 100.f;
 
+	float TargetDamageVulnerability = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().DamageVulnerabilityDef, EvaluationParameters, TargetDamageVulnerability);
+	// DamageVulnerability increases damage taken by the Target
+	Damage *= 1 + TargetDamageVulnerability;
+
 	// Capture CritChance on Source, and determine if there was a successful Critical Hit
 	float SourceCritChance = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CritChanceDef, EvaluationParameters, SourceCritChance);
 	SourceCritChance = FMath::Max<float>(SourceCritChance, 0.f);
-
-	// Capture CritResistance on Target
-	//float TargetCritRes = 0.f;
-	//ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CritResDef, EvaluationParameters, TargetCritRes);
-	//TargetCritRes = FMath::Max<float>(TargetCritRes, 0.f);
-
-	//FRealCurve* CritResCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(FName("CriticalHitResistance"), FString());
-	//const float CritResCoeff = CritResCurve->Eval(TargetLevel);
-	//// Critical Hit Resistance reduces the attacker's Critical Hit Chance 
-	//const float EffectiveCritChance = SourceCritChance - TargetCritRes * CritResCoeff;
 
 	// Capture CritDamage on Source
 	float SourceCritDamage = 0.f;

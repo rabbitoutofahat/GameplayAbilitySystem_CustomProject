@@ -153,6 +153,10 @@ public:
 	FGameplayAttributeData StunBuildup;
 	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, StunBuildup);
 
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_DamageVulnerability, Category = "Attributes")
+	FGameplayAttributeData DamageVulnerability;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, DamageVulnerability);
+
 	UFUNCTION()
 	void OnRep_Armour(const FGameplayAttributeData& OldArmour) const;
 
@@ -168,7 +172,6 @@ public:
 	UFUNCTION()
 	void OnRep_CritDamage(const FGameplayAttributeData& OldCritDamage) const;
 	
-
 	UFUNCTION()
 	void OnRep_HealthRegen(const FGameplayAttributeData& OldHealthRegen) const;
 
@@ -189,6 +192,9 @@ public:
 
 	UFUNCTION()
 	void OnRep_StunBuildup(const FGameplayAttributeData& OldStunBuildup) const;
+
+	UFUNCTION()
+	void OnRep_DamageVulnerability(const FGameplayAttributeData& OldDamageVulnerability) const;
 
 	/*
 	* Damage Types

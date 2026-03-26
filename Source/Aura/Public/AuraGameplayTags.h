@@ -17,6 +17,7 @@ public:
 	static void InitialiseNativeGameplayTags();
 
 	FGameplayTag Attributes_Armour;
+	// TODO: Rename ArmourShred to ArmourPenetration, "ArmourShred" shoudn't be an attribute but should decrease Armour
 	FGameplayTag Attributes_ArmourShred;
 	FGameplayTag Attributes_CriticalHitChance;
 	FGameplayTag Attributes_CriticalHitDamage;
@@ -33,6 +34,7 @@ public:
 	FGameplayTag Attributes_MovementSpeed;
 	FGameplayTag Attributes_StunBuildup;
 	FGameplayTag Attributes_BlockChance;
+	FGameplayTag Attributes_DamageVulnerability;
 	
 	FGameplayTag Attributes_Vital_Energy;
 
@@ -55,8 +57,6 @@ public:
 
 	FGameplayTag Debuff_Burn;
 	FGameplayTag Debuff_Stun;
-	//FGameplayTag Debuff_Arcane;
-	//FGameplayTag Debuff_Physical;
 
 	FGameplayTag Debuff_Params_Chance;
 	FGameplayTag Debuff_Params_Damage;

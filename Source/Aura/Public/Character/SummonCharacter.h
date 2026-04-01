@@ -56,6 +56,9 @@ public:
 
 	void AddLifespan(float InLifespan); // Add difference between new and old Lifespan to AdditionalLifespan and set Lifespan to new value
 
+	UPROPERTY(BlueprintReadOnly, Category = "Upgrades")
+	float UproarDamageCoeff = 1.5f; // Used for the Uproar damage buff from the Pandemonium - Uproar upgrade
+
 protected:
 	virtual void BeginPlay() override;
 

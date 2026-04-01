@@ -21,6 +21,7 @@ void UDreglingExplosion::Explosion()
 {
 	FDamageEffectParams DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 	ADregling* Dregling = Cast<ADregling>(GetAvatarActorFromActorInfo());
+	FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
 
 	AVessel* Vessel = Cast<AVessel>(Dregling->OwnerActor);
 	UAbilitySystemComponent* VesselASC = Vessel->GetAbilitySystemComponent();
@@ -28,6 +29,13 @@ void UDreglingExplosion::Explosion()
 	ActorsToIgnore.Add(Vessel);
 	TArray<AActor*> ActorsToDamage;
 	DamageEffectParams.RadialDamageOrigin = Dregling->GetActorLocation();
+
+	if (Dregling->GetAbilitySystemComponent()->HasMatchingGameplayTag(GameplayTags.Buff_DemonicStrength)
+		&& VesselASC->HasMatchingGameplayTag(GameplayTags.Abilities_Vessel_Pandemonium_Uproar))
+	{
+		// Uproar upgrade causes Summon Special Abilities activated by Pandemonium to deal increased damage
+		DamageEffectParams.BaseDamage *= Dregling->UproarDamageCoeff;
+	}
 
 	UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(DamageEffectParams.WorldContextObject, ActorsToDamage, ActorsToIgnore, DamageEffectParams.RadialDamageOuterRadius, DamageEffectParams.RadialDamageOrigin);
 

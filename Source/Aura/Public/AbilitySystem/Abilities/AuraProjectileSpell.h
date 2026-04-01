@@ -9,6 +9,7 @@
 class AAuraProjectile;
 class UGameplayEffect;
 struct FGameplayTag;
+class ASummonCharacter;
 
 /**
  * 
@@ -37,4 +38,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	float ProjectileSpread = 90.f;
+
+private:
+	// Uproar upgrade causes Summon Special Abilities activated by Pandemonium to deal increased damage (Chaos Elemental Special is a projectile)
+	void UproarDamageIncrease(ASummonCharacter* Summon, FDamageEffectParams& DamageEffectParams);
 };

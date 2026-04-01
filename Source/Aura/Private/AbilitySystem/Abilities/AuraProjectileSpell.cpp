@@ -8,6 +8,8 @@
 #include "AbilitySystemComponent.h"
 #include "Aura/Public/AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "Character/SummonCharacter.h"
+#include "Character/PlayableClasses/Vessel.h"
 
 void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
 	const FGameplayEventData* TriggerEventData)
@@ -54,10 +56,22 @@ void UAuraProjectileSpell::SpawnProjectile(FTransform& SpawnTransform)
 	AAuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
 		ProjectileClass,
 		SpawnTransform,
-		GetOwningActorFromActorInfo(),
-		Cast<APawn>(GetOwningActorFromActorInfo()),
+		GetAvatarActorFromActorInfo(),
+		Cast<APawn>(GetAvatarActorFromActorInfo()),
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
 	Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+	if (ASummonCharacter* Summon = Cast<ASummonCharacter>(GetAvatarActorFromActorInfo())) UproarDamageIncrease(Summon, Projectile->DamageEffectParams);
 	Projectile->FinishSpawning(SpawnTransform);
+}
+
+void UAuraProjectileSpell::UproarDamageIncrease(ASummonCharacter* Summon, FDamageEffectParams& DamageEffectParams)
+{
+	FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
+	if (Summon->GetAbilitySystemComponent()->HasMatchingGameplayTag(GameplayTags.Buff_DemonicStrength))
+	{
+		AVessel* Vessel = Cast<AVessel>(Summon->OwnerActor);
+		UAbilitySystemComponent* VesselASC = Vessel->GetAbilitySystemComponent();
+		if (VesselASC->HasMatchingGameplayTag(GameplayTags.Abilities_Vessel_Pandemonium_Uproar)) DamageEffectParams.BaseDamage *= Summon->UproarDamageCoeff;
+	}
 }

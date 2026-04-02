@@ -50,6 +50,8 @@ public:
 	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	static FGameplayTag GetTypeTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+	static FGameplayTag GetMaxChargeTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+	static FGameplayTag GetCurrentChargeTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 
 	FGameplayTag GetStatusFromAbilityTag(const FGameplayTag& AbilityTag); // Can't be static because it relies on GetStatusTagFromSpec()
 	FGameplayTag GetInputFromAbilityTag(const FGameplayTag& AbilityTag); 

@@ -134,15 +134,37 @@ void UAuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
 	}
-
 	if (Attribute == GetManaAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxMana());
 	}
-
 	if (Attribute == GetEnergyAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxEnergy()); // Max Energy should always be 100
+	}
+	if (Attribute == GetChargeLMBAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxChargeLMB());
+	}
+	if (Attribute == GetChargeRMBAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxChargeRMB());
+	}
+	if (Attribute == GetCharge1Attribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxCharge1());
+	}
+	if (Attribute == GetCharge2Attribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxCharge2());
+	}
+	if (Attribute == GetCharge3Attribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxCharge3());
+	}
+	if (Attribute == GetCharge4Attribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxCharge4());
 	}
 }
 
@@ -175,6 +197,30 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	if (Data.EvaluatedData.Attribute == GetIncomingXPAttribute()) // Level Up functionality
 	{
 		HandleIncomingXP(Props);
+	}
+	if (Data.EvaluatedData.Attribute == GetChargeLMBAttribute())
+	{
+		SetChargeLMB(FMath::Clamp(GetChargeLMB(), 0.f, GetMaxChargeLMB()));
+	}
+	if (Data.EvaluatedData.Attribute == GetChargeRMBAttribute())
+	{
+		SetChargeRMB(FMath::Clamp(GetChargeRMB(), 0.f, GetMaxChargeRMB()));
+	}
+	if (Data.EvaluatedData.Attribute == GetCharge1Attribute())
+	{
+		SetCharge1(FMath::Clamp(GetCharge1(), 0.f, GetMaxCharge1()));
+	}
+	if (Data.EvaluatedData.Attribute == GetCharge2Attribute())
+	{
+		SetCharge2(FMath::Clamp(GetCharge2(), 0.f, GetMaxCharge2()));
+	}
+	if (Data.EvaluatedData.Attribute == GetCharge3Attribute())
+	{
+		SetCharge3(FMath::Clamp(GetCharge3(), 0.f, GetMaxCharge3()));
+	}
+	if (Data.EvaluatedData.Attribute == GetCharge4Attribute())
+	{
+		SetCharge4(FMath::Clamp(GetCharge4(), 0.f, GetMaxCharge4()));
 	}
 }
 
@@ -375,32 +421,6 @@ void UAuraAttributeSet::OnRep_Charge4(const FGameplayAttributeData& OldCharge4) 
 void UAuraAttributeSet::OnRep_MaxCharge4(const FGameplayAttributeData& OldMaxCharge4) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxCharge4, OldMaxCharge4);
-}
-
-FGameplayTag UAuraAttributeSet::GetMaxChargeTagFromInput(const FGameplayTag& InputTag)
-{
-	FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
-	for (const auto& Pair : GameplayTags.InputTagsToMaxCharges)
-	{
-		if (InputTag.MatchesTag(Pair.Key))
-		{
-			return Pair.Value;
-		}
-	}
-	return FGameplayTag();
-}
-
-FGameplayTag UAuraAttributeSet::GetCurrentChargeTagFromInput(const FGameplayTag& InputTag)
-{
-	FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
-	for (const auto& Pair : GameplayTags.InputTagsToCharges)
-	{
-		if (InputTag.MatchesTag(Pair.Key))
-		{
-			return Pair.Value;
-		}
-	}
-	return FGameplayTag();
 }
 
 void UAuraAttributeSet::OnRep_Energy(const FGameplayAttributeData& OldEnergy) const

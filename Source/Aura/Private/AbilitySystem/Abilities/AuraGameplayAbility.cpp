@@ -6,6 +6,13 @@
 #include "Character/AuraCharacterBase.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 
+void UAuraGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
+{
+	Super::OnGiveAbility(ActorInfo, Spec);
+
+	InitialiseChargeCountAttributes(Spec);
+}
+
 FString UAuraGameplayAbility::GetDescription(int32 Level)
 {
     return FString::Printf(TEXT("<Default>%s, </><Level>%d</>"), L"Default Ability Name - LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum LoremIpsum ", Level);
@@ -48,7 +55,7 @@ float UAuraGameplayAbility::GetCooldown(float InLevel)
     return Cooldown;
 }
 
-void UAuraGameplayAbility::ApplyChargeChangeGameplayEffect(const FGameplayAbilitySpec& Spec)
+void UAuraGameplayAbility::InitialiseChargeCountAttributes(const FGameplayAbilitySpec& Spec)
 {
     UGameplayEffect* GEChargeChange = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("ChargeChange")));
 
@@ -66,8 +73,9 @@ void UAuraGameplayAbility::ApplyChargeChangeGameplayEffect(const FGameplayAbilit
     CurrentChargeInfo.ModifierMagnitude = FScalableFloat(MaxCharges);
     CurrentChargeInfo.ModifierOp = EGameplayModOp::Override;
 
-    FGameplayTag MaxChargeTag = UAuraAttributeSet::GetMaxChargeTagFromInput(UAuraAbilitySystemComponent::GetInputTagFromSpec(Spec));
-	FGameplayTag CurrentChargeTag = UAuraAttributeSet::GetCurrentChargeTagFromInput(UAuraAbilitySystemComponent::GetInputTagFromSpec(Spec));
+	// Find the input slot associated with this ability, and grant the appropriate number of charges based on the ability to the charge attributes of that input slot.
+    FGameplayTag MaxChargeTag = UAuraAbilitySystemComponent::GetMaxChargeTagFromSpec(Spec);
+	FGameplayTag CurrentChargeTag = UAuraAbilitySystemComponent::GetCurrentChargeTagFromSpec(Spec);
 
     UAuraAttributeSet* AS = Cast<UAuraAttributeSet>(Cast<AAuraCharacterBase>(GetAvatarActorFromActorInfo())->GetAttributeSet());
     for (const auto& Pair : AS->TagsToAttributes)

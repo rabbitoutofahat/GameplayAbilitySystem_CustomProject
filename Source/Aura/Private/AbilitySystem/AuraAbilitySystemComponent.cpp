@@ -197,6 +197,32 @@ FGameplayTag UAuraAbilitySystemComponent::GetTypeTagFromSpec(const FGameplayAbil
 	return FGameplayTag();
 }
 
+FGameplayTag UAuraAbilitySystemComponent::GetMaxChargeTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+{
+	FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
+	for (const auto& Pair : GameplayTags.InputTagsToMaxCharges)
+	{
+		if (GetInputTagFromSpec(AbilitySpec).MatchesTag(Pair.Key))
+		{
+			return Pair.Value;
+		}
+	}
+	return FGameplayTag();
+}
+
+FGameplayTag UAuraAbilitySystemComponent::GetCurrentChargeTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+{
+	FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
+	for (const auto& Pair : GameplayTags.InputTagsToCharges)
+	{
+		if (GetInputTagFromSpec(AbilitySpec).MatchesTag(Pair.Key))
+		{
+			return Pair.Value;
+		}
+	}
+	return FGameplayTag();
+}
+
 FGameplayTag UAuraAbilitySystemComponent::GetStatusFromAbilityTag(const FGameplayTag& AbilityTag)
 {
 	if (const FGameplayAbilitySpec* Spec = GetAbilitySpecFromTag(AbilityTag))

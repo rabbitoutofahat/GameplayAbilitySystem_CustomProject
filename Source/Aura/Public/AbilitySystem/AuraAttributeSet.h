@@ -331,9 +331,6 @@ public:
 	UFUNCTION()
 	void OnRep_MaxCharge4(const FGameplayAttributeData& OldMaxCharge4) const;
 
-	static FGameplayTag GetMaxChargeTagFromInput(const FGameplayTag& InputTag);
-	static FGameplayTag GetCurrentChargeTagFromInput(const FGameplayTag& InputTag);
-
 	/*
 	* Summon Attributes
 	*/

@@ -72,6 +72,26 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	GameplayTags.MaxInputCharge_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("MaxInputCharge.4"), FString("Maximum charge for the 4 key"));
 
 	/*
+	* Map of Input Tags to Max Charges
+	*/
+	GameplayTags.InputTagsToMaxCharges.Add(GameplayTags.InputTag_LMB, GameplayTags.MaxInputCharge_LMB);
+	GameplayTags.InputTagsToMaxCharges.Add(GameplayTags.InputTag_RMB, GameplayTags.MaxInputCharge_RMB);
+	GameplayTags.InputTagsToMaxCharges.Add(GameplayTags.InputTag_1, GameplayTags.MaxInputCharge_1);
+	GameplayTags.InputTagsToMaxCharges.Add(GameplayTags.InputTag_2, GameplayTags.MaxInputCharge_2);
+	GameplayTags.InputTagsToMaxCharges.Add(GameplayTags.InputTag_3, GameplayTags.MaxInputCharge_3);
+	GameplayTags.InputTagsToMaxCharges.Add(GameplayTags.InputTag_4, GameplayTags.MaxInputCharge_4);
+
+	/*
+	* Map of Input Tags to Current Charges
+	*/
+	GameplayTags.InputTagsToCharges.Add(GameplayTags.InputTag_LMB, GameplayTags.InputCharge_LMB);
+	GameplayTags.InputTagsToCharges.Add(GameplayTags.InputTag_RMB, GameplayTags.InputCharge_RMB);
+	GameplayTags.InputTagsToCharges.Add(GameplayTags.InputTag_1, GameplayTags.InputCharge_1);
+	GameplayTags.InputTagsToCharges.Add(GameplayTags.InputTag_2, GameplayTags.InputCharge_2);
+	GameplayTags.InputTagsToCharges.Add(GameplayTags.InputTag_3, GameplayTags.InputCharge_3);
+	GameplayTags.InputTagsToCharges.Add(GameplayTags.InputTag_4, GameplayTags.InputCharge_4);
+
+	/*
  	* Damage Tags
 	*/
 	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), FString("Damage"));

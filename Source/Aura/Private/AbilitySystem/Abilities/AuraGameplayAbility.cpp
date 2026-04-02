@@ -4,6 +4,7 @@
 #include "AbilitySystem/Abilities/AuraGameplayAbility.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "Character/AuraCharacterBase.h"
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
 
 FString UAuraGameplayAbility::GetDescription(int32 Level)
 {
@@ -47,27 +48,40 @@ float UAuraGameplayAbility::GetCooldown(float InLevel)
     return Cooldown;
 }
 
-void UAuraGameplayAbility::ApplyStackChangeGameplayEffect(const FGameplayAbilitySpec& Spec)
+void UAuraGameplayAbility::ApplyChargeChangeGameplayEffect(const FGameplayAbilitySpec& Spec)
 {
-    UGameplayEffect* GEStackChange = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("StackChange")));
+    UGameplayEffect* GEChargeChange = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("ChargeChange")));
 
-    GEStackChange->DurationPolicy = EGameplayEffectDurationType::Instant;
+    GEChargeChange->DurationPolicy = EGameplayEffectDurationType::Instant;
 
-    // Append two additional modifiers to the GE for max and current stacks, and set them to the max stacks value.
-    const int32 Index = GEStackChange->Modifiers.Num();
-    GEStackChange->Modifiers.SetNum(Index + 2);
+    // Append two additional modifiers to the GE for max and current charges, and set them to the max charges value.
+    const int32 Index = GEChargeChange->Modifiers.Num();
+    GEChargeChange->Modifiers.SetNum(Index + 2);
 
-    FGameplayModifierInfo& MaxStackInfo = GEStackChange->Modifiers[Index];
-    MaxStackInfo.ModifierMagnitude = FScalableFloat(MaxStacks);
-    MaxStackInfo.ModifierOp = EGameplayModOp::Override;
+    FGameplayModifierInfo& MaxChargeInfo = GEChargeChange->Modifiers[Index];
+    MaxChargeInfo.ModifierMagnitude = FScalableFloat(MaxCharges);
+    MaxChargeInfo.ModifierOp = EGameplayModOp::Override;
 
-    FGameplayModifierInfo& CurrentStackInfo = GEStackChange->Modifiers[Index + 1];
-    CurrentStackInfo.ModifierMagnitude = FScalableFloat(MaxStacks);
-    CurrentStackInfo.ModifierOp = EGameplayModOp::Override;
+    FGameplayModifierInfo& CurrentChargeInfo = GEChargeChange->Modifiers[Index + 1];
+    CurrentChargeInfo.ModifierMagnitude = FScalableFloat(MaxCharges);
+    CurrentChargeInfo.ModifierOp = EGameplayModOp::Override;
 
-    //MaxStackInfo.Attribute = UAbilitiesStackSet::GetMaxAttributeByInputID(Spec.InputID);
-    //CurrentStackInfo.Attribute = UAbilitiesStackSet::GetCurrentAttributeByInputID(Spec.InputID);
+    FGameplayTag MaxChargeTag = UAuraAttributeSet::GetMaxChargeTagFromInput(UAuraAbilitySystemComponent::GetInputTagFromSpec(Spec));
+	FGameplayTag CurrentChargeTag = UAuraAttributeSet::GetCurrentChargeTagFromInput(UAuraAbilitySystemComponent::GetInputTagFromSpec(Spec));
+
+    UAuraAttributeSet* AS = Cast<UAuraAttributeSet>(Cast<AAuraCharacterBase>(GetAvatarActorFromActorInfo())->GetAttributeSet());
+    for (const auto& Pair : AS->TagsToAttributes)
+    {
+        if (Pair.Key.MatchesTagExact(MaxChargeTag))
+        {
+            MaxChargeInfo.Attribute = Pair.Value();
+        }
+        else if (Pair.Key.MatchesTagExact(CurrentChargeTag))
+        {
+            CurrentChargeInfo.Attribute = Pair.Value();
+		}
+    }
 
     UAbilitySystemComponent* ASC = Cast<AAuraCharacterBase>(GetAvatarActorFromActorInfo())->GetAbilitySystemComponent();
-    ASC->ApplyGameplayEffectToSelf(GEStackChange, 1.0f, ASC->MakeEffectContext());
+    ASC->ApplyGameplayEffectToSelf(GEChargeChange, 1.0f, ASC->MakeEffectContext());
 }

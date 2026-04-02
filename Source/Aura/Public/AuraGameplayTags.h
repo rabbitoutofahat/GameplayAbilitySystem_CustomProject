@@ -63,6 +63,9 @@ public:
 	FGameplayTag MaxInputCharge_3;
 	FGameplayTag MaxInputCharge_4;
 
+	TMap<FGameplayTag, FGameplayTag> InputTagsToMaxCharges;
+	TMap<FGameplayTag, FGameplayTag> InputTagsToCharges;
+
 	FGameplayTag Damage;
 	FGameplayTag Damage_Physical;
 	FGameplayTag Damage_Fire;

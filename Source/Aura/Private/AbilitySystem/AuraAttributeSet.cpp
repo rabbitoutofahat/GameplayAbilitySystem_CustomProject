@@ -59,6 +59,10 @@ UAuraAttributeSet::UAuraAttributeSet()
 
 	TagsToAttributes.Add(GameplayTags.MaxInputCharge_LMB, GetMaxChargeLMBAttribute);
 	TagsToAttributes.Add(GameplayTags.MaxInputCharge_RMB, GetMaxChargeRMBAttribute);
+	TagsToAttributes.Add(GameplayTags.MaxInputCharge_1, GetMaxCharge1Attribute);
+	TagsToAttributes.Add(GameplayTags.MaxInputCharge_2, GetMaxCharge2Attribute);
+	TagsToAttributes.Add(GameplayTags.MaxInputCharge_3, GetMaxCharge3Attribute);
+	TagsToAttributes.Add(GameplayTags.MaxInputCharge_4, GetMaxCharge4Attribute);
 }
 
 void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -371,6 +375,32 @@ void UAuraAttributeSet::OnRep_Charge4(const FGameplayAttributeData& OldCharge4) 
 void UAuraAttributeSet::OnRep_MaxCharge4(const FGameplayAttributeData& OldMaxCharge4) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxCharge4, OldMaxCharge4);
+}
+
+FGameplayTag UAuraAttributeSet::GetMaxChargeTagFromInput(const FGameplayTag& InputTag)
+{
+	FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
+	for (const auto& Pair : GameplayTags.InputTagsToMaxCharges)
+	{
+		if (InputTag.MatchesTag(Pair.Key))
+		{
+			return Pair.Value;
+		}
+	}
+	return FGameplayTag();
+}
+
+FGameplayTag UAuraAttributeSet::GetCurrentChargeTagFromInput(const FGameplayTag& InputTag)
+{
+	FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
+	for (const auto& Pair : GameplayTags.InputTagsToCharges)
+	{
+		if (InputTag.MatchesTag(Pair.Key))
+		{
+			return Pair.Value;
+		}
+	}
+	return FGameplayTag();
 }
 
 void UAuraAttributeSet::OnRep_Energy(const FGameplayAttributeData& OldEnergy) const

@@ -26,14 +26,14 @@ protected:
 	float GetManaCost(float InLevel = 1.f);
 	float GetCooldown(float InLevel = 1.f);
 
-	UPROPERTY(EditDefaultsOnly, Category = "Stacking")
-	int32 MaxStacks = 1;
+	UPROPERTY(EditDefaultsOnly, Category = "Ability Charges")
+	int32 MaxCharges = 1;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Stacking")
+	UPROPERTY(EditDefaultsOnly, Category = "Ability Charges")
 	float RechargeDuration = 1.0f;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Stacking")
+	UPROPERTY(EditDefaultsOnly, Category = "Ability Charges")
 	TSubclassOf<UGameplayAbility> RechargerAbility;
 
-	void ApplyStackChangeGameplayEffect(const FGameplayAbilitySpec& Spec);
+	void ApplyChargeChangeGameplayEffect(const FGameplayAbilitySpec& Spec);
 };

@@ -55,6 +55,23 @@ void FAuraGameplayTags::InitialiseNativeGameplayTags()
 	GameplayTags.InputTag_Passive_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.Passive.2"), FString("Input Tag for Passive Ability 2"));
 
 	/*
+	* Input Charges
+	*/
+	GameplayTags.InputCharge_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputCharge.LMB"), FString("Current charge for Left Mouse Button"));
+	GameplayTags.InputCharge_RMB = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputCharge.RMB"), FString("Current charge for Right Mouse Button"));
+	GameplayTags.InputCharge_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputCharge.1"), FString("Current charge for the 1 key"));
+	GameplayTags.InputCharge_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputCharge.2"), FString("Current charge for the 2 key"));
+	GameplayTags.InputCharge_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputCharge.3"), FString("Current charge for the 3 key"));
+	GameplayTags.InputCharge_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputCharge.4"), FString("Current charge for the 4 key"));
+
+	GameplayTags.MaxInputCharge_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("MaxInputCharge.LMB"), FString("Maximum charge for Left Mouse Button"));
+	GameplayTags.MaxInputCharge_RMB = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("MaxInputCharge.RMB"), FString("Maximum charge for Right Mouse Button"));
+	GameplayTags.MaxInputCharge_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("MaxInputCharge.1"), FString("Maximum charge for the 1 key"));
+	GameplayTags.MaxInputCharge_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("MaxInputCharge.2"), FString("Maximum charge for the 2 key"));
+	GameplayTags.MaxInputCharge_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("MaxInputCharge.3"), FString("Maximum charge for the 3 key"));
+	GameplayTags.MaxInputCharge_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("MaxInputCharge.4"), FString("Maximum charge for the 4 key"));
+
+	/*
  	* Damage Tags
 	*/
 	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), FString("Damage"));

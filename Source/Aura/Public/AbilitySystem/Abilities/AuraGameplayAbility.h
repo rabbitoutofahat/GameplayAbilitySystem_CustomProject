@@ -25,4 +25,15 @@ public:
 protected:
 	float GetManaCost(float InLevel = 1.f);
 	float GetCooldown(float InLevel = 1.f);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Stacking")
+	int32 MaxStacks = 1;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Stacking")
+	float RechargeDuration = 1.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Stacking")
+	TSubclassOf<UGameplayAbility> RechargerAbility;
+
+	void ApplyStackChangeGameplayEffect(const FGameplayAbilitySpec& Spec);
 };

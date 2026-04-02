@@ -245,6 +245,93 @@ public:
 	void OnRep_Mana(const FGameplayAttributeData& OldMana) const;
 
 	/*
+	* Input Charge Attributes
+	*/
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ChargeLMB, Category = "InputCharges")
+	FGameplayAttributeData ChargeLMB;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, ChargeLMB);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxChargeLMB, Category = "InputCharges")
+	FGameplayAttributeData MaxChargeLMB;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxChargeLMB);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ChargeRMB, Category = "InputCharges")
+	FGameplayAttributeData ChargeRMB;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, ChargeRMB);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxChargeRMB, Category = "InputCharges")
+	FGameplayAttributeData MaxChargeRMB;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxChargeRMB);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Charge1, Category = "InputCharges")
+	FGameplayAttributeData Charge1;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Charge1);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxCharge1, Category = "InputCharges")
+	FGameplayAttributeData MaxCharge1;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxCharge1);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Charge2, Category = "InputCharges")
+	FGameplayAttributeData Charge2;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Charge2);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxCharge2, Category = "InputCharges")
+	FGameplayAttributeData MaxCharge2;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxCharge2);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Charge3, Category = "InputCharges")
+	FGameplayAttributeData Charge3;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Charge3);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxCharge3, Category = "InputCharges")
+	FGameplayAttributeData MaxCharge3;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxCharge3);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Charge4, Category = "InputCharges")
+	FGameplayAttributeData Charge4;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, Charge4);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxCharge4, Category = "InputCharges")
+	FGameplayAttributeData MaxCharge4;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, MaxCharge4);
+
+	UFUNCTION()
+	void OnRep_ChargeLMB(const FGameplayAttributeData& OldChargeLMB) const;
+
+	UFUNCTION()
+	void OnRep_MaxChargeLMB(const FGameplayAttributeData& OldMaxChargeLMB) const;
+
+	UFUNCTION()
+	void OnRep_ChargeRMB(const FGameplayAttributeData& OldChargeRMB) const;
+
+	UFUNCTION()
+	void OnRep_MaxChargeRMB(const FGameplayAttributeData& OldMaxChargeRMB) const;
+
+	UFUNCTION()
+	void OnRep_Charge1(const FGameplayAttributeData& OldCharge1) const;
+
+	UFUNCTION()
+	void OnRep_MaxCharge1(const FGameplayAttributeData& OldMaxCharge1) const;
+
+	UFUNCTION()
+	void OnRep_Charge2(const FGameplayAttributeData& OldCharge2) const;
+
+	UFUNCTION()
+	void OnRep_MaxCharge2(const FGameplayAttributeData& OldMaxCharge2) const;
+
+	UFUNCTION()
+	void OnRep_Charge3(const FGameplayAttributeData& OldCharge3) const;
+
+	UFUNCTION()
+	void OnRep_MaxCharge3(const FGameplayAttributeData& OldMaxCharge3) const;
+
+	UFUNCTION()
+	void OnRep_Charge4(const FGameplayAttributeData& OldCharge4) const;
+
+	UFUNCTION()
+	void OnRep_MaxCharge4(const FGameplayAttributeData& OldMaxCharge4) const;
+
+	/*
 	* Summon Attributes
 	*/
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Energy, Category = "Summon Attributes")

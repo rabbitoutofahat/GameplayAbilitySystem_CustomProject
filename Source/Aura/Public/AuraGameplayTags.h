@@ -49,6 +49,20 @@ public:
 	FGameplayTag InputTag_Passive_1;
 	FGameplayTag InputTag_Passive_2;
 
+	FGameplayTag InputCharge_LMB;
+	FGameplayTag InputCharge_RMB;
+	FGameplayTag InputCharge_1;
+	FGameplayTag InputCharge_2;
+	FGameplayTag InputCharge_3;
+	FGameplayTag InputCharge_4;
+
+	FGameplayTag MaxInputCharge_LMB;
+	FGameplayTag MaxInputCharge_RMB;
+	FGameplayTag MaxInputCharge_1;
+	FGameplayTag MaxInputCharge_2;
+	FGameplayTag MaxInputCharge_3;
+	FGameplayTag MaxInputCharge_4;
+
 	FGameplayTag Damage;
 	FGameplayTag Damage_Physical;
 	FGameplayTag Damage_Fire;

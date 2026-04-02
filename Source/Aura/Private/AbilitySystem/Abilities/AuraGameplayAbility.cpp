@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Abilities/AuraGameplayAbility.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "Character/AuraCharacterBase.h"
 
 FString UAuraGameplayAbility::GetDescription(int32 Level)
 {
@@ -44,4 +45,29 @@ float UAuraGameplayAbility::GetCooldown(float InLevel)
 		CooldownEffect->DurationMagnitude.GetStaticMagnitudeIfPossible(InLevel, Cooldown);
 	}
     return Cooldown;
+}
+
+void UAuraGameplayAbility::ApplyStackChangeGameplayEffect(const FGameplayAbilitySpec& Spec)
+{
+    UGameplayEffect* GEStackChange = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("StackChange")));
+
+    GEStackChange->DurationPolicy = EGameplayEffectDurationType::Instant;
+
+    // Append two additional modifiers to the GE for max and current stacks, and set them to the max stacks value.
+    const int32 Index = GEStackChange->Modifiers.Num();
+    GEStackChange->Modifiers.SetNum(Index + 2);
+
+    FGameplayModifierInfo& MaxStackInfo = GEStackChange->Modifiers[Index];
+    MaxStackInfo.ModifierMagnitude = FScalableFloat(MaxStacks);
+    MaxStackInfo.ModifierOp = EGameplayModOp::Override;
+
+    FGameplayModifierInfo& CurrentStackInfo = GEStackChange->Modifiers[Index + 1];
+    CurrentStackInfo.ModifierMagnitude = FScalableFloat(MaxStacks);
+    CurrentStackInfo.ModifierOp = EGameplayModOp::Override;
+
+    //MaxStackInfo.Attribute = UAbilitiesStackSet::GetMaxAttributeByInputID(Spec.InputID);
+    //CurrentStackInfo.Attribute = UAbilitiesStackSet::GetCurrentAttributeByInputID(Spec.InputID);
+
+    UAbilitySystemComponent* ASC = Cast<AAuraCharacterBase>(GetAvatarActorFromActorInfo())->GetAbilitySystemComponent();
+    ASC->ApplyGameplayEffectToSelf(GEStackChange, 1.0f, ASC->MakeEffectContext());
 }

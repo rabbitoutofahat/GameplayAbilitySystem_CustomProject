@@ -48,6 +48,17 @@ UAuraAttributeSet::UAuraAttributeSet()
 
 	// Vital Attributes
 	TagsToAttributes.Add(GameplayTags.Attributes_Vital_Energy, GetEnergyAttribute);
+
+	// Input Charge Attributes
+	TagsToAttributes.Add(GameplayTags.InputCharge_LMB, GetChargeLMBAttribute);
+	TagsToAttributes.Add(GameplayTags.InputCharge_RMB, GetChargeRMBAttribute);
+	TagsToAttributes.Add(GameplayTags.InputCharge_1, GetCharge1Attribute);
+	TagsToAttributes.Add(GameplayTags.InputCharge_2, GetCharge2Attribute);
+	TagsToAttributes.Add(GameplayTags.InputCharge_3, GetCharge3Attribute);
+	TagsToAttributes.Add(GameplayTags.InputCharge_4, GetCharge4Attribute);
+
+	TagsToAttributes.Add(GameplayTags.MaxInputCharge_LMB, GetMaxChargeLMBAttribute);
+	TagsToAttributes.Add(GameplayTags.MaxInputCharge_RMB, GetMaxChargeRMBAttribute);
 }
 
 void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -83,6 +94,21 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	// Vital Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Health, COND_None, REPNOTIFY_Always); 
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Mana, COND_None, REPNOTIFY_Always);
+
+	// Input Charge Attributes
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ChargeLMB, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, ChargeRMB, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Charge1, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Charge2, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Charge3, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Charge4, COND_None, REPNOTIFY_Always);
+
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxChargeLMB, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxChargeRMB, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxCharge1, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxCharge2, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxCharge3, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, MaxCharge4, COND_None, REPNOTIFY_Always);
 
 	// Summon Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet, Energy, COND_None, REPNOTIFY_Always);
@@ -285,6 +311,66 @@ void UAuraAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) co
 void UAuraAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldMana) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Mana, OldMana);
+}
+
+void UAuraAttributeSet::OnRep_ChargeLMB(const FGameplayAttributeData& OldChargeLMB) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ChargeLMB, OldChargeLMB);
+}
+
+void UAuraAttributeSet::OnRep_MaxChargeLMB(const FGameplayAttributeData& OldMaxChargeLMB) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxChargeLMB, OldMaxChargeLMB);
+}
+
+void UAuraAttributeSet::OnRep_ChargeRMB(const FGameplayAttributeData& OldChargeRMB) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, ChargeRMB, OldChargeRMB);
+}
+
+void UAuraAttributeSet::OnRep_MaxChargeRMB(const FGameplayAttributeData& OldMaxChargeRMB) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxChargeRMB, OldMaxChargeRMB);
+}
+
+void UAuraAttributeSet::OnRep_Charge1(const FGameplayAttributeData& OldCharge1) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Charge1, OldCharge1);
+}
+
+void UAuraAttributeSet::OnRep_MaxCharge1(const FGameplayAttributeData& OldMaxCharge1) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxCharge1, OldMaxCharge1);
+}
+
+void UAuraAttributeSet::OnRep_Charge2(const FGameplayAttributeData& OldCharge2) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Charge2, OldCharge2);
+}
+
+void UAuraAttributeSet::OnRep_MaxCharge2(const FGameplayAttributeData& OldMaxCharge2) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxCharge2, OldMaxCharge2);
+}
+
+void UAuraAttributeSet::OnRep_Charge3(const FGameplayAttributeData& OldCharge3) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Charge3, OldCharge3);
+}
+
+void UAuraAttributeSet::OnRep_MaxCharge3(const FGameplayAttributeData& OldMaxCharge3) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxCharge3, OldMaxCharge3);
+}
+
+void UAuraAttributeSet::OnRep_Charge4(const FGameplayAttributeData& OldCharge4) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Charge4, OldCharge4);
+}
+
+void UAuraAttributeSet::OnRep_MaxCharge4(const FGameplayAttributeData& OldMaxCharge4) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, MaxCharge4, OldMaxCharge4);
 }
 
 void UAuraAttributeSet::OnRep_Energy(const FGameplayAttributeData& OldEnergy) const

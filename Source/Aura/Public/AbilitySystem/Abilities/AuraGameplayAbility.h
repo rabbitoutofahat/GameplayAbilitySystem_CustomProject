@@ -47,5 +47,5 @@ protected:
 	* After an ability has been granted through the ASC, the charge attributes are automatically changed to the reflect the ability's Max Charges.
 	* This is possible using a dynamic GE created at runtime.
 	*/
-	void InitialiseChargeCountAttributes(const FGameplayAbilitySpec& Spec);
+	void InitialiseChargeCountAttributes(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec);
 };

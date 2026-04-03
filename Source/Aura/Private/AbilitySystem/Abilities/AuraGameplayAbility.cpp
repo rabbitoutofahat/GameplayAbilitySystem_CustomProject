@@ -10,7 +10,9 @@ void UAuraGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorI
 {
 	Super::OnGiveAbility(ActorInfo, Spec);
 
-	InitialiseChargeCountAttributes(Spec);
+    // Only give ability charges to Player Characters
+    if (ActorInfo->AvatarActor == nullptr) return;
+	InitialiseChargeCountAttributes(ActorInfo, Spec);
 }
 
 FString UAuraGameplayAbility::GetDescription(int32 Level)
@@ -55,7 +57,7 @@ float UAuraGameplayAbility::GetCooldown(float InLevel)
     return Cooldown;
 }
 
-void UAuraGameplayAbility::InitialiseChargeCountAttributes(const FGameplayAbilitySpec& Spec)
+void UAuraGameplayAbility::InitialiseChargeCountAttributes(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
     UGameplayEffect* GEChargeChange = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("ChargeChange")));
 
@@ -77,7 +79,10 @@ void UAuraGameplayAbility::InitialiseChargeCountAttributes(const FGameplayAbilit
     FGameplayTag MaxChargeTag = UAuraAbilitySystemComponent::GetMaxChargeTagFromSpec(Spec);
 	FGameplayTag CurrentChargeTag = UAuraAbilitySystemComponent::GetCurrentChargeTagFromSpec(Spec);
 
-    UAuraAttributeSet* AS = Cast<UAuraAttributeSet>(Cast<AAuraCharacterBase>(GetAvatarActorFromActorInfo())->GetAttributeSet());
+    //FGameplayEffectContextHandle ContextHandle = MakeEffectContext(Spec.Handle, ActorInfo);
+	AAuraCharacterBase* Character = Cast<AAuraCharacterBase>(ActorInfo->AvatarActor);
+    UAuraAttributeSet* AS = Cast<UAuraAttributeSet>(Character->GetAttributeSet());
+
     for (const auto& Pair : AS->TagsToAttributes)
     {
         if (Pair.Key.MatchesTagExact(MaxChargeTag))
@@ -89,7 +94,7 @@ void UAuraGameplayAbility::InitialiseChargeCountAttributes(const FGameplayAbilit
             CurrentChargeInfo.Attribute = Pair.Value();
 		}
     }
-
-    UAbilitySystemComponent* ASC = Cast<AAuraCharacterBase>(GetAvatarActorFromActorInfo())->GetAbilitySystemComponent();
+   
+    UAbilitySystemComponent* ASC = Character->GetAbilitySystemComponent();
     ASC->ApplyGameplayEffectToSelf(GEChargeChange, 1.0f, ASC->MakeEffectContext());
 }

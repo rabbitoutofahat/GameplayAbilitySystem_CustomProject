@@ -16,6 +16,7 @@ void UAuraGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorI
 
     if (AbilityRechargerInfo)
     {
+        // Find the ability recharger associated with the input tag of the given ability
         FRechargerInfo Info = AbilityRechargerInfo->FindRechargerInfoForAbilitySpec(Spec, false);
 		FGameplayAbilitySpec RechargerSpec = FGameplayAbilitySpec(Info.AbilityRecharger, 1);
         RechargerSpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Equipped);

@@ -3,16 +3,22 @@
 
 #include "AbilitySystem/Abilities/AuraGameplayAbility.h"
 #include "AbilitySystem/AuraAttributeSet.h"
-#include "Character/AuraCharacterBase.h"
+#include "Character/AuraCharacter.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AuraGameplayTags.h"
 
 void UAuraGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
 	Super::OnGiveAbility(ActorInfo, Spec);
 
-    // Only give ability charges to Player Characters
-    if (ActorInfo->AvatarActor == nullptr) return;
 	InitialiseChargeCountAttributes(ActorInfo, Spec);
+
+    if (RechargerAbility)
+    {
+		FGameplayAbilitySpec RechargerSpec = FGameplayAbilitySpec(RechargerAbility, 1);
+        RechargerSpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Equipped);
+        ActorInfo->AbilitySystemComponent->GiveAbilityAndActivateOnce(RechargerSpec);
+    }
 }
 
 FString UAuraGameplayAbility::GetDescription(int32 Level)
@@ -59,8 +65,11 @@ float UAuraGameplayAbility::GetCooldown(float InLevel)
 
 void UAuraGameplayAbility::InitialiseChargeCountAttributes(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
-    UGameplayEffect* GEChargeChange = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("ChargeChange")));
+    // Only give ability charges to Player Characters
+    AAuraCharacter* Character = Cast<AAuraCharacter>(ActorInfo->AvatarActor);
+	if (!Character) return;
 
+    UGameplayEffect* GEChargeChange = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("ChargeChange")));
     GEChargeChange->DurationPolicy = EGameplayEffectDurationType::Instant;
 
     // Append two additional modifiers to the GE for max and current charges, and set them to the max charges value.
@@ -79,10 +88,7 @@ void UAuraGameplayAbility::InitialiseChargeCountAttributes(const FGameplayAbilit
     FGameplayTag MaxChargeTag = UAuraAbilitySystemComponent::GetMaxChargeTagFromSpec(Spec);
 	FGameplayTag CurrentChargeTag = UAuraAbilitySystemComponent::GetCurrentChargeTagFromSpec(Spec);
 
-    //FGameplayEffectContextHandle ContextHandle = MakeEffectContext(Spec.Handle, ActorInfo);
-	AAuraCharacterBase* Character = Cast<AAuraCharacterBase>(ActorInfo->AvatarActor);
     UAuraAttributeSet* AS = Cast<UAuraAttributeSet>(Character->GetAttributeSet());
-
     for (const auto& Pair : AS->TagsToAttributes)
     {
         if (Pair.Key.MatchesTagExact(MaxChargeTag))

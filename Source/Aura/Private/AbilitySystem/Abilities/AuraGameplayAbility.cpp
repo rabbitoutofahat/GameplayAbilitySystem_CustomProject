@@ -6,6 +6,7 @@
 #include "Character/AuraCharacter.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
+#include "AbilitySystem/Data/AbilityRechargerInfo.h"
 
 void UAuraGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
@@ -13,9 +14,10 @@ void UAuraGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorI
 
 	InitialiseChargeCountAttributes(ActorInfo, Spec);
 
-    if (RechargerAbility)
+    if (AbilityRechargerInfo)
     {
-		FGameplayAbilitySpec RechargerSpec = FGameplayAbilitySpec(RechargerAbility, 1);
+        FRechargerInfo Info = AbilityRechargerInfo->FindRechargerInfoForAbilitySpec(Spec, false);
+		FGameplayAbilitySpec RechargerSpec = FGameplayAbilitySpec(Info.AbilityRecharger, 1);
         RechargerSpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Equipped);
         ActorInfo->AbilitySystemComponent->GiveAbilityAndActivateOnce(RechargerSpec);
     }

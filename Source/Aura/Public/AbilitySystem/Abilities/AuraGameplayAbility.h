@@ -6,6 +6,8 @@
 #include "Abilities/GameplayAbility.h"
 #include "AuraGameplayAbility.generated.h"
 
+class UAbilityRechargerInfo;
+
 /**
  * 
  */
@@ -41,7 +43,7 @@ protected:
 	float RechargeDuration = -1.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Ability Charges")
-	TSubclassOf<UGameplayAbility> RechargerAbility;
+	TObjectPtr<UAbilityRechargerInfo> AbilityRechargerInfo;
 
 	/*
 	* After an ability has been granted through the ASC, the charge attributes are automatically changed to the reflect the ability's Max Charges.

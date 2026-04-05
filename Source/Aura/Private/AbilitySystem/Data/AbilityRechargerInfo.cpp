@@ -17,7 +17,7 @@ FRechargerInfo UAbilityRechargerInfo::FindRechargerInfoForAbilitySpec(const FGam
 
 	if (bLogNotFound)
 	{
-		UE_LOG(LogAura, Error, TEXT("Can't find Info for Abiity [%s] on AttributeInfo [%s]."), *UAuraAbilitySystemComponent::GetAbilityTagFromSpec(AbilitySpec).ToString(), *GetNameSafe(this));
+		UE_LOG(LogAura, Error, TEXT("Can't find Info for Abiity [%s] on RechargerInfo [%s]."), *UAuraAbilitySystemComponent::GetAbilityTagFromSpec(AbilitySpec).ToString(), *GetNameSafe(this));
 	}
 
 	return FRechargerInfo();

@@ -88,9 +88,11 @@ public:
 	*/
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
-	// Method for clamping
+	// Clamp new incoming attribute value
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	// Update attribute value to the new value and clamp again
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+	// When we want to do more than just update the attribute's value in response to an attribute change
 	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
 
 	/*

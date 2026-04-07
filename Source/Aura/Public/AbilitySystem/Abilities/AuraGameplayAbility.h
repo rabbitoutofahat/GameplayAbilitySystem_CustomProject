@@ -41,7 +41,7 @@ protected:
 	int32 CurrentCharges = MaxCharges;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Ability Charges")
-	float RechargeDuration = -1.0f;
+	float ChargeCooldown = -1.f; // "Cooldown" between use of ability charges
 
 	UPROPERTY(EditDefaultsOnly, Category = "Ability Charges")
 	TObjectPtr<UAbilityRechargerInfo> AbilityRechargerInfo;

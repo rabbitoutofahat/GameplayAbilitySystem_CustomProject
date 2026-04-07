@@ -7,6 +7,7 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/Data/AbilityRechargerInfo.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 void UAuraGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
@@ -22,6 +23,20 @@ void UAuraGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorI
         RechargerSpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Equipped);
         ActorInfo->AbilitySystemComponent->GiveAbilityAndActivateOnce(RechargerSpec);
     }
+}
+
+bool UAuraGameplayAbility::CommitAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, OUT FGameplayTagContainer* OptionalRelevantTags)
+{
+	bool bSuccessfulCommit = Super::CommitAbility(Handle, ActorInfo, ActivationInfo, OptionalRelevantTags);
+	if (!bSuccessfulCommit || MaxCharges < 2) return bSuccessfulCommit; // Max Charge = 1 => No charge system for the given ability
+
+	// If the ability has charges, find the Ability Recharge GE associated with the ability's input and set its duration to match the ability's cooldown.
+    FGameplayAbilitySpec* Spec = ActorInfo->AbilitySystemComponent->FindAbilitySpecFromHandle(Handle);
+    FRechargerInfo Info = AbilityRechargerInfo->FindRechargerInfoForAbilitySpec(*Spec, false);
+	UGameplayEffect* RechargeGE = Cast<UGameplayEffect>(Info.RechargeEffect->GetDefaultObject());
+	RechargeGE->DurationMagnitude = CooldownGameplayEffectClass.GetDefaultObject()->DurationMagnitude;
+   
+	return bSuccessfulCommit;
 }
 
 FString UAuraGameplayAbility::GetDescription(int32 Level)

@@ -8,6 +8,7 @@
 #include "AbilityRechargerInfo.generated.h"
 
 class UGameplayAbility;
+class UGameplayEffect;
 struct FGameplayAbilitySpec;
 
 USTRUCT(BlueprintType)
@@ -20,6 +21,9 @@ struct FRechargerInfo
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGameplayAbility> AbilityRecharger= nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayEffect> RechargeEffect = nullptr;
 };
 
 /**

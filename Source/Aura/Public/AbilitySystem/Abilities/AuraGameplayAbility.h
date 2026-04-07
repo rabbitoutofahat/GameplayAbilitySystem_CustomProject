@@ -17,8 +17,6 @@ class AURA_API UAuraGameplayAbility : public UGameplayAbility
 	GENERATED_BODY()
 	
 public:
-	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
-
 	virtual FString GetDescription(int32 Level);
 	virtual FString GetNextLevelDescription(int32 Level);
 	static FString GetLockedDescription(int32 Level);
@@ -30,6 +28,9 @@ public:
 	FGameplayTag StartupInputTag;
 
 protected:
+	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
+	virtual bool CommitAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) override;
+
 	float GetManaCost(float InLevel = 1.f);
 	float GetCooldown(float InLevel = 1.f);
 

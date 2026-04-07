@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "GameplayTagContainer.h"
+#include "AttributeSet.h"
 #include "AbilityRechargerInfo.generated.h"
 
 class UGameplayAbility;
@@ -18,6 +19,9 @@ struct FRechargerInfo
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag InputTag = FGameplayTag();
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayAttribute InputChargeAttribute = FGameplayAttribute();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGameplayAbility> AbilityRecharger= nullptr;

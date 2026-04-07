@@ -27,16 +27,32 @@ void UAuraGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorI
 
 bool UAuraGameplayAbility::CommitAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, OUT FGameplayTagContainer* OptionalRelevantTags)
 {
-	bool bSuccessfulCommit = Super::CommitAbility(Handle, ActorInfo, ActivationInfo, OptionalRelevantTags);
-	if (!bSuccessfulCommit || MaxCharges < 2) return bSuccessfulCommit; // Max Charge = 1 => No charge system for the given ability
+	if (MaxCharges < 2) return Super::CommitAbility(Handle, ActorInfo, ActivationInfo, OptionalRelevantTags); // Max Charge = 1 => No charge system for the given ability => Exit early and commit ability as normal
 
-	// If the ability has charges, find the Ability Recharge GE associated with the ability's input and set its duration to match the ability's cooldown.
+    AAuraCharacter* Character = Cast<AAuraCharacter>(ActorInfo->AvatarActor);
+    UAuraAttributeSet* AS = Cast<UAuraAttributeSet>(Character->GetAttributeSet());
+
+	// If the ability has charges, find the Ability Recharge GE associated with the ability's input and set its duration to match the ability's cooldown
     FGameplayAbilitySpec* Spec = ActorInfo->AbilitySystemComponent->FindAbilitySpecFromHandle(Handle);
     FRechargerInfo Info = AbilityRechargerInfo->FindRechargerInfoForAbilitySpec(*Spec, false);
 	UGameplayEffect* RechargeGE = Cast<UGameplayEffect>(Info.RechargeEffect->GetDefaultObject());
-	RechargeGE->DurationMagnitude = CooldownGameplayEffectClass.GetDefaultObject()->DurationMagnitude;
-   
-	return bSuccessfulCommit;
+
+    // If an ability has charges, set the time taken to recover a single ability charge to the cooldown of the ability 
+    // Cache off ability's base cooldown using a new instance of the cooldown GE so we can modify its duration without affecting future instances // Is this performant or should FGameplayModifierInfo be used?
+    UGameplayEffect* TempCooldownGE = NewObject<UGameplayEffect>(CooldownGameplayEffectClass.GetDefaultObject());
+	const FGameplayEffectModifierMagnitude& AbilityCooldown = TempCooldownGE->DurationMagnitude; 
+    RechargeGE->DurationMagnitude = AbilityCooldown;
+
+    // Consume a charge via Gameplay Effect
+	ActorInfo->AbilitySystemComponent->ApplyGameplayEffectToSelf(RechargeGE, 1.f, ActorInfo->AbilitySystemComponent->MakeEffectContext());
+    // Determine the ability's cooldown depending on whether there are any more charges remaining
+    UGameplayEffect* CooldownGE = CooldownGameplayEffectClass.GetDefaultObject();
+    if (Info.InputChargeAttribute.GetNumericValue(AS) >= 2) CooldownGE->DurationMagnitude = FScalableFloat(ChargeCooldown); 
+    else CooldownGE->DurationMagnitude = AbilityCooldown;
+
+	bool bCommitAbility = Super::CommitAbility(Handle, ActorInfo, ActivationInfo, OptionalRelevantTags);
+    TempCooldownGE->BeginDestroy();
+	return bCommitAbility;
 }
 
 FString UAuraGameplayAbility::GetDescription(int32 Level)

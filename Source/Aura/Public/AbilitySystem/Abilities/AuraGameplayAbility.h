@@ -51,4 +51,7 @@ protected:
 	* This is possible using a dynamic GE created at runtime.
 	*/
 	void InitialiseChargeCountAttributes(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec);
+
+private:
+	float AbilityCooldown = 0.f; // Cache the base cooldown of the ability for use when modifying the cooldown based on remaining charges
 };

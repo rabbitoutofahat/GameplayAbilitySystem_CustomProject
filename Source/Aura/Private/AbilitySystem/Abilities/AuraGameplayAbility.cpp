@@ -38,7 +38,7 @@ bool UAuraGameplayAbility::CommitAbility(const FGameplayAbilitySpecHandle Handle
     FRechargerInfo Info = AbilityRechargerInfo->FindRechargerInfoForAbilitySpec(*Spec, false);
 	UGameplayEffect* RechargeGE = Cast<UGameplayEffect>(Info.RechargeEffect->GetDefaultObject());
 
-    // Cache off ability's base cooldown so we can modify its duration without affecting future instances (Is this performant or should FGameplayModifierInfo be used?)
+    // Store ability's base cooldown so we can modify its duration without affecting future instances (Is this performant or should FGameplayModifierInfo be used?)
     UGameplayEffect* CooldownGE = CooldownGameplayEffectClass.GetDefaultObject();
 	CooldownGE->DurationMagnitude.GetStaticMagnitudeIfPossible(1.f, AbilityCooldown);
 
@@ -47,20 +47,14 @@ bool UAuraGameplayAbility::CommitAbility(const FGameplayAbilitySpecHandle Handle
     FActiveGameplayEffectHandle RechargeHandle = ASC->ApplyGameplayEffectToSelf(RechargeGE, 1.f, ASC->MakeEffectContext()); // Consume a charge via Gameplay Effect
 
     // Determine the ability's cooldown depending on whether there are any more charges remaining
-	bool bCommitAbility = false;
-    if (Info.InputChargeAttribute.GetNumericValue(AS) > 0)
-    {
-        CooldownGE->DurationMagnitude = FScalableFloat(ChargeCooldown);
-        bCommitAbility = Super::CommitAbility(Handle, ActorInfo, ActivationInfo, OptionalRelevantTags);
-		
-    }
+    if (Info.InputChargeAttribute.GetNumericValue(AS) > 0) CooldownGE->DurationMagnitude = FScalableFloat(ChargeCooldown);
     else // If no charges remaining, get current remaining duration on the RechargeGE to know when the next charge will be available
     {
         float RemainingChargeCooldown = UAbilitySystemBlueprintLibrary::GetActiveGameplayEffectRemainingDuration(Character, RechargeHandle);
         CooldownGE->DurationMagnitude = FScalableFloat(RemainingChargeCooldown);
-        bCommitAbility = Super::CommitAbility(Handle, ActorInfo, ActivationInfo, OptionalRelevantTags);
     }
 
+    bool bCommitAbility = Super::CommitAbility(Handle, ActorInfo, ActivationInfo, OptionalRelevantTags);
     CooldownGE->DurationMagnitude = FScalableFloat(AbilityCooldown); // Reset the cooldown GE's duration magnitude to the base cooldown before returning
     return bCommitAbility;
 }

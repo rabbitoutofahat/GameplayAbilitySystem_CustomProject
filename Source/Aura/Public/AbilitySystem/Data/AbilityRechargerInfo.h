@@ -8,7 +8,6 @@
 #include "AttributeSet.h"
 #include "AbilityRechargerInfo.generated.h"
 
-class UGameplayAbility;
 class UGameplayEffect;
 struct FGameplayAbilitySpec;
 
@@ -25,9 +24,6 @@ struct FRechargerInfo
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayAttribute MaxCharge = FGameplayAttribute();
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UGameplayAbility> AbilityRecharger= nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGameplayEffect> RechargeEffect = nullptr;

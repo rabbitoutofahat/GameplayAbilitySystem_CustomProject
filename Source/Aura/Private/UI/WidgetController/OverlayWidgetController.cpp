@@ -70,6 +70,12 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 			{
 				SpellGlobeLightUpDelegate.Broadcast(bLightUp, AbilityTag);
 			});
+
+		GetAuraASC()->AbilityRecharge.AddLambda(
+			[this](const FActiveGameplayEffectHandle& RechargeEffectHandle)
+			{
+				AbilityRechargeDelegate.Broadcast(RechargeEffectHandle);
+			});
 	}
 
 	GetAuraPS()->OnXPChanged.AddUObject(this, &UOverlayWidgetController::OnXPChanged);

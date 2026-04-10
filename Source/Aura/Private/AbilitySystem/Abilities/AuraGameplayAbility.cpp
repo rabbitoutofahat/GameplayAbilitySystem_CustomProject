@@ -14,15 +14,6 @@ void UAuraGameplayAbility::OnGiveAbility(const FGameplayAbilityActorInfo* ActorI
 	Super::OnGiveAbility(ActorInfo, Spec);
 
 	InitialiseChargeCountAttributes(ActorInfo, Spec);
-
-    if (AbilityRechargerInfo)
-    {
-        // Find the ability recharger associated with the input tag of the given ability
-        FRechargerInfo Info = AbilityRechargerInfo->FindRechargerInfoForAbilitySpec(Spec, false);
-		FGameplayAbilitySpec RechargerSpec = FGameplayAbilitySpec(Info.AbilityRecharger, 1);
-        RechargerSpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Equipped);
-        ActorInfo->AbilitySystemComponent->GiveAbilityAndActivateOnce(RechargerSpec);
-    }
 }
 
 bool UAuraGameplayAbility::CommitAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, OUT FGameplayTagContainer* OptionalRelevantTags)
@@ -31,7 +22,7 @@ bool UAuraGameplayAbility::CommitAbility(const FGameplayAbilitySpecHandle Handle
 
     AAuraCharacter* Character = Cast<AAuraCharacter>(ActorInfo->AvatarActor);
     UAuraAttributeSet* AS = Cast<UAuraAttributeSet>(Character->GetAttributeSet());
-	UAbilitySystemComponent* ASC = ActorInfo->AbilitySystemComponent.Get();
+	UAuraAbilitySystemComponent* ASC = Cast<UAuraAbilitySystemComponent>(ActorInfo->AbilitySystemComponent.Get());
 
 	// If the ability has charges, find the Ability Recharge GE associated with the ability's input and set its duration to match the ability's cooldown
     FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromHandle(Handle);
@@ -45,6 +36,7 @@ bool UAuraGameplayAbility::CommitAbility(const FGameplayAbilitySpecHandle Handle
     // If an ability has charges, set the time taken to recover a single ability charge to the cooldown of the ability 
     RechargeGE->DurationMagnitude = FScalableFloat(AbilityCooldown);
     FActiveGameplayEffectHandle RechargeHandle = ASC->ApplyGameplayEffectToSelf(RechargeGE, 1.f, ASC->MakeEffectContext()); // Consume a charge via Gameplay Effect
+    ASC->AbilityRecharge.Broadcast(RechargeHandle); // Broadcast to Ability Charge Widget to change its radial progress bar
 
     // Determine the ability's cooldown depending on whether there are any more charges remaining
     if (Info.CurrentCharge.GetNumericValue(AS) > 0) CooldownGE->DurationMagnitude = FScalableFloat(ChargeCooldown);

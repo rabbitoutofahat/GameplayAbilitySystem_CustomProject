@@ -47,7 +47,7 @@ bool UAuraGameplayAbility::CommitAbility(const FGameplayAbilitySpecHandle Handle
     FActiveGameplayEffectHandle RechargeHandle = ASC->ApplyGameplayEffectToSelf(RechargeGE, 1.f, ASC->MakeEffectContext()); // Consume a charge via Gameplay Effect
 
     // Determine the ability's cooldown depending on whether there are any more charges remaining
-    if (Info.InputChargeAttribute.GetNumericValue(AS) > 0) CooldownGE->DurationMagnitude = FScalableFloat(ChargeCooldown);
+    if (Info.CurrentCharge.GetNumericValue(AS) > 0) CooldownGE->DurationMagnitude = FScalableFloat(ChargeCooldown);
     else // If no charges remaining, get current remaining duration on the RechargeGE to know when the next charge will be available
     {
         float RemainingChargeCooldown = UAbilitySystemBlueprintLibrary::GetActiveGameplayEffectRemainingDuration(Character, RechargeHandle);

@@ -21,7 +21,10 @@ struct FRechargerInfo
 	FGameplayTag InputTag = FGameplayTag();
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FGameplayAttribute InputChargeAttribute = FGameplayAttribute();
+	FGameplayAttribute CurrentCharge = FGameplayAttribute();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayAttribute MaxCharge = FGameplayAttribute();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UGameplayAbility> AbilityRecharger= nullptr;

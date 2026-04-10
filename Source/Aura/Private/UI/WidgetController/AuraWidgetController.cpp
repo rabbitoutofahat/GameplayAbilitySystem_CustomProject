@@ -7,6 +7,8 @@
 #include "Player/AuraPlayerController.h"
 #include "Player/AuraPlayerState.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
+#include "AbilitySystem/Data/AbilityRechargerInfo.h"
+
 
 void UAuraWidgetController::SetWidgetControllerParams(const FWidgetControllerParams& WCParams)
 {
@@ -37,8 +39,15 @@ void UAuraWidgetController::BroadcastAbilityInfo()
 			Info.InputTag = AuraAbilitySystemComponent->GetInputTagFromSpec(AbilitySpec);
 			Info.StatusTag = AuraAbilitySystemComponent->GetStatusTagFromSpec(AbilitySpec);
 			AbilityInfoDelegate.Broadcast(Info); // Broadcast to widgets
+
+			if (Info.AbilityType == FGameplayTag::RequestGameplayTag(FName("Abilities.Type.Offensive"))) 
+			{
+				// Once Input is bound to the active ability, get the corresponding input charge attributes to monitor ability charges (if the ability has any)
+				FRechargerInfo RechargerInfo = AbilityRechargerInfo->FindRechargerInfoForAbilitySpec(AbilitySpec);
+				AbilityRechargerInfoDelegate.Broadcast(RechargerInfo);
+			}
 		});
-	GetAuraASC()->ForEachAbility(BroadcastDelegate); // 'Broadcast' to ForEachAbility() in the ASC
+	GetAuraASC()->ForEachAbility(BroadcastDelegate); // Execute the above lambda "for each ability"
 }
 
 AAuraPlayerController* UAuraWidgetController::GetAuraPC()

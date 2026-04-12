@@ -36,7 +36,7 @@ bool UAuraGameplayAbility::CommitAbility(const FGameplayAbilitySpecHandle Handle
     // If an ability has charges, set the time taken to recover a single ability charge to the cooldown of the ability 
     RechargeGE->DurationMagnitude = FScalableFloat(AbilityCooldown);
     FActiveGameplayEffectHandle RechargeHandle = ASC->ApplyGameplayEffectToSelf(RechargeGE, 1.f, ASC->MakeEffectContext()); // Consume a charge via Gameplay Effect
-    ASC->AbilityRecharge.Broadcast(RechargeHandle); // Broadcast to Ability Charge Widget to change its radial progress bar
+    ASC->AbilityRecharge.Broadcast(RechargeHandle, Info.InputTag); // Broadcast to Ability Charge Widget to change its radial progress bar
 
     // Determine the ability's cooldown depending on whether there are any more charges remaining
     if (Info.CurrentCharge.GetNumericValue(AS) > 0) CooldownGE->DurationMagnitude = FScalableFloat(ChargeCooldown);

@@ -72,9 +72,9 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 			});
 
 		GetAuraASC()->AbilityRecharge.AddLambda(
-			[this](const FActiveGameplayEffectHandle& RechargeEffectHandle)
+			[this](const FActiveGameplayEffectHandle& RechargeEffectHandle, const FGameplayTag& InputTag)
 			{
-				AbilityRechargeDelegate.Broadcast(RechargeEffectHandle);
+				AbilityRechargeDelegate.Broadcast(RechargeEffectHandle, InputTag);
 			});
 	}
 

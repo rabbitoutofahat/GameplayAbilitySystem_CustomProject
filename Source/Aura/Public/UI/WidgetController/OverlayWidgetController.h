@@ -43,7 +43,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLevelChangedSignature, int32, Ne
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityLevelChangedSignature, int32, NewLevel);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FSpellGlobeLightUpSignature, bool, bLightUp, const FGameplayTag&, AbilityTag);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityRechargeSignature, const FActiveGameplayEffectHandle&, RechargeEffectHandle);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FAbilityRechargeSignature, const FActiveGameplayEffectHandle&, RechargeEffectHandle, const FGameplayTag&, InputTag);
 
 /**
  * 

@@ -21,6 +21,8 @@ public:
 	virtual FString GetNextLevelDescription(int32 Level);
 	static FString GetLockedDescription(int32 Level);
 
+	void IncreaseMaxCharges(int32 NewValue, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec);
+
 	UFUNCTION(BlueprintCallable, Category = "Ability Charges")
 	int32 GetCurrentAbilityCharges() { return CurrentCharges; }
 

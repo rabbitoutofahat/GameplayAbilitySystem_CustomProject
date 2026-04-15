@@ -203,4 +203,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
 	static void RedistributeHealthEvenly(TArray<AActor*> TargetActors);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
+	static void IncreaseAbilityCharges(int32 Amount, const FGameplayTag& AbilityTag, UAuraAbilitySystemComponent* ASC);
 };

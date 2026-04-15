@@ -21,7 +21,13 @@ public:
 	virtual FString GetNextLevelDescription(int32 Level);
 	static FString GetLockedDescription(int32 Level);
 
-	void IncreaseMaxCharges(int32 NewValue, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec);
+	int32 IncreaseAbilityCharges(int32 Amount) { return MaxCharges += Amount; }
+
+	/*
+	* After an ability has been granted through the ASC, the charge attributes are automatically changed to the reflect the ability's Max Charges.
+	* This is possible using a dynamic GE created at runtime.
+	*/
+	void InitialiseChargeCountAttributes(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec);
 
 	UFUNCTION(BlueprintCallable, Category = "Ability Charges")
 	int32 GetCurrentAbilityCharges() { return CurrentCharges; }
@@ -47,12 +53,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Ability Charges")
 	TObjectPtr<UAbilityRechargerInfo> AbilityRechargerInfo;
-
-	/*
-	* After an ability has been granted through the ASC, the charge attributes are automatically changed to the reflect the ability's Max Charges.
-	* This is possible using a dynamic GE created at runtime.
-	*/
-	void InitialiseChargeCountAttributes(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec);
 
 private:
 	float AbilityCooldown = 0.f; // Cache the base cooldown of the ability for use when modifying the cooldown based on remaining charges

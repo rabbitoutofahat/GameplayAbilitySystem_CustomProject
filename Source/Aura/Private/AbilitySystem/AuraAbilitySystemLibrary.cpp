@@ -16,6 +16,7 @@
 #include "Character/SummonCharacter.h"
 #include "AI/AuraAIController.h"
 #include "BrainComponent.h"
+#include "AbilitySystem/Abilities/AuraGameplayAbility.h"
 
 UOverlayWidgetController* UAuraAbilitySystemLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
 {
@@ -653,4 +654,10 @@ void UAuraAbilitySystemLibrary::RedistributeHealthEvenly(TArray<AActor*> TargetA
 		const float NewHealth = AuraAS->GetMaxHealth() * AverageHealthPercentage;
 		AuraAS->SetHealth(NewHealth);
 	}
+}
+
+void UAuraAbilitySystemLibrary::IncreaseAbilityCharges(int32 Amount, const FGameplayTag& AbilityTag, UAuraAbilitySystemComponent* ASC)
+{
+	FGameplayAbilitySpec* Spec = ASC->GetAbilitySpecFromTag(AbilityTag);
+	if (Spec) Cast<UAuraGameplayAbility>(Spec->Ability)->IncreaseAbilityCharges(Amount);
 }

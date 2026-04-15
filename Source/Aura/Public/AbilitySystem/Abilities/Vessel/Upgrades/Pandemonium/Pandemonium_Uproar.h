@@ -19,4 +19,7 @@ public:
 	
 protected:
 	virtual void OnGiveAbility(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec) override;
+
+private:
+	int32 NumCharges = 1; // Stored here for description (updated when upgrade is applied)
 };

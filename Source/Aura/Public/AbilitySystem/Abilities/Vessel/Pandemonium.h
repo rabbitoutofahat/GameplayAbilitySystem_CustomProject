@@ -14,6 +14,10 @@ class AURA_API UPandemonium : public UAuraGameplayAbility
 {
 	GENERATED_BODY()
 
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|Uproar")
+	int32 NumAdditionalCharges;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float EffectRadius = 1000.f;

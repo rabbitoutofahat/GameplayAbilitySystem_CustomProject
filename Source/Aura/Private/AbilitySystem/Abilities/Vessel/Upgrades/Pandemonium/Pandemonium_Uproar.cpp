@@ -28,9 +28,10 @@ void UPandemonium_Uproar::OnGiveAbility(const FGameplayAbilityActorInfo* ActorIn
 
 	UAuraAbilitySystemComponent* ASC = Cast<UAuraAbilitySystemComponent>(Character->GetAbilitySystemComponent());
 	const FGameplayTag PandemoniumTag = FAuraGameplayTags::Get().Abilities_Vessel_Pandemonium;
-	UPandemonium* PandemoniumAbility = Cast<UPandemonium>(ASC->GetAbilitySpecFromTag(PandemoniumTag)->Ability);
+	const FGameplayAbilitySpec& PandemoniumSpec = *ASC->GetAbilitySpecFromTag(PandemoniumTag);
+	UPandemonium* PandemoniumAbility = Cast<UPandemonium>(PandemoniumSpec.Ability);
 	
 	NumCharges = PandemoniumAbility->NumAdditionalCharges;
 	UAuraAbilitySystemLibrary::IncreaseAbilityCharges(NumCharges, PandemoniumTag, ASC);
-	PandemoniumAbility->InitialiseChargeCountAttributes(ActorInfo, Spec); // Reinitialise the charge count attributes to update the ASC with the new max charges value
+	PandemoniumAbility->InitialiseChargeCountAttributes(ActorInfo, PandemoniumSpec); // Reinitialise the charge count attributes to update the ASC with the new max charges value
 }

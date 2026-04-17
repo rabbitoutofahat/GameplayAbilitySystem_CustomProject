@@ -16,7 +16,7 @@ class AURA_API UPandemonium : public UAuraGameplayAbility
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Upgrades|Uproar")
-	int32 NumAdditionalCharges;
+	int32 NumAdditionalCharges = 1;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

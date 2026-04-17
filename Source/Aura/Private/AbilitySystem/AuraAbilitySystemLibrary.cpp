@@ -658,6 +658,6 @@ void UAuraAbilitySystemLibrary::RedistributeHealthEvenly(TArray<AActor*> TargetA
 
 void UAuraAbilitySystemLibrary::IncreaseAbilityCharges(int32 Amount, const FGameplayTag& AbilityTag, UAuraAbilitySystemComponent* ASC)
 {
-	FGameplayAbilitySpec* Spec = ASC->GetAbilitySpecFromTag(AbilityTag);
-	if (Spec) Cast<UAuraGameplayAbility>(Spec->Ability)->IncreaseAbilityCharges(Amount);
+	const FGameplayAbilitySpec& Spec = *ASC->GetAbilitySpecFromTag(AbilityTag);
+	CastChecked<UAuraGameplayAbility>(Spec.Ability)->IncreaseAbilityCharges(Amount);
 }

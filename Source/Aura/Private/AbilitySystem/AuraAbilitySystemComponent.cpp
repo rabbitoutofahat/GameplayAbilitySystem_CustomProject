@@ -404,7 +404,7 @@ void UAuraAbilitySystemComponent::MakeAbilityUpgradesEligible(const FGameplayTag
 		
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Info.Ability, 1);
 		AbilitySpec.DynamicAbilityTags.AddTag(FAuraGameplayTags::Get().Abilities_Status_Eligible);
-		GiveAbility(AbilitySpec);
+		//GiveAbility(AbilitySpec);
 		MarkAbilitySpecDirty(AbilitySpec); 
 		ClientUpdateAbilityStatus(Info.AbilityTag, GameplayTags.Abilities_Status_Eligible, 1);
 	}

@@ -95,9 +95,12 @@ float UAuraGameplayAbility::GetCooldown(float InLevel)
 
 void UAuraGameplayAbility::InitialiseChargeCountAttributes(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
-    // Only give ability charges to Player Characters
-    AAuraCharacter* Character = Cast<AAuraCharacter>(ActorInfo->AvatarActor);
-	if (!Character) return;
+    // Find the input slot associated with this ability, and 
+    FGameplayTag MaxChargeTag = UAuraAbilitySystemComponent::GetMaxChargeTagFromSpec(Spec);
+    FGameplayTag CurrentChargeTag = UAuraAbilitySystemComponent::GetCurrentChargeTagFromSpec(Spec);
+
+    // Charge Tags exist => offensive abilities belonging to player character => Add input charge attributes
+    if (MaxChargeTag == FGameplayTag::EmptyTag || CurrentChargeTag == FGameplayTag::EmptyTag) return;
 
     UGameplayEffect* GEChargeChange = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("ChargeChange")));
     GEChargeChange->DurationPolicy = EGameplayEffectDurationType::Instant;
@@ -114,10 +117,8 @@ void UAuraGameplayAbility::InitialiseChargeCountAttributes(const FGameplayAbilit
     CurrentChargeInfo.ModifierMagnitude = FScalableFloat(MaxCharges);
     CurrentChargeInfo.ModifierOp = EGameplayModOp::Override;
 
-	// Find the input slot associated with this ability, and grant the appropriate number of charges based on the ability to the charge attributes of that input slot.
-    FGameplayTag MaxChargeTag = UAuraAbilitySystemComponent::GetMaxChargeTagFromSpec(Spec);
-	FGameplayTag CurrentChargeTag = UAuraAbilitySystemComponent::GetCurrentChargeTagFromSpec(Spec);
-
+    // Grant the appropriate number of charges based on the ability to the charge attributes of that input slot.
+    AAuraCharacter* Character = Cast<AAuraCharacter>(ActorInfo->AvatarActor);
     UAuraAttributeSet* AS = Cast<UAuraAttributeSet>(Character->GetAttributeSet());
     for (const auto& Pair : AS->TagsToAttributes)
     {

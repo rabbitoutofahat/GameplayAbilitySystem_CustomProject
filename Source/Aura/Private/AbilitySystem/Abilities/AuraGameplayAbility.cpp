@@ -66,6 +66,11 @@ FString UAuraGameplayAbility::GetLockedDescription(int32 Level)
     return FString::Printf(TEXT("<Default>Spell locked until level: %d</>"), Level);
 }
 
+void UAuraGameplayAbility::IncreaseAbilityCharges(int32 Amount)
+{
+    MaxCharges += Amount;
+}
+
 float UAuraGameplayAbility::GetManaCost(float InLevel)
 {
     float ManaCost = 0.f;

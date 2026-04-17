@@ -660,4 +660,40 @@ void UAuraAbilitySystemLibrary::IncreaseAbilityCharges(int32 Amount, const FGame
 {
 	const FGameplayAbilitySpec& Spec = *ASC->GetAbilitySpecFromTag(AbilityTag);
 	CastChecked<UAuraGameplayAbility>(Spec.Ability)->IncreaseAbilityCharges(Amount);
+
+	//UGameplayEffect* GEChargeChange = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("ChargeChange")));
+	//GEChargeChange->DurationPolicy = EGameplayEffectDurationType::Instant;
+
+	//// Append two additional modifiers to the GE for max and current charges, and set them to the max charges value.
+	//const int32 Index = GEChargeChange->Modifiers.Num();
+	//GEChargeChange->Modifiers.SetNum(Index + 2);
+
+	//FGameplayModifierInfo& MaxChargeInfo = GEChargeChange->Modifiers[Index];
+	//MaxChargeInfo.ModifierMagnitude = FScalableFloat(Amount);
+	//MaxChargeInfo.ModifierOp = EGameplayModOp::Additive;
+
+	//FGameplayModifierInfo& CurrentChargeInfo = GEChargeChange->Modifiers[Index + 1];
+	//CurrentChargeInfo.ModifierMagnitude = FScalableFloat(Amount);
+	//CurrentChargeInfo.ModifierOp = EGameplayModOp::Additive;
+
+	//FGameplayTag MaxChargeTag = UAuraAbilitySystemComponent::GetMaxChargeTagFromSpec(Spec);
+	//FGameplayTag CurrentChargeTag = UAuraAbilitySystemComponent::GetCurrentChargeTagFromSpec(Spec);
+
+	//// Grant the appropriate number of charges based on the ability to the charge attributes of that input slot.
+	//AAuraCharacter* Character = Cast<AAuraCharacter>(ActorInfo->AvatarActor);
+	//UAuraAttributeSet* AS = Cast<UAuraAttributeSet>(Character->GetAttributeSet());
+	//for (const auto& Pair : AS->TagsToAttributes)
+	//{
+	//	if (Pair.Key.MatchesTagExact(MaxChargeTag))
+	//	{
+	//		MaxChargeInfo.Attribute = Pair.Value();
+	//	}
+	//	else if (Pair.Key.MatchesTagExact(CurrentChargeTag))
+	//	{
+	//		CurrentChargeInfo.Attribute = Pair.Value();
+	//	}
+	//}
+
+	//UAbilitySystemComponent* ASC = Character->GetAbilitySystemComponent();
+	//ASC->ApplyGameplayEffectToSelf(GEChargeChange, 1.0f, ASC->MakeEffectContext());
 }

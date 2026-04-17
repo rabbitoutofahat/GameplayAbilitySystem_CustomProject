@@ -21,7 +21,7 @@ public:
 	virtual FString GetNextLevelDescription(int32 Level);
 	static FString GetLockedDescription(int32 Level);
 
-	int32 IncreaseAbilityCharges(int32 Amount) { return MaxCharges += Amount; }
+	void IncreaseAbilityCharges(int32 Amount);
 
 	/*
 	* After an ability has been granted through the ASC, the charge attributes are automatically changed to the reflect the ability's Max Charges.
@@ -43,7 +43,7 @@ protected:
 	float GetCooldown(float InLevel = 1.f);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Ability Charges")
-	int32 MaxCharges = 1;
+	int32 MaxCharges;
 
 	UPROPERTY()
 	int32 CurrentCharges = MaxCharges;
